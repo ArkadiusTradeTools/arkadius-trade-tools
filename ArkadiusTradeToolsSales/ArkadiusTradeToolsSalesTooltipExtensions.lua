@@ -318,7 +318,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
                 price = sale.price / sale.quantity
 
                 if (price < minPrice) then minPrice = price end
-                if (price > maxPrice) then maxPrice = price end
+                if ((price > maxPrice) and (price ~= math.huge)) then maxPrice = price end
             end
 
             --- There are no sales for this item ---

@@ -170,8 +170,8 @@ end
 
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     --- Disable tradinghouse extensions for AwesomeGuildStore users for now ---
---    if ((enable) and (self.profitMarginDaysLabel == nil) and (not AwesomeGuildStore)) then
-    if ((enable) and (self.profitMarginDaysLabel == nil)) then
+    if ((enable) and (self.profitMarginDaysLabel == nil) and (not AwesomeGuildStore)) then
+--    if ((enable) and (self.profitMarginDaysLabel == nil)) then
         ZO_PreHook("ZO_ScrollList_Commit", ZO_ScrollList_Commit_Hook)
         EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
 
