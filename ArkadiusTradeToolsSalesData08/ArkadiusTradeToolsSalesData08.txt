@@ -1,8 +1,8 @@
 ## Title: Arkadius' Trade Tools - Sales (Data08)
 ## Author: Arkadius (@Arkadius1 EU)
-## APIVersion: 100022
+## APIVersion: 100023
 ## Description: None
-## Version: 1.0.8
+## Version: 1.0.9
 ## SavedVariables: ArkadiusTradeToolsSalesData08
 ## DependsOn: ArkadiusTradeToolsSales
 
