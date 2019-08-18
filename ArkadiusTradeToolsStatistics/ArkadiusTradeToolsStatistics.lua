@@ -87,15 +87,15 @@ function ArkadiusTradeToolsStatisticsList:SetupStatisticRow(rowControl, rowData)
     guildName:SetHidden(guildName.header:IsHidden())
     guildName:SetColor(ArkadiusTradeTools:GetGuildColor(data.guildName):UnpackRGBA())
 
-    salesVolume:SetText(ZO_LocalizeDecimalNumber(data.salesVolume) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    salesVolume:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.salesVolume) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     salesVolume:SetWidth(salesVolume.header:GetWidth() - 10)
     salesVolume:SetHidden(salesVolume.header:IsHidden())
 
-    taxes:SetText(ZO_LocalizeDecimalNumber(data.taxes) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    taxes:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.taxes) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     taxes:SetWidth(taxes.header:GetWidth() - 10)
     taxes:SetHidden(taxes.header:IsHidden())
 
-    internalSalesVolumePercentage:SetText(ZO_LocalizeDecimalNumber(data.internalSalesVolumePercentage) .. "%")
+    internalSalesVolumePercentage:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.internalSalesVolumePercentage) .. "%")
     internalSalesVolumePercentage:SetWidth(internalSalesVolumePercentage.header:GetWidth() - 10)
     internalSalesVolumePercentage:SetHidden(internalSalesVolumePercentage.header:IsHidden())
 

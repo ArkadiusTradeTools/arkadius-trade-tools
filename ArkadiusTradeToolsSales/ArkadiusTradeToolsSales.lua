@@ -186,11 +186,11 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
         data.eaprice=math.attRound(data.price/data.quantity, 2)
     end
 		
-	eaprice:SetText(ZO_LocalizeDecimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+	eaprice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     eaprice:SetWidth(eaprice.header:GetWidth() - 10)
     eaprice:SetHidden(eaprice.header:IsHidden())	
 
-    price:SetText(ZO_LocalizeDecimalNumber(data.price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    price:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     price:SetWidth(price.header:GetWidth() - 10)
     price:SetHidden(price.header:IsHidden())
 
@@ -520,7 +520,7 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 
             -- Announce sale
             if (dataTable.sales[eventIdNum].sellerName == self.displayName) then
-                local saleString = string.format(L["ATT_FMTSTR_ANNOUNCE_SALE"], dataTable.sales[eventIdNum].quantity, dataTable.sales[eventIdNum].itemLink, ZO_LocalizeDecimalNumber(dataTable.sales[eventIdNum].price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", dataTable.sales[eventIdNum].guildName)
+                local saleString = string.format(L["ATT_FMTSTR_ANNOUNCE_SALE"], dataTable.sales[eventIdNum].quantity, dataTable.sales[eventIdNum].itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(dataTable.sales[eventIdNum].price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", dataTable.sales[eventIdNum].guildName)
                 ArkadiusTradeTools:ShowNotification(saleString)
             end
 
@@ -751,12 +751,12 @@ function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
     if (numSales > 0) then
         if (itemType == ITEMTYPE_MASTER_WRIT) then
             local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("%d+"))
-            chatString = string.format(L["ATT_FMTSTR_STATS_MASTER_WRIT"], itemLink, ZO_LocalizeDecimalNumber(averagePrice * vouchers), ZO_LocalizeDecimalNumber(numSales), ZO_LocalizeDecimalNumber(quantity), ZO_LocalizeDecimalNumber(averagePrice), days)
+            chatString = string.format(L["ATT_FMTSTR_STATS_MASTER_WRIT"], itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice * vouchers), ArkadiusTradeTools:LocalizeDezimalNumber(numSales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity), ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice), days)
         else
             if (quantity > numSales) then
-                chatString = string.format(L["ATT_FMTSTR_STATS_ITEM"], itemLink, ZO_LocalizeDecimalNumber(averagePrice), ZO_LocalizeDecimalNumber(numSales), ZO_LocalizeDecimalNumber(quantity), days)
+                chatString = string.format(L["ATT_FMTSTR_STATS_ITEM"], itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice), ArkadiusTradeTools:LocalizeDezimalNumber(numSales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity), days)
             else
-                chatString = string.format(L["ATT_FMTSTR_STATS_NO_QUANTITY"], itemLink, ZO_LocalizeDecimalNumber(averagePrice), ZO_LocalizeDecimalNumber(numSales), days)
+                chatString = string.format(L["ATT_FMTSTR_STATS_NO_QUANTITY"], itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice), ArkadiusTradeTools:LocalizeDezimalNumber(numSales), days)
             end
         end
     else

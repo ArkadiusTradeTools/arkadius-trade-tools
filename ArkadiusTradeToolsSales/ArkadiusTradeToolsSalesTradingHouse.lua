@@ -65,7 +65,7 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
 
         profitMarginControl:SetText(margin .. "%")
         profitMarginControl:SetColor(color:UnpackRGBA())
-        averagePriceControl:SetText(ZO_LocalizeDecimalNumber(math.attRound(averagePrice * rowControl.dataEntry.data.stackCount)))
+        averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice * rowControl.dataEntry.data.stackCount)))
         averagePriceControl:SetColor(color:UnpackRGBA())
     end
 

@@ -29,8 +29,8 @@ local function SetupEntry(self, control, data, selected)
         salesControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
     end
 
-    purchasesControl:SetText(ZO_LocalizeDecimalNumber(data.purchases or 0) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
-    salesControl:SetText(ZO_LocalizeDecimalNumber(data.sales or 0) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    purchasesControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.purchases or 0) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    salesControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.sales or 0) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
 end
 
 

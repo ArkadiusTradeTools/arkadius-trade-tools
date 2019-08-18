@@ -164,11 +164,11 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
 		
     end
 
-	eaprice:SetText(ZO_LocalizeDecimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+	eaprice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     eaprice:SetWidth(eaprice.header:GetWidth() - 10)
     eaprice:SetHidden(eaprice.header:IsHidden())
 	
-    price:SetText(ZO_LocalizeDecimalNumber(data.price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    price:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     price:SetWidth(price.header:GetWidth() - 10)
     price:SetHidden(price.header:IsHidden())
 

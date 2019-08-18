@@ -62,11 +62,11 @@ function TooltipExtensionList:SetupItemRow(control, data)
     itemLinkControl:SetText(data.itemLink)
 
     local averagePriceControl = GetControl(control, "AveragePrice")
-    averagePriceControl:SetText(ZO_LocalizeDecimalNumber(data.averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     averagePriceControl.normalColor = ZO_ColorDef:New(1, 1, 1)
 
     local numberSalesControl = GetControl(control, "NumberSales")
-    numberSalesControl:SetText(ZO_LocalizeDecimalNumber(data.numberSales))
+    numberSalesControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.numberSales))
     numberSalesControl.normalColor = ZO_ColorDef:New(1, 1, 1)
 
     if (self.tooltip ~= ItemTooltip) then
@@ -310,7 +310,7 @@ self.graphControl.object:Clear()
             if (Settings.graphEnabled) then
                 self.graphControl.object:SetRange(GetTimeStamp() - self.days * self.SECONDS_IN_DAY, GetTimeStamp(), minPrice, maxPrice)
                 self.graphControl.object:SetXLabels(-self.days .. " " .. L["ATT_STR_DAYS"], -self.days / 2 .. " " .. L["ATT_STR_DAYS"], L["ATT_STR_NOW"])
-                self.graphControl.object:SetYLabels(ZO_LocalizeDecimalNumber(math.attRound(maxPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", "", ZO_LocalizeDecimalNumber(math.attRound(minPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+                self.graphControl.object:SetYLabels(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(maxPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", "", ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(minPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
             end
         end
 
@@ -344,11 +344,11 @@ end
                 if (itemType == ITEMTYPE_MASTER_WRIT) then
                     local vouchers = tonumber(GenerateMasterWritRewardText(link):match("%d+"))
 
-                    priceString = string.format(L["ATT_FMTSTR_TOOLTIP_PRICE_MASTER_WRIT"], ZO_LocalizeDecimalNumber(averagePrice * vouchers) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", ZO_LocalizeDecimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
-                    statsString = string.format(L["ATT_FMTSTR_TOOLTIP_STATS_MASTER_WRIT"], ZO_LocalizeDecimalNumber(#sales), ZO_LocalizeDecimalNumber(quantity))
+                    priceString = string.format(L["ATT_FMTSTR_TOOLTIP_PRICE_MASTER_WRIT"], ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice * vouchers) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+                    statsString = string.format(L["ATT_FMTSTR_TOOLTIP_STATS_MASTER_WRIT"], ArkadiusTradeTools:LocalizeDezimalNumber(#sales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity))
                 else
-                    priceString = string.format(L["ATT_FMTSTR_TOOLTIP_PRICE_ITEM"], ZO_LocalizeDecimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
-                    statsString = string.format(L["ATT_FMTSTR_TOOLTIP_STATS_ITEM"], ZO_LocalizeDecimalNumber(#sales), ZO_LocalizeDecimalNumber(quantity))
+                    priceString = string.format(L["ATT_FMTSTR_TOOLTIP_PRICE_ITEM"], ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+                    statsString = string.format(L["ATT_FMTSTR_TOOLTIP_STATS_ITEM"], ArkadiusTradeTools:LocalizeDezimalNumber(#sales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity))
                 end
             end
         else
@@ -358,7 +358,7 @@ end
 
     self.statsControl:SetText(statsString)
     self.priceControl:SetText(priceString)
-    --self.priceControl:SetText(ZO_LocalizeDecimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    --self.priceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
 
     local h = 320
     if (#masterList > 0) then
