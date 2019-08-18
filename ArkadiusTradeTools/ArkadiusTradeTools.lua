@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = "ArkadiusTradeTools"
 ArkadiusTradeTools.TITLE = "Arkadius Trade Tools"
-ArkadiusTradeTools.VERSION = "1.0.13"
+ArkadiusTradeTools.VERSION = "1.0.14"
 ArkadiusTradeTools.AUTHOR = "@Arkadius1"
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
@@ -474,14 +474,13 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
 
         self.currentPurchase = {}
         self.currentPurchase.guildName = guildName
-        self.currentPurchase.sellerName = sellerName:gsub("|c.-$", "")
+        self.currentPurchase.sellerName = sellerName
         self.currentPurchase.itemLink = GetTradingHouseSearchResultItemLink(arg1)
         self.currentPurchase.quantity = quantity
         self.currentPurchase.price = price
     elseif (eventCode == EVENT_TRADING_HOUSE_RESPONSE_RECEIVED) then
         if (arg1 == TRADING_HOUSE_RESULT_PURCHASE_PENDING) and (arg2 == TRADING_HOUSE_RESULT_SUCCESS) then
-            self.currentPurchase.timeStamp = GetTimeStamp()
-            self:FireCallbacks(EVENTS.ON_GUILDSTORE_ITEM_BOUGHT, self.currentPurchase.guildName, self.currentPurchase.sellerName, self.currentPurchase.itemLink, self.currentPurchase.quantity, self.currentPurchase.price, self.currentPurchase.timeStamp)
+            self:FireCallbacks(EVENTS.ON_GUILDSTORE_ITEM_BOUGHT, self.currentPurchase.guildName, self.currentPurchase.sellerName, self.currentPurchase.itemLink, self.currentPurchase.quantity, self.currentPurchase.price, GetTimeStamp())
         end
     elseif (eventCode == EVENT_PLAYER_COMBAT_STATE) then
         self.isInCombat = arg1
@@ -513,20 +512,22 @@ local function OnPlayerActivated(eventCode)
 	EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_CRAFTING_STATION_INTERACT, OnEvent)
 	EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_END_CRAFTING_STATION_INTERACT, OnEvent)
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_GUILD_HISTORY_RESPONSE_RECEIVED, OnEvent)
-    EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, OnEvent)
-    EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_PLAYER_COMBAT_STATE, OnEvent)
 
+    --- Workaround if AGS is active, as EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE won't work as intended ---
+    if (AwesomeGuildStore) then
+        AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.ITEM_PURCHASED,
+            function(itemData)
+                ArkadiusTradeTools:FireCallbacks(ArkadiusTradeTools.EVENTS.ON_GUILDSTORE_ITEM_BOUGHT, itemData.guildName, itemData.sellerName, itemData.itemLink, itemData.stackCount, itemData.purchasePrice, GetTimeStamp())
+            end)
+        else
+            EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, OnEvent)
+            EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
+        end
+
     ScanGuildHistoryEvents()
-
---   local function callback(gid, cat, index, id, done)
---     d(index .. " " .. id)
---   end
-
---	local LGH = LibStub("LibGuildHistory-2.0")
---    LGH:RequestHistoryNewerByGuildId("att", GetGuildId(1), GUILD_HISTORY_STORE, GetTimeStamp()-60*10, true, callback)
---d("XXX")
 end
+
 
 local function OnPlayerDeactivated(eventCode)
     ArkadiusTradeTools:Finalize()

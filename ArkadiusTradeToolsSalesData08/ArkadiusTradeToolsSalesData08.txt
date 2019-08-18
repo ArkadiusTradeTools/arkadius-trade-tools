@@ -2,7 +2,7 @@
 ## Author: Arkadius (@Arkadius1 EU)
 ## APIVersion: 100026
 ## Description: None
-## Version: 1.0.13
+## Version: 1.0.14
 ## SavedVariables: ArkadiusTradeToolsSalesData08
 ## DependsOn: ArkadiusTradeToolsSales
 
