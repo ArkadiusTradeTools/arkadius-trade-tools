@@ -7,8 +7,9 @@
             </OnEffectivelyHidden>
             <Controls>
                 <Label name="$(parent)Price" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="ZoFontGame" color="EECA2A">
+                    <Dimensions y="30" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="25"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
                 <Control name="$(parent)Graph" inherits="ArkadiusTradeToolsSalesGraph">
                     <Dimensions y="150" />
@@ -16,28 +17,31 @@
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Price" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10"/>
                 </Control>
                 <Label name="$(parent)Stats" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="ZoFontGame">
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)Graph" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Graph" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="25"/>
+                    <Dimensions y="30" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Graph" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Graph" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10"/>
                 </Label>
                 <Control name="$(parent)Days" inherits="ArkadiusTradeToolsSlider">
+                    <Dimensions y="40" />
                     <OnInitialized>
                         ArkadiusTradeToolsSlider:New(self)
                         self.slider:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_DAYS"])
                     </OnInitialized>
-                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="15" offsetY="0"/>
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-15" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Control>
+
                 <Control name="$(parent)ItemList">
                     <Dimensions y="47" />
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/>
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Days" relativePoint="TOPRIGHT" offsetX="0" offsetY="-5"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Stats" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10"/>
                     <Controls>
                         <Control name="$(parent)Headers">
-                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="15" offsetY="0"/>
-                            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-15" offsetY="18"/>
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="18"/>
                             <Controls>
                                 <Control name="$(parent)ItemLink" mouseEnabled="false" inherits="ZO_SortHeader">
-                                    <Dimensions x="150" />
+                                    <Dimensions x="192" />
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                                     <OnInitialized>
@@ -46,7 +50,7 @@
                                     </OnInitialized>
                                 </Control>
                                 <Control name="$(parent)AveragePrice" mouseEnabled="false" inherits="ZO_SortHeader">
-                                    <Dimensions x="100" />
+                                    <Dimensions x="92" />
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                                     <OnInitialized>
@@ -55,7 +59,7 @@
                                     </OnInitialized>
                                 </Control>
                                 <Control name="$(parent)NumberSales" mouseEnabled="false" inherits="ZO_SortHeader">
-                                    <Dimensions x="70" />
+                                    <Dimensions x="65" />
                                     <Anchor point="TOPLEFT" relativeTo="$(parent)AveragePrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)AveragePrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                                     <OnInitialized>
@@ -66,19 +70,27 @@
                             </Controls>
                         </Control>
                         <Line name="$(parent)Line1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="1">
-                            <Anchor point="LEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="1" />
-                            <Anchor point="RIGHT" relativeTo="$(parent)Headers" relativePoint="BOTTOMRIGHT" offsetX="15" offsetY="1" />
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="1" />
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)Headers" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="1" />
                         </Line>
                         <Control name="$(parent)List" inherits="ZO_ScrollList">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="15" offsetY="0"/>
                         </Control>
                         <Line name="$(parent)Line2" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="1">
-                            <Anchor point="LEFT" relativeTo="$(parent)List" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
-                            <Anchor point="RIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetX="-15" offsetY="0" />
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)List" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                         </Line>
                     </Controls>
                 </Control>
+
+                <Control name="$(parent)CraftingInfo" inherits="ArkadiusTradeToolsSalesCraftingInfo">
+                    <Dimensions y="150" />
+                    <!--<Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Days" relativePoint="TOPRIGHT" offsetX="0" offsetY="-5"/>!-->
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Days" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/>
+                </Control>
+
             </Controls>
         </Control>
 
@@ -86,7 +98,7 @@
             <Dimensions y="16"/>
             <Controls>
                 <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
-                   <Dimensions x="150" />
+                   <Dimensions x="192" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                    <OnMouseEnter>
@@ -103,12 +115,12 @@
                    </OnMouseUp>
                 </Label>
                 <Label name="$(parent)AveragePrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="/esoui/common/fonts/univers57.otf|16">
-                   <Dimensions x="100" />
+                   <Dimensions x="92" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
                 <Label name="$(parent)NumberSales" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="/esoui/common/fonts/univers57.otf|16">
-                   <Dimensions x="70" />
+                   <Dimensions x="65" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)AveragePrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)AveragePrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>

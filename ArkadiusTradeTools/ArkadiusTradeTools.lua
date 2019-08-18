@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = "ArkadiusTradeTools"
 ArkadiusTradeTools.TITLE = "Arkadius Trade Tools"
-ArkadiusTradeTools.VERSION = "1.0.15"
+ArkadiusTradeTools.VERSION = "1.1.0"
 ArkadiusTradeTools.AUTHOR = "@Arkadius1"
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
@@ -25,9 +25,6 @@ local Settings
 local SECONDS_IN_HOUR = 60 * 60
 local SECONDS_IN_DAY = SECONDS_IN_HOUR * 24
 local SECONDS_IN_WEEK = SECONDS_IN_DAY * 7
-
-local LocalizedDecimalDot = "."
-local LocalizedDecimalComma = ","
 
 --local LGH = LibStub("LibGuildHistory-2.0")
 local LGH = LibGuildHistory2
@@ -112,11 +109,6 @@ function ArkadiusTradeTools:Initialize()
 
     local serverName = GetWorldName()
     local displayName = GetDisplayName()
-
-    if (serverName == "EU Megaserver") then
-        LocalizedDecimalDot = ","
-        LocalizedDecimalComma = "."
-    end
 
     --- Temporary workaround for fixed tab positions ---
     if (self.Modules["Sales"]) then
@@ -371,31 +363,10 @@ end
 
 
 function ArkadiusTradeTools:LocalizeDezimalNumber(number)
-    local numStr = tostring(number)
-    local decSep = numStr:find("%.")
-    local pre = ""
-    local post = ""
-    local sep = ""
+    local left,num,right = string.match(number, '^([^%d]*%d)(%d*)(.-)$')
+    local numStr = left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 
-    if (decSep == nil) then
-        decSep = numStr:len() + 1
-    else
-        post = numStr:sub(decSep + 1, numStr:len())
-        sep = LocalizedDecimalDot
-    end
-
-    local c = 0
-    for i = decSep - 1, 1, -1 do
-        pre = numStr:sub(i, i) .. pre
-        c = c + 1
-
-        if ((c % 3 == 0) and (i > 1)) then
-            pre = LocalizedDecimalComma .. pre
-        end
-        
-    end
-
-    return pre .. sep .. post
+    return ZO_FastFormatDecimalNumber(numStr)
 end
 
 

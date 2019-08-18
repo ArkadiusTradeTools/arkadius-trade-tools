@@ -26,9 +26,12 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
         local sellPricePerUnitControl = rowControl:GetNamedChild("SellPricePerUnit")
         local sellPriceControl = rowControl:GetNamedChild("SellPrice")
         local timeRemainingControl = rowControl:GetNamedChild("TimeRemaining")
-        local itemLink = GetTradingHouseSearchResultItemLink(rowControl.dataEntry.data.slotIndex)
-        local price = rowControl.dataEntry.data.purchasePrice / rowControl.dataEntry.data.stackCount
+        --local itemLink = GetTradingHouseSearchResultItemLink(rowControl.dataEntry.data.slotIndex)
+        --local stackCount = rowControl.dataEntry.data.stackCount
+        local purchasePricePerUnit = rowControl.dataEntry.data.purchasePricePerUnit
         local averagePrice = rowControl.dataEntry.data.averagePrice or 0
+        local averagePricePerUnit = rowControl.dataEntry.data.averagePricePerUnit or 0
+        --local currencyType = rowControl.dataEntry.data.currencyType
 
         if (not profitMarginControl) then
             local h = nameControl:GetHeight()
@@ -74,27 +77,33 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
             averagePriceControl:SetFont("ZoFontGameShadow")
         end
 
-        local color = ZO_ColorDef:New(GetItemQualityColor(5))
-        local margin
-
         if (averagePrice == 0) then
-            margin = 0
+            local color = ZO_ColorDef:New(1.0, 1.0, 1.0)
+            profitMarginControl:SetText("----")
+            profitMarginControl:SetColor(color:UnpackRGBA())
+            averagePriceControl:SetText("- |t18:18:EsoUI/Art/currency/currency_gold.dds|t")
+            averagePriceControl:SetColor(color:UnpackRGBA())
+            averagePricePerUnitControl:SetText("- |t18:18:EsoUI/Art/currency/currency_gold.dds|t")
+            averagePricePerUnitControl:SetColor(color:UnpackRGBA())
         else
-            margin = math.attRound((100 / averagePrice * price - 100) * (-1))
+            local color = ZO_ColorDef:New(GetItemQualityColor(5))
+            local margin = math.attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
+
+            if (margin < -1.5) then color = ZO_ColorDef:New(1, 0, 0)
+            elseif (margin < 20) then color = ZO_ColorDef:New(0.6, 0.6, 0.6)
+            elseif (margin < 35) then color = ZO_ColorDef:New(GetItemQualityColor(2))
+            elseif (margin < 50) then color = ZO_ColorDef:New(GetItemQualityColor(3))
+            elseif (margin < 65) then color = ZO_ColorDef:New(GetItemQualityColor(4)) end
+    
+            profitMarginControl:SetText(margin .. "%")
+            profitMarginControl:SetColor(color:UnpackRGBA())
+            --ZO_CurrencyControl_SetSimpleCurrency(averagePriceControl, currencyType, math.attRound(averagePrice), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
+            averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice) .. " |t18:18:EsoUI/Art/currency/currency_gold.dds|t"))
+            averagePriceControl:SetColor(color:UnpackRGBA())
+            --ZO_CurrencyControl_SetSimpleCurrency(averagePricePerUnitControl, currencyType, math.attRound(averagePricePerUnit, 2), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
+            averagePricePerUnitControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePricePerUnit, 2) .. " |t18:18:EsoUI/Art/currency/currency_gold.dds|t"))
+            averagePricePerUnitControl:SetColor(color:UnpackRGBA())
         end
-
-        if (margin < -1.5) then color = ZO_ColorDef:New(1, 0, 0)
-        elseif (margin < 20) then color = ZO_ColorDef:New(0.6, 0.6, 0.6)
-        elseif (margin < 35) then color = ZO_ColorDef:New(GetItemQualityColor(2))
-        elseif (margin < 50) then color = ZO_ColorDef:New(GetItemQualityColor(3))
-        elseif (margin < 65) then color = ZO_ColorDef:New(GetItemQualityColor(4)) end
-
-        profitMarginControl:SetText(margin .. "%")
-        profitMarginControl:SetColor(color:UnpackRGBA())
-        averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice * rowControl.dataEntry.data.stackCount)) .. " |t18:18:EsoUI/Art/currency/currency_gold.dds|t")
-        averagePriceControl:SetColor(color:UnpackRGBA())
-        averagePricePerUnitControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice, 2)) .. " |t18:18:EsoUI/Art/currency/currency_gold.dds|t")
-        averagePricePerUnitControl:SetColor(color:UnpackRGBA())
     end
 
     --- Important to return false, so that the hooked function gets called ---
@@ -129,10 +138,21 @@ local function ZO_ScrollList_Commit_Hook(list)
 
             if (averagePrices[itemLink] == nil) then
                 local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
-                averagePrices[itemLink] = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+                local itemType = GetItemLinkItemType(itemLink)
+                averagePrices[itemLink] = {}
+
+                if (itemType == ITEMTYPE_MASTER_WRIT) then
+                    local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
+                    averagePrices[itemLink].total = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+                    averagePrices[itemLink].perUnit = averagePrices[itemLink].total / vouchers
+                else
+                    averagePrices[itemLink].perUnit = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+                    averagePrices[itemLink].total = averagePrices[itemLink].perUnit * scrollData[i].data.stackCount
+                end
             end
 
-            scrollData[i].data.averagePrice = averagePrices[itemLink]
+            scrollData[i].data.averagePrice = averagePrices[itemLink].total
+            scrollData[i].data.averagePricePerUnit = averagePrices[itemLink].perUnit
         end
     end
 
@@ -150,7 +170,8 @@ end
 
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     --- Disable tradinghouse extensions for AwesomeGuildStore users for now ---
-    if ((enable) and (self.profitMarginDaysLabel == nil) and (not AwesomeGuildStore)) then
+--    if ((enable) and (self.profitMarginDaysLabel == nil) and (not AwesomeGuildStore)) then
+    if ((enable) and (self.profitMarginDaysLabel == nil)) then
         ZO_PreHook("ZO_ScrollList_Commit", ZO_ScrollList_Commit_Hook)
         EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
 

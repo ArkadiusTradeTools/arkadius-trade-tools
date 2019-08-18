@@ -27,6 +27,7 @@ local localization =
 
     ATT_STR_NO_PRICE                        = "Pas de Prix",
     ATT_STR_AVERAGE_PRICE                   = "Prix moyen",
+    ATT_STR_TOTAL                           = "Total",
     ATT_STR_OTHER_QUALITIES                 = "Autres qualités",
 	ATT_STR_NOTHING_FOUND                   = "<Rien n'a été trouvé>",
     ATT_STR_STATS_TO_CHAT                   = "Link les informations dans le chat",

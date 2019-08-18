@@ -318,6 +318,7 @@ function ArkadiusTradeToolsSales:GetSettingsMenu()
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS"], getFunc = function() return self.TradingHouse:IsEnabled() end, setFunc = function(bool) self.TradingHouse:Enable(bool) end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS"], getFunc = function() return self.TooltipExtensions:IsEnabled() end, setFunc = function(bool) self.TooltipExtensions:Enable(bool) end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH"], getFunc = function() return self.TooltipExtensions:IsGraphEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableGraph(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING"], getFunc = function() return self.TooltipExtensions:IsCraftingEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableCrafting(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
 
     for guildName, _ in pairs(TemporaryVariables.guildNamesLowered) do
         table.insert(guildNames, guildName)
@@ -683,6 +684,36 @@ function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeS
     end
 
     return averagePrice
+end
+
+
+function ArkadiusTradeToolsSales:GetCrafingComponentPrices(itemLink, fromTimeStamp)
+    if (not self:IsItemLink(itemLink)) then
+        return {}
+    end
+
+    local itemLinkInfos = TemporaryVariables.itemLinkInfos
+    local itemLinkInfo = itemLinkInfos[itemLink]
+    local itemType
+    local components
+
+    if (itemLinkInfo) then
+        itemType = itemLinkInfo.itype
+    else
+        itemType = GetItemLinkItemType(itemLink)
+    end
+
+    if (itemType == ITEMTYPE_MASTER_WRIT) then
+        components = self:GetMasterWritComponents(itemLink)
+    else
+        return {}
+    end
+
+    for _, component in ipairs(components) do
+        component.price = self:GetAveragePricePerItem(component.itemLink, fromTimeStamp)
+    end
+
+    return components
 end
 
 function ArkadiusTradeToolsSales:DeleteSales()

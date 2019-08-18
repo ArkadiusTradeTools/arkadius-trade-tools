@@ -1,0 +1,166 @@
+<GuiXml>
+    <Controls>
+        <Control name="ArkadiusTradeToolsSalesCraftingInfoRow" virtual="true">
+            <Dimensions y="16" />
+            <Controls>
+                <Label name="$(parent)ItemQuantity" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                   <Dimensions x="16" />
+                   <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                   <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                </Label>
+
+                <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="true" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                   <Dimensions x="192" />
+                   <Anchor point="TOPLEFT" relativeTo="$(parent)ItemQuantity" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
+                   <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemQuantity" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
+                   <OnMouseEnter>
+                        InitializeTooltip(ItemTooltip, self:GetParent())
+                        ItemTooltip:SetLink(self:GetText())
+                   </OnMouseEnter>
+                   <OnMouseExit>
+                        ClearTooltip(ItemTooltip)
+                   </OnMouseExit>
+                   <OnMouseUp>
+                       if (upInside) then
+                           ZO_LinkHandler_OnLinkClicked(self:GetText(), button, self:GetParent())
+                       end
+                   </OnMouseUp>
+                </Label>
+
+                <Label name="$(parent)ItemPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                   <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
+                   <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Label>
+            </Controls>
+        </Control>
+
+        <Control name="ArkadiusTradeToolsSalesCraftingInfo" virtual="true">
+            <Dimensions y="320" />
+            <OnInitialized>
+                self.SetItemPrices = function(itemPrices)
+
+                    --- Pretty hacky way to disable mouse input for ItemTooltip ---
+                    if (self.tooltip == nil) then
+                        self.tooltip = self:GetParent():GetParent():GetParent():GetParent()
+
+                        if (self.tooltip == ItemTooltip) then
+                            for i = 1, 7 do
+                                local row = self:GetNamedChild("Row" .. i)
+                                row:GetNamedChild("ItemLink"):SetMouseEnabled(false)
+                            end
+                        end
+                    end
+
+                    local lastVisibleRow = 1
+                    local totalPrice = 0
+
+                    for i = 1, 7 do
+                        local row = self:GetNamedChild("Row" .. i)
+
+                        if (itemPrices[i] == nil) then
+                            row:SetHidden(true)
+                        else
+                            row:GetNamedChild("ItemQuantity"):SetText(itemPrices[i].quantity)
+                            row:GetNamedChild("ItemLink"):SetText(itemPrices[i].itemLink)
+                            row:GetNamedChild("ItemPrice"):SetText(ArkadiusTradeTools:LocalizeDezimalNumber(itemPrices[i].price * itemPrices[i].quantity) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+                            row:SetHidden(false)
+                            totalPrice = totalPrice + (itemPrices[i].price * itemPrices[i].quantity)
+                            lastVisibleRow = i
+                        end
+                    end
+
+                    local totalRow = self:GetNamedChild("Total")
+                    local row = self:GetNamedChild("Row" .. lastVisibleRow)
+
+                    totalRow:GetNamedChild("ItemPrice"):SetText(ArkadiusTradeTools:LocalizeDezimalNumber(totalPrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+                    totalRow:ClearAnchors()
+                    totalRow:SetAnchor(TOPLEFT, row, BOTTOMLEFT, 0, 0)
+                    totalRow:SetAnchor(TOPRIGHT, row, BOTTOMRIGHT, 0, 0)
+                    self:SetHeight((#itemPrices * 16) + 20 + 20 + 10)
+                end
+            </OnInitialized>
+            <Controls>
+                <Control name="$(parent)Header" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <OnInitialized>
+                        self:SetHeight(23)
+                        local itemQuantityControl = self:GetNamedChild("ItemQuantity")
+                        local itemLinkControl = self:GetNamedChild("ItemLink")
+                        local itemPriceControl = self:GetNamedChild("ItemPrice")
+                        local interfaceColor = {GetInterfaceColor(INTERFACE_COLOR_TYPE_TEXT_COLORS, INTERFACE_TEXT_COLOR_NORMAL)}
+
+                        itemQuantityControl:SetVerticalAlignment(TOP)
+                        itemQuantityControl:SetColor(unpack(interfaceColor))
+                        itemQuantityControl:SetText("#")
+                        itemLinkControl:SetVerticalAlignment(TOP)
+                        itemLinkControl:SetMouseEnabled(false)
+                        itemLinkControl:SetColor(unpack(interfaceColor))
+                        itemLinkControl:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_ITEM"])
+                        itemPriceControl:SetVerticalAlignment(TOP)
+                        itemPriceControl:SetColor(unpack(interfaceColor))
+                        itemPriceControl:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_TOTAL"])
+                    </OnInitialized>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Line name="$(parent)Line" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="1">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="-2" />
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-2" />
+                        </Line>
+                    </Controls>
+                </Control>
+                <Control name="$(parent)Row1" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Header" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Header" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Row2" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row1" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row1" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Row3" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row2" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row2" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Row4" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row3" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row3" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Row5" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row4" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row4" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Row6" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row5" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row5" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Row7" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row6" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row6" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                </Control>
+                <Control name="$(parent)Total" inherits="ArkadiusTradeToolsSalesCraftingInfoRow">
+                    <OnInitialized>
+                        self:SetHeight(26)
+                        local itemQuantityControl = self:GetNamedChild("ItemQuantity")
+                        local itemLinkControl = self:GetNamedChild("ItemLink")
+                        local itemPriceControl = self:GetNamedChild("ItemPrice")
+                        local interfaceColor = {GetInterfaceColor(INTERFACE_COLOR_TYPE_TEXT_COLORS, INTERFACE_TEXT_COLOR_NORMAL)}
+
+                        itemQuantityControl:SetVerticalAlignment(BOTTOM)
+                        itemLinkControl:SetVerticalAlignment(BOTTOM)
+                        itemLinkControl:SetColor(unpack(interfaceColor))
+                        itemLinkControl:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_TOTAL"])
+                        itemLinkControl:SetMouseEnabled(false)
+                        itemPriceControl:SetVerticalAlignment(BOTTOM)
+                    </OnInitialized>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Row7" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Row7" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                    <Controls>
+                        <Line name="$(parent)Line" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="1">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="5" />
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="5" />
+                        </Line>
+                    </Controls>
+                </Control>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

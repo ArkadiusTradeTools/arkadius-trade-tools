@@ -27,6 +27,7 @@ local localization =
 
     ATT_STR_NO_PRICE                        = "Нет цены",
     ATT_STR_AVERAGE_PRICE                   = "Средняя цена",
+    ATT_STR_TOTAL                           = "Cуммарный",
     ATT_STR_OTHER_QUALITIES                 = "В другом качестве",
 	ATT_STR_NOTHING_FOUND                   = "<Ничего не найдено>",
     ATT_STR_STATS_TO_CHAT                   = "Статистику в чат",

@@ -88,6 +88,7 @@ function ArkadiusTradeToolsSales.TooltipExtensions:Initialize(settings)
     if (Settings.enabled == nil) then Settings.enabled = true end
     Settings.days = Settings.days or 10
     if (Settings.graphEnabled == nil) then Settings.graphEnabled = true end
+    if (Settings.craftingEnabled == nil) then Settings.craftingEnabled = true end
 
     self:Enable(Settings.enabled)
 end
@@ -103,6 +104,7 @@ function ArkadiusTradeToolsSales.TooltipExtensions:Enable(enable)
         end
 
         self:EnableGraph(Settings.graphEnabled)
+        self:EnableCrafting(Settings.craftingEnabled)
         self:SetDays(Settings.days)
     end
 
@@ -138,8 +140,17 @@ function ArkadiusTradeToolsSales.TooltipExtensions:EnableGraph(enable)
     Settings.graphEnabled = enable
 end
 
+function ArkadiusTradeToolsSales.TooltipExtensions:EnableCrafting(enable)
+    --- Do more things? ---
+    Settings.craftingEnabled = enable
+end
+
 function ArkadiusTradeToolsSales.TooltipExtensions:IsGraphEnabled()
     return Settings.graphEnabled
+end
+
+function ArkadiusTradeToolsSales.TooltipExtensions:IsCraftingEnabled()
+    return Settings.craftingEnabled
 end
 
 function ArkadiusTradeToolsSales.TooltipExtensions:SetDays(days)
@@ -178,10 +189,13 @@ end
 function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
     local control = self.control
 
-    self.list = TooltipExtensionList:New(GetControl(control, "ItemList"), self.tooltip)
+    self.daysControl = GetControl(control, "Days")
+    self.listControl = GetControl(control, "ItemList")
+    self.list = TooltipExtensionList:New(self.listControl, self.tooltip)
     self.statsControl = GetControl(control, "Stats")
     self.graphControl = GetControl(control, "Graph")
     self.priceControl = GetControl(control, "Price")
+    self.craftingControl = GetControl(control, "CraftingInfo")
 
     local function UpdateTooltip(tooltip, itemLink)
         if ((Settings.enabled) and (ArkadiusTradeToolsSales:IsItemLink(itemLink))) then
@@ -256,8 +270,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:GetItemSalesInformation(itemLi
 end
 
 function ArkadiusTradeToolsSales.TooltipExtension:SetDays(days)
-    local daysControl = GetControl(self.control, "Days")
-    daysControl.slider:SetValue(days)
+    self.daysControl.slider:SetValue(days)
 
     self.days = days
     Settings.days = days
@@ -281,6 +294,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
     local itemSales = self:GetItemSalesInformation(itemLink, GetTimeStamp() - self.days * self.SECONDS_IN_DAY)
     local itemQuality = GetItemLinkQuality(itemLink)
     local itemType = GetItemLinkItemType(itemLink)
+    local bindType = GetItemLinkBindType(itemLink)
     local priceString = L["ATT_STR_NO_PRICE"]
     local statsString = L["ATT_FMTSTR_TOOLTIP_NO_SALES"]
     local averagePrice = 0
@@ -289,7 +303,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
     local masterList = {}
     local guildColors = {}
 
-self.graphControl.object:Clear()
+    self.graphControl.object:Clear()
 
     for link, sales in pairs(itemSales) do
         averagePrice = 0
@@ -305,6 +319,11 @@ self.graphControl.object:Clear()
 
                 if (price < minPrice) then minPrice = price end
                 if (price > maxPrice) then maxPrice = price end
+            end
+
+            --- There are no sales for this item ---
+            if (minPrice == math.huge) then
+                minPrice = 0
             end
 
             if (Settings.graphEnabled) then
@@ -355,16 +374,72 @@ end
     self.priceControl:SetText(priceString)
     --self.priceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
 
-    local h = 320
+    local height = 31
     if (#masterList > 0) then
-        h = 304 + #masterList * 16
+        height = height + #masterList * 16
     end
 
-    if (not Settings.graphEnabled) then
-        h = h - 150
-	end
-
-    self.control:SetHeight(h)
+    self.listControl:SetHeight(height)
     self.list:SetMasterList(masterList)
     self.list:RefreshData()
+
+    local craftingComponentPrices = {}
+
+    if (Settings.craftingEnabled) then
+        craftingComponentPrices = ArkadiusTradeToolsSales:GetCrafingComponentPrices(itemLink, GetTimeStamp() - self.days * self.SECONDS_IN_DAY)
+        self.craftingControl.SetItemPrices(craftingComponentPrices)
+    end
+
+
+    self.daysControl:SetHidden(false)
+    self.listControl:SetHidden(false)
+    self.statsControl:SetHidden(false)
+    self.graphControl:SetHidden(not Settings.graphEnabled)
+    self.priceControl:SetHidden(false)
+    self.craftingControl:SetHidden(true)
+
+    if ((bindType == BIND_TYPE_ON_PICKUP) or (bindType == BIND_TYPE_ON_PICKUP_BACKPACK)) then
+        self.daysControl:SetHidden(true)
+        self.listControl:SetHidden(true)
+        self.statsControl:SetHidden(true)
+        self.graphControl:SetHidden(true)
+        self.priceControl:SetHidden(true)
+    end
+
+    if ((itemType == ITEMTYPE_MASTER_WRIT) and (#craftingComponentPrices > 0)) then
+        self.daysControl:SetHidden(false)
+        self.craftingControl:SetHidden(not Settings.craftingEnabled)
+    end
+
+    if (#masterList == 0) then
+        self.listControl:SetHidden(true)
+    end
+
+    --- Rearrange tooltip elements based on their visibilities ---
+    local elements = {}
+    local anchorTo = self.control
+    local anchorTopLeft = TOPLEFT
+    local anchorTopRight = TOPRIGHT
+    height = 0
+
+    table.insert(elements, self.priceControl)
+    table.insert(elements, self.graphControl)
+    table.insert(elements, self.statsControl)
+    table.insert(elements, self.listControl)
+    table.insert(elements, self.craftingControl)
+    table.insert(elements, self.daysControl)
+
+    for i = 1, #elements do
+        if (elements[i]:IsHidden() == false) then
+            elements[i]:ClearAnchors()
+            elements[i]:SetAnchor(TOPLEFT, anchorTo, anchorTopLeft, 0, 10)
+            elements[i]:SetAnchor(TOPRIGHT, anchorTo, anchorTopRight, 0, 10)
+            anchorTo = elements[i]
+            anchorTopLeft = BOTTOMLEFT
+            anchorTopRight = BOTTOMRIGHT
+            height = height + elements[i]:GetHeight() + 10
+        end
+    end
+
+    self.control:SetHeight(height)
 end
