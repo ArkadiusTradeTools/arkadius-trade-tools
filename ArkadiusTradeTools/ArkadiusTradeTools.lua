@@ -34,8 +34,8 @@ function math.attRound(num, numDecimals)
     return tonumber(string.format("%." .. (numDecimals or 0) .. "f", num))
 end
 
-local function RequestGuildHistoryCategoryOlderLocal(guildIndex, category, numGuilds)
-    if (RequestGuildHistoryCategoryOlder(GetGuildId(guildIndex), category)) then
+local function RequestMoreGuildHistoryCategoryEventsLocal(guildIndex, category, numGuilds)
+    if (RequestMoreGuildHistoryCategoryEvents(GetGuildId(guildIndex), category)) then
         ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
 
         if (guildIndex < numGuilds) then
@@ -57,21 +57,9 @@ local function ScanGuildHistoryEvents()
         local numGuilds = GetNumGuilds()
         local guildId
 
-        --- Scan for new events ---
-        for i = 1, numGuilds do
-            guildId = GetGuildId(i)
-
-            if (RequestGuildHistoryCategoryNewest(guildId, GUILD_HISTORY_STORE)) then
-                ArkadiusTradeTools.guildStatus:SetBusy(i)
-		        zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
-
-                return
-            end
-        end
-
-        --- No new events, so scan for older events ---
+        --- New events are pushed instead of pulled, so scan for older events ---
         for i = ArkadiusTradeTools.nextScanGuild, numGuilds do
-            if (RequestGuildHistoryCategoryOlderLocal(i, GUILD_HISTORY_STORE, numGuilds)) then
+            if (RequestMoreGuildHistoryCategoryEventsLocal(i, GUILD_HISTORY_STORE, numGuilds)) then
                 zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
 
                 return
@@ -79,7 +67,7 @@ local function ScanGuildHistoryEvents()
         end
 
         for i = 1, ArkadiusTradeTools.nextScanGuild - 1 do
-            if (RequestGuildHistoryCategoryOlderLocal(i, GUILD_HISTORY_STORE, numGuilds)) then
+            if (RequestMoreGuildHistoryCategoryEventsLocal(i, GUILD_HISTORY_STORE, numGuilds)) then
                 zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
 
                 return
