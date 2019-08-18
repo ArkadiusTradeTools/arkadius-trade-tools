@@ -334,15 +334,10 @@ end
             averagePrice = 0
         end
 
---        if (itemType == ITEMTYPE_MASTER_WRIT) then
---            local vouchers = tonumber(GenerateMasterWritRewardText(link):match("%d+"))
---            averagePrice = averagePrice * vouchers
---        end
-
         if (link == itemLink) then
             if (quantity > 0) then
                 if (itemType == ITEMTYPE_MASTER_WRIT) then
-                    local vouchers = tonumber(GenerateMasterWritRewardText(link):match("%d+"))
+                    local vouchers = tonumber(GenerateMasterWritRewardText(link):match("[0-9]+"))
 
                     priceString = string.format(L["ATT_FMTSTR_TOOLTIP_PRICE_MASTER_WRIT"], ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice * vouchers) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
                     statsString = string.format(L["ATT_FMTSTR_TOOLTIP_STATS_MASTER_WRIT"], ArkadiusTradeTools:LocalizeDezimalNumber(#sales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity))

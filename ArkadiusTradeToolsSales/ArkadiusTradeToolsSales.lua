@@ -417,7 +417,7 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
         itemCP = GetItemLinkRequiredChampionPoints(itemLink)
         itemQuality = GetItemLinkQuality(itemLink)
 
-        if ((itemType == ITEMTYPE_ARMOR) or (itemType == ITEMTYPE_WEAPON) or (itemType == ITEMTYPE_ARMOR_TRAIT) or (itemType == ITEMTYPE_WEAPON_TRAIT)) then
+        if ((itemType == ITEMTYPE_ARMOR) or (itemType == ITEMTYPE_WEAPON) or (itemType == ITEMTYPE_ARMOR_TRAIT) or (itemType == ITEMTYPE_WEAPON_TRAIT) or (itemType == ITEMTYPE_JEWELRY_TRAIT)) then
             --- This function is EXTREMELY time consuming ---
             itemTrait = GetItemLinkTraitInfo(itemLink)
         else
@@ -425,7 +425,7 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
         end
 
         if (itemType == ITEMTYPE_MASTER_WRIT) then
-            itemVouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("%d+"))
+            itemVouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
         end
 
         itemLinkInfos[itemLink] = {name = itemName, itype = itemType, level = itemLevel, cp = itemCP, trait = itemTrait, quality = itemQuality, vouchers = itemVouchers}
@@ -678,7 +678,7 @@ function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeS
     end
 
     if (itemType == ITEMTYPE_MASTER_WRIT) then
-        local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("%d+"))
+        local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
         averagePrice = averagePrice * vouchers
     end
 
@@ -750,7 +750,7 @@ function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
 
     if (numSales > 0) then
         if (itemType == ITEMTYPE_MASTER_WRIT) then
-            local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("%d+"))
+            local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
             chatString = string.format(L["ATT_FMTSTR_STATS_MASTER_WRIT"], itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice * vouchers), ArkadiusTradeTools:LocalizeDezimalNumber(numSales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity), ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice), days)
         else
             if (quantity > numSales) then

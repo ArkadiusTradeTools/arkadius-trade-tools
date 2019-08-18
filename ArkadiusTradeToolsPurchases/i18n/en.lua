@@ -8,7 +8,7 @@ local localization =
     ATT_STR_PRICE                    = "Price",
     ATT_STR_TIME                     = "Time",
 
-    ATT_STR_PURCHASES = "Purchases",
+    ATT_STR_PURCHASES                = "Purchases",
 
     ATT_STR_TODAY                    = "Today",
     ATT_STR_YESTERDAY                = "Yesterday",

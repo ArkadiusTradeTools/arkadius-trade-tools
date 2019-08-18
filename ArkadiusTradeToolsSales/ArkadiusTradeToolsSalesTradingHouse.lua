@@ -20,8 +20,12 @@ end
 local function TradingHouseSearchResultsSetupRow(rowControl, ...)
     if (rowControl.dataEntry) then
         local profitMarginControl = rowControl:GetNamedChild("ProfitMargin")
+        local averagePricePerUnitControl = rowControl:GetNamedChild("AveragePricePerUnit")
         local averagePriceControl = rowControl:GetNamedChild("AveragePrice")
         local nameControl = rowControl:GetNamedChild("Name")
+        local sellPricePerUnitControl = rowControl:GetNamedChild("SellPricePerUnit")
+        local sellPriceControl = rowControl:GetNamedChild("SellPrice")
+        local timeRemainingControl = rowControl:GetNamedChild("TimeRemaining")
         local itemLink = GetTradingHouseSearchResultItemLink(rowControl.dataEntry.data.slotIndex)
         local price = rowControl.dataEntry.data.purchasePrice / rowControl.dataEntry.data.stackCount
         local averagePrice = rowControl.dataEntry.data.averagePrice or 0
@@ -29,20 +33,42 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
         if (not profitMarginControl) then
             local h = nameControl:GetHeight()
 
-            nameControl:SetWidth(100)        -- original 342
+            nameControl:SetWidth(220)               -- original 198
+            timeRemainingControl:SetWidth(50)       -- original 60
+            sellPricePerUnitControl:SetWidth(100)   -- original 120
+            sellPricePerUnitControl:SetHeight(20)   -- original 23.02
+            sellPriceControl:SetWidth(100)          -- original 130
+            sellPriceControl:SetHeight(20)          -- original 23.02
+
+            timeRemainingControl:ClearAnchors()
+            timeRemainingControl:SetAnchor(LEFT, nameControl, RIGHT, 20)
 
             profitMarginControl = CreateControlFromVirtual(rowControl:GetName() .. "ProfitMargin", rowControl, "ZO_KeyboardGuildRosterRowLabel")
             profitMarginControl:SetDimensions(42, h)
             profitMarginControl:ClearAnchors()
-            profitMarginControl:SetAnchor(LEFT, nameControl, RIGHT, 10)
+            profitMarginControl:SetAnchor(LEFT, timeRemainingControl, RIGHT, 10)
             profitMarginControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
             profitMarginControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
             profitMarginControl:SetFont("ZoFontGameShadow")
 
+            sellPricePerUnitControl:ClearAnchors()
+            sellPricePerUnitControl:SetAnchor(BOTTOMLEFT, profitMarginControl, RIGHT, 10)
+
+            sellPriceControl:ClearAnchors()
+            sellPriceControl:SetAnchor(LEFT, sellPricePerUnitControl, RIGHT, 0)
+
+            averagePricePerUnitControl = CreateControlFromVirtual(rowControl:GetName() .. "AveragePricePerUnit", rowControl, "ZO_KeyboardGuildRosterRowLabel")
+            averagePricePerUnitControl:SetDimensions(99, 20)
+            averagePricePerUnitControl:ClearAnchors()
+            averagePricePerUnitControl:SetAnchor(TOPLEFT, profitMarginControl, RIGHT, 10)
+            averagePricePerUnitControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
+            averagePricePerUnitControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
+            averagePricePerUnitControl:SetFont("ZoFontGameShadow")
+
             averagePriceControl = CreateControlFromVirtual(rowControl:GetName() .. "AveragePrice", rowControl, "ZO_KeyboardGuildRosterRowLabel")
-            averagePriceControl:SetDimensions(64, h)
+            averagePriceControl:SetDimensions(100, 20)
             averagePriceControl:ClearAnchors()
-            averagePriceControl:SetAnchor(LEFT, profitMarginControl, RIGHT, 10)
+            averagePriceControl:SetAnchor(LEFT, averagePricePerUnitControl, RIGHT, 0)
             averagePriceControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
             averagePriceControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
             averagePriceControl:SetFont("ZoFontGameShadow")
@@ -58,15 +84,17 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
         end
 
         if (margin < -1.5) then color = ZO_ColorDef:New(1, 0, 0)
-        elseif (margin < 20) then color = ZO_ColorDef:New(GetItemQualityColor(1))
+        elseif (margin < 20) then color = ZO_ColorDef:New(0.6, 0.6, 0.6)
         elseif (margin < 35) then color = ZO_ColorDef:New(GetItemQualityColor(2))
         elseif (margin < 50) then color = ZO_ColorDef:New(GetItemQualityColor(3))
         elseif (margin < 65) then color = ZO_ColorDef:New(GetItemQualityColor(4)) end
 
         profitMarginControl:SetText(margin .. "%")
         profitMarginControl:SetColor(color:UnpackRGBA())
-        averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice * rowControl.dataEntry.data.stackCount)))
+        averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice * rowControl.dataEntry.data.stackCount)) .. " |t18:18:EsoUI/Art/currency/currency_gold.dds|t")
         averagePriceControl:SetColor(color:UnpackRGBA())
+        averagePricePerUnitControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice, 2)) .. " |t18:18:EsoUI/Art/currency/currency_gold.dds|t")
+        averagePricePerUnitControl:SetColor(color:UnpackRGBA())
     end
 
     --- Important to return false, so that the hooked function gets called ---
@@ -99,7 +127,7 @@ local function ZO_ScrollList_Commit_Hook(list)
         for i = 1, #scrollData do
             itemLink = GetTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
 
-            if (not averagePrices[itemLink]) then
+            if (averagePrices[itemLink] == nil) then
                 local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
                 averagePrices[itemLink] = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
             end
@@ -121,7 +149,8 @@ function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
-    if ((enable) and (self.profitMarginDaysLabel == nil)) then
+    --- Disable tradinghouse extensions for AwesomeGuildStore users for now ---
+    if ((enable) and (self.profitMarginDaysLabel == nil) and (not AwesomeGuildStore)) then
         ZO_PreHook("ZO_ScrollList_Commit", ZO_ScrollList_Commit_Hook)
         EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
 

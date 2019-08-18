@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = "ArkadiusTradeTools"
 ArkadiusTradeTools.TITLE = "Arkadius Trade Tools"
-ArkadiusTradeTools.VERSION = "1.0.14"
+ArkadiusTradeTools.VERSION = "1.0.15"
 ArkadiusTradeTools.AUTHOR = "@Arkadius1"
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
@@ -28,6 +28,9 @@ local SECONDS_IN_WEEK = SECONDS_IN_DAY * 7
 
 local LocalizedDecimalDot = "."
 local LocalizedDecimalComma = ","
+
+--local LGH = LibStub("LibGuildHistory-2.0")
+local LGH = LibGuildHistory2
 ---------------------------------
 
 function math.attRound(num, numDecimals)
@@ -474,7 +477,7 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
 
         self.currentPurchase = {}
         self.currentPurchase.guildName = guildName
-        self.currentPurchase.sellerName = sellerName
+        self.currentPurchase.sellerName = sellerName:gsub("|c.-$", "")
         self.currentPurchase.itemLink = GetTradingHouseSearchResultItemLink(arg1)
         self.currentPurchase.quantity = quantity
         self.currentPurchase.price = price
@@ -526,6 +529,7 @@ local function OnPlayerActivated(eventCode)
         end
 
     ScanGuildHistoryEvents()
+    --LGH.RegisterForEvent("ATT", 0, 0, 0, function(guildId, category) d(guildId .. " " .. category .. " " .. GetNumGuildEvents(guildId, category)) end)
 end
 
 
