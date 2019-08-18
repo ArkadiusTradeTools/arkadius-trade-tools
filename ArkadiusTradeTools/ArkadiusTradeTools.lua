@@ -152,9 +152,9 @@ function ArkadiusTradeTools:Initialize()
     local guildStatusText = GetControl(self.guildStatus, "Text")
     guildStatusText:SetText(L["ATT_STR_GUILDSTATUS_TEXT"])
 
-    local buttonDonate = GetControl(statusBar, "Donate")
-    buttonDonate:SetText(L["ATT_STR_DONATE"])
-    buttonDonate.tooltip:SetContent(L["ATT_STR_DONATE_TOOLTIP"])
+    --local buttonDonate = GetControl(statusBar, "Donate")
+    --buttonDonate:SetText(L["ATT_STR_DONATE"])
+    --buttonDonate.tooltip:SetContent(L["ATT_STR_DONATE_TOOLTIP"])
 
     self.nextScanGuild = 1
 end
