@@ -974,6 +974,7 @@ local function onAddOnLoaded(eventCode, addonName)
     Settings.guilds = Settings.guilds or {}
     Settings.guildRoster = Settings.guildRoster or {}
     Settings.tooltips = Settings.tooltips or {}
+    Settings.tradingHouse = Settings.tradingHouse or {}
     Settings.filters = Settings.filters or {}
     Settings.filters.timeSelection = Settings.filters.timeSelection or 4
     if (Settings.filters.sellerName == nil) then Settings.filters.sellerName = true end
