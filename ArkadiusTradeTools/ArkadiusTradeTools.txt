@@ -1,0 +1,30 @@
+## Title: Arkadius' Trade Tools
+## Author: Arkadius (@Arkadius1 EU)
+## APIVersion: 100019
+## Description: None
+## Version: 1.0.0
+## SavedVariables: ArkadiusTradeToolsData
+
+libs\LibStub\LibStub.lua
+libs\LibAddonMenu-2.0\LibAddonMenu-2.0.lua
+libs\LibAddonMenu-2.0\controls\panel.lua
+libs\LibAddonMenu-2.0\controls\submenu.lua
+libs\LibAddonMenu-2.0\controls\button.lua
+libs\LibAddonMenu-2.0\controls\checkbox.lua
+libs\LibAddonMenu-2.0\controls\colorpicker.lua
+libs\LibAddonMenu-2.0\controls\custom.lua
+libs\LibAddonMenu-2.0\controls\description.lua
+libs\LibAddonMenu-2.0\controls\dropdown.lua
+libs\LibAddonMenu-2.0\controls\editbox.lua
+libs\LibAddonMenu-2.0\controls\header.lua
+libs\LibAddonMenu-2.0\controls\slider.lua
+libs\LibAddonMenu-2.0\controls\texture.lua
+libs\LibAddonMenu-2.0\controls\iconpicker.lua
+libs\LibAddonMenu-2.0\controls\divider.lua
+# libs\LibGuildHistory-2.0\LibGuildHistory-2.0.lua
+ArkadiusTradeTools.lua
+i18n/en.lua
+i18n/$(language).lua
+ArkadiusTradeToolsTemplates.lua
+ArkadiusTradeToolsTemplates.xml
+ArkadiusTradeTools.xml

@@ -1,0 +1,18 @@
+## Title: Arkadius' Trade Tools - Sales
+## Author: Arkadius (@Arkadius1 EU)
+## APIVersion: 100019
+## Description: None
+## Version: 1.0
+## SavedVariables: ArkadiusTradeToolsSalesData
+## DependsOn: ArkadiusTradeTools
+
+ArkadiusTradeToolsSales.lua
+ArkadiusTradeToolsSalesGuildRoster.lua
+ArkadiusTradeToolsSalesTradingHouse.lua
+i18n/en.lua
+i18n/$(language).lua
+ArkadiusTradeToolsSalesGraph.lua
+ArkadiusTradeToolsSalesTooltipExtensions.lua
+ArkadiusTradeToolsSalesGraph.xml
+ArkadiusTradeToolsSalesTooltipExtensions.xml
+ArkadiusTradeToolsSales.xml

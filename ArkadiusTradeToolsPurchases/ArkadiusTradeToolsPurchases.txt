@@ -1,0 +1,12 @@
+## Title: Arkadius' Trade Tools - Purchases
+## Author: Arkadius (@Arkadius1 EU)
+## APIVersion: 100019
+## Description: None
+## Version: 1.0.0
+## SavedVariables: ArkadiusTradeToolsPurchasesData
+## DependsOn: ArkadiusTradeTools
+
+ArkadiusTradeToolsPurchases.lua
+i18n/en.lua
+i18n/$(language).lua
+ArkadiusTradeToolsPurchases.xml

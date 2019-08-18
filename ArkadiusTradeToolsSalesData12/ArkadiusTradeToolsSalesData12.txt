@@ -1,0 +1,9 @@
+## Title: Arkadius' Trade Tools - Sales (Data12)
+## Author: Arkadius (@Arkadius1 EU)
+## APIVersion: 100019
+## Description: None
+## Version: 1.0.0
+## SavedVariables: ArkadiusTradeToolsSalesData12
+## DependsOn: ArkadiusTradeToolsSales
+
+ArkadiusTradeToolsSalesData12.lua

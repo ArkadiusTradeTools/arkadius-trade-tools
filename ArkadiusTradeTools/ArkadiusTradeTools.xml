@@ -1,0 +1,234 @@
+<GuiXml>
+    <Controls>
+        <Control name="ArkadiusTradeToolsGuildStatusTooltipLine" resizeToFitDescendents="true" virtual="true">
+            <Controls>
+                <Texture name="$(parent)Icon" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="0" offsetY="0" />
+                </Texture>
+                <Label name="$(parent)Text" text="test" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="ZoFontGame" resizeToFitDescendents="true">
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="5" offsetY="1" />
+                </Label>
+            </Controls>
+        </Control>
+
+        <Control name="ArkadiusTradeToolsGuildStatusTooltip" resizeToFitDescendents="true" virtual="true">
+            <Controls>
+                <Control name="$(parent)Line1" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+                </Control>
+                <Control name="$(parent)Line2" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Line1" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+                </Control>
+                <Control name="$(parent)Line3" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Line2" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+                </Control>
+            </Controls>
+        </Control>
+
+        <Control name="ArkadiusTradeToolsGuildStatus" mouseEnabled="true" resizeToFitDescendents="true" virtual="true">
+            <OnInitialized>
+                local textureNotDone = "/esoui/art/buttons/checkbox_unchecked.dds"
+                local textureBusy = "/esoui/art/buttons/checkbox_indeterminate.dds"
+                local textureDone = "/esoui/art/buttons/checkbox_checked.dds"
+
+                self.done = {}
+                self.busy = 0
+                self.icons = {}
+                self.icons[1] = GetControl(self, "Icon1")
+                self.icons[2] = GetControl(self, "Icon2")
+                self.icons[3] = GetControl(self, "Icon3")
+                self.icons[4] = GetControl(self, "Icon4")
+                self.icons[5] = GetControl(self, "Icon5")
+
+                self.SetDone = function(self, guildIndex)
+                    if (self.done[guildIndex]) then
+                        return
+                    end
+
+                    self.icons[guildIndex]:SetTexture(textureDone)
+                    self.done[guildIndex] = true
+                end
+
+                self.SetBusy = function(self, guildIndex)
+                    if (self.busy == guildIndex) then
+                        return
+                    end
+
+                    if (self.icons[self.busy]) then
+                        if (self.done[self.busy]) then
+                            self.icons[self.busy]:SetTexture(textureDone)
+                        else
+                            self.icons[self.busy]:SetTexture(textureNotDone)
+                        end
+                    end
+
+                    if (guildIndex ~= 0) then
+                        self.icons[guildIndex]:SetTexture(textureBusy)
+                    end
+
+                    self.busy = guildIndex
+                end
+
+                self.SetText = function(self, line, text)
+                    local l
+		            l = GetControl(self.tooltip, "Line" .. line)
+
+                    if (l) then
+                        local t = GetControl(l, "Text")
+                        t:SetText(text)
+                    end
+                end
+
+                self.SetIcon = function(self, line, icon)
+                    local l
+		            l = GetControl(self.tooltip, "Line" .. line)
+
+                    if (l) then
+                        local i = GetControl(l, "Icon")
+                        i:SetTexture(icon)
+                    end
+                end
+
+                self.tooltip = CreateControlFromVirtual(self:GetName() .. "Tooltip", InformationTooltip, "ArkadiusTradeToolsGuildStatusTooltip")
+                self.tooltip:SetHidden(true)
+
+                self:SetIcon(1, textureNotDone)
+                self:SetIcon(2, textureBusy)
+                self:SetIcon(3, textureDone)
+            </OnInitialized>
+            <OnMouseEnter>
+                InitializeTooltip(InformationTooltip, self, TOPRIGHT, 0, 5, BOTTOMRIGHT)
+                InformationTooltip:AddControl(self.tooltip, 0, false)
+                self.tooltip:SetAnchor(CENTER)
+                self.tooltip:SetHidden(false)
+            </OnMouseEnter>
+            <OnMouseExit>
+                ClearTooltip(InformationTooltip)
+            </OnMouseExit>
+            <Controls>
+                <Label name="$(parent)Text" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" resizeToFitDescendents="true">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="5" offsetY="0" />
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="5" offsetY="0" />
+                </Label>
+                <Texture name="$(parent)Icon1" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Text" relativePoint="RIGHT" offsetX="5" offsetY="0" />
+                </Texture>
+                <Texture name="$(parent)Icon2" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon1" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Texture>
+                <Texture name="$(parent)Icon3" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon2" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Texture>
+                <Texture name="$(parent)Icon4" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon3" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Texture>
+                <Texture name="$(parent)Icon5" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="LEFT" relativeTo="$(parent)Icon4" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Texture>
+            </Controls>
+        </Control>
+
+        <TopLevelControl name="ArkadiusTradeToolsWindow" movable="true" mouseEnabled="true" clampedToScreen="true" hidden="true" resizeHandleSize="8" tier="HIGH" inherits="ZO_RightPanelFootPrint">
+            <DimensionConstraints minX="400" minY="300" />
+            <Controls>
+                <Backdrop name="$(parent)Backdrop" inherits="ZO_DefaultBackdrop">
+                    <AnchorFill />
+                </Backdrop>
+
+                <Control name="$(parent)Header">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="80" />
+                    <Controls>
+                        <Label name="$(parent)Caption" text="Arkadius' Trade Tools" color="FFFFFF" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|18" resizeToFitDescendents="true">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="10" />
+                        </Label>
+                        <Button name="$(parent)Close">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)Header" relativePoint="TOPRIGHT" offsetX="-5" offsetY="10" />
+                            <Textures
+                                normal="EsoUI/Art/Buttons/decline_up.dds"
+                                pressed="EsoUI/Art/Buttons/decline_down.dds"
+                                mouseOver="EsoUI/Art/Buttons/decline_over.dds"
+                            />
+                            <OnClicked>
+                                self:GetParent():GetParent():SetHidden(true)
+                            </OnClicked>
+                        </Button>
+                        <Control name="$(parent)Background" inherits="ArkadiusTradeToolsBackground256X32">
+                        </Control>
+                        <Control name="$(parent)BackgroundInit">
+                            <OnInitialized>
+                                self:GetParent():GetNamedChild("Background"):SetTexture("ArkadiusTradeTools/img/title.dds")
+                            </OnInitialized>
+                        </Control>
+                    </Controls>
+                </Control>
+
+                <Line name="$(parent)LineLeft" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
+                    <Anchor point="LEFT" relativeTo="$(parent)Header" relativePoint="BOTTOMLEFT" offsetX="2" offsetY="0" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)Header" relativePoint="BOTTOMLEFT" offsetX="10" offsetY="0" />
+                </Line>
+
+                <Control name="$(parent)TabButtonGroup" inherits="ArkadiusTradeToolsTabButtonGroup">
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)LineLeft" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="1" />
+                </Control>
+
+                <Line name="$(parent)LineRight" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TabButtonGroup" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-1" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)Header" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="0" />
+                </Line>
+
+                <Line name="$(parent)LineBottom" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="2" offsetY="-32" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="-32" />
+                </Line>
+
+                <Control name="$(parent)StatusBar">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="-34" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-2" />
+                    <Controls>
+                        <Control name="$(parent)GuildStatus" inherits="ArkadiusTradeToolsGuildStatus">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+                            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="160" offsetY="0" />
+                        </Control>
+                        <Button name="$(parent)Donate" text="Spenden" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" inherits="ZO_DefaultButton">
+                            <Dimensions x="96" y="20" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-5" offsetY="0" />
+                            <OnClicked>
+                                local function PrepareMail()
+                                    MAIL_SEND.to:SetText("@Arkadius1")
+                                    MAIL_SEND.subject:SetText("Arkadius Trade Tools - Donation")
+                                    MAIL_SEND.body:SetText("")
+                                    MAIL_SEND:SetMoneyAttachmentMode()
+                                    MAIL_SEND:AttachMoney(0, 1000)
+                                end
+
+                                MAIL_SEND:ClearFields()
+
+                                if (MAIL_SEND:IsHidden()) then
+								    MAIN_MENU_KEYBOARD:ShowScene("mailSend")
+                                    SCENE_MANAGER:CallWhen("mailSend", SCENE_SHOWN, PrepareMail)
+                                else
+                                    PrepareMail()
+                                end
+                            </OnClicked>
+                            <OnMouseEnter>
+                                InitializeTooltip(InformationTooltip, self, TOPRIGHT, 0, 5, BOTTOMRIGHT)
+                                SetTooltipText(InformationTooltip, self.tooltip)
+                            </OnMouseEnter>
+                            <OnMouseExit>
+                                ClearTooltip(InformationTooltip)
+                            </OnMouseExit>
+                        </Button>
+                    </Controls>
+                </Control>
+            </Controls>
+        </TopLevelControl>
+    </Controls>
+</GuiXml>

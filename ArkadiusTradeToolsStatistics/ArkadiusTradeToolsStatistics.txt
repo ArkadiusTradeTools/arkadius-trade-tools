@@ -1,0 +1,12 @@
+## Title: Arkadius' Trade Tools - Statistics
+## Author: Arkadius (@Arkadius1 EU)
+## APIVersion: 100019
+## Description: None
+## Version: 1.0
+## SavedVariables: ArkadiusTradeToolsStatisticsData
+## DependsOn: ArkadiusTradeTools
+
+ArkadiusTradeToolsStatistics.lua
+i18n/en.lua
+i18n/$(language).lua
+ArkadiusTradeToolsStatistics.xml
