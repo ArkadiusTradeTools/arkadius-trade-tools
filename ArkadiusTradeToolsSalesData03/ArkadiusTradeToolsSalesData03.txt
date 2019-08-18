@@ -1,5 +1,5 @@
 ## Title: Arkadius' Trade Tools - Sales (Data03)
-## Author: Arkadius (@Arkadius1 EU)
+## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
 ## APIVersion: 100026
 ## Description: None
 ## Version: 1.1.1
