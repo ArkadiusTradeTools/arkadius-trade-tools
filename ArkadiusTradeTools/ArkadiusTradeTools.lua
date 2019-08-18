@@ -1,20 +1,21 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = "ArkadiusTradeTools"
 ArkadiusTradeTools.TITLE = "Arkadius Trade Tools"
-ArkadiusTradeTools.VERSION = "1.0.0"
+ArkadiusTradeTools.VERSION = "1.0.3"
 ArkadiusTradeTools.AUTHOR = "@Arkadius1"
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
 ArkadiusTradeTools.Modules = {}
 ArkadiusTradeTools.EVENTS =
 {
-    ON_MAILBOX_OPEN = 1,
-    ON_MAILBOX_CLOSE = 2,
-    ON_GUILDSTORE_OPEN = 3,
-    ON_GUILDSTORE_CLOSE = 4,
-    ON_CRAFTING_STATION_OPEN = 5,
+    ON_MAILBOX_OPEN           = 1,
+    ON_MAILBOX_CLOSE          = 2,
+    ON_GUILDSTORE_OPEN        = 3,
+    ON_GUILDSTORE_CLOSE       = 4,
+    ON_CRAFTING_STATION_OPEN  = 5,
     ON_CRAFTING_STATION_CLOSE = 6,
     ON_GUILDSTORE_ITEM_BOUGHT = 7,
+    ON_GUILDHISTORY_STORE     = 8,
 }
 
 local L = ArkadiusTradeTools.Localization
@@ -378,9 +379,23 @@ function ArkadiusTradeTools:CreateTab(options)
     return frame
 end
 
-function ArkadiusTradeTools:OnGuildHistoryEvent(eventCode, guildId, category)
-    for _, moduleObject in pairs(self.Modules) do
-        moduleObject:OnGuildHistoryEvent(eventCode, guildId, category)
+function ArkadiusTradeTools:CreateDefaultSettings(settings, defaultSettings)
+    if (settings == nil) then
+        return
+    end
+
+    for key, value in pairs(defaultSettings) do
+        if (type(value) == "table") then
+            if (type(settings[key]) ~= "table") then
+                settings[key] = {}
+            end
+
+            self:CreateDefaultSettings(settings[key], value)
+        else
+            if ((type(settings[key]) == "table") or (settings[key] == nil))then
+                settings[key] = value
+            end
+        end
     end
 end
 
@@ -416,7 +431,9 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
             self:FireCallbacks(EVENTS.ON_CRAFTING_STATION_CLOSE)
         end
     elseif (eventCode == EVENT_GUILD_HISTORY_RESPONSE_RECEIVED) then
-        self:OnGuildHistoryEvent(eventCode, arg1, arg2, ...)
+        if (arg2 == GUILD_HISTORY_STORE) then
+            self:FireCallbacks(EVENTS.ON_GUILDHISTORY_STORE, arg1)
+        end
     elseif (eventCode == EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE) then
         local _, _, _, quantity, sellerName, _, price = GetTradingHouseSearchResultItemInfo(arg1) -- TODO check this again, may return empty vaules
         local _, guildName = GetCurrentTradingHouseGuildDetails()

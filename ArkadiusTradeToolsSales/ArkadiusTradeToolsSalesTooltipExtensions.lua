@@ -83,29 +83,73 @@ end
 ----------------------------------------------------------------------------
 ArkadiusTradeToolsSales.TooltipExtensions = {}
 
-function ArkadiusTradeToolsSales.TooltipExtensions:Install(settings)
-    if (self.isInstalled) then
-        return
+function ArkadiusTradeToolsSales.TooltipExtensions:Initialize(settings)
+    Settings = settings
+    if (Settings.enabled == nil) then Settings.enabled = true end
+    Settings.days = Settings.days or 10
+    if (Settings.graphEnabled == nil) then Settings.graphEnabled = true end
+
+    self:Enable(Settings.enabled)
+end
+
+function ArkadiusTradeToolsSales.TooltipExtensions:Enable(enable)
+    if (enable) then
+        if (self.itemTooltip == nil) then
+            self.itemTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesItemTooltip", GuiRoot, "ArkadiusTradeToolsSalesItemTooltip")
+        end
+
+        if (self.popupTooltip == nil) then
+            self.popupTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesPopupTooltip", GuiRoot, "ArkadiusTradeToolsSalesPopupTooltip")
+        end
+
+        self:EnableGraph(Settings.graphEnabled)
+        self:SetDays(Settings.days)
     end
 
-    Settings = settings
-    Settings.days = Settings.days or 10
+    Settings.enabled = enable
+end
 
-    self.itemTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesItemTooltip", GuiRoot, "ArkadiusTradeToolsSalesItemTooltip")
-    self.popupTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesPopupTooltip", GuiRoot, "ArkadiusTradeToolsSalesPopupTooltip")
+function ArkadiusTradeToolsSales.TooltipExtensions:IsEnabled()
+    return Settings.enabled
+end
 
-    self.isInstalled = true
+function ArkadiusTradeToolsSales.TooltipExtensions:EnableGraph(enable)
+    local function SetGraphVisibility(tooltip, hidden)
+        if (tooltip == nil) then
+            return
+        end
 
-    self:SetDays(Settings.days)
+        local graph = GetControl(tooltip, "Graph")
+
+        if (hidden) then
+            tooltip:SetHeight(170)
+            graph:SetHeight(1)
+            graph:SetHidden(true)
+        else
+            tooltip:SetHeight(320)
+            graph:SetHeight(150)
+            graph:SetHidden(false)
+        end
+    end
+
+    SetGraphVisibility(self.itemTooltip, not enable)
+    SetGraphVisibility(self.popupTooltip, not enable)
+
+    Settings.graphEnabled = enable
+end
+
+function ArkadiusTradeToolsSales.TooltipExtensions:IsGraphEnabled()
+    return Settings.graphEnabled
 end
 
 function ArkadiusTradeToolsSales.TooltipExtensions:SetDays(days)
-    if (not self.isInstalled) then
-        return
+    if (self.itemTooltip) then
+        self.itemTooltip:SetDays(days)
     end
 
-    self.itemTooltip:SetDays(days)
-    self.popupTooltip:SetDays(days)
+    if (self.popupTooltip) then
+        self.popupTooltip:SetDays(days)
+    end
 end
 ----------------------------------------------------------------------------
 ArkadiusTradeToolsSales.TooltipExtension = ZO_Object:Subclass()
@@ -138,10 +182,9 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
     self.statsControl = GetControl(control, "Stats")
     self.graphControl = GetControl(control, "Graph")
     self.priceControl = GetControl(control, "Price")
-    self.itemListControl = GetControl(control, "ItemList")
 
     local function UpdateTooltip(tooltip, itemLink)
-        if ((itemLink) and (itemLink ~= "")) then
+        if ((Settings.enabled) and (ArkadiusTradeToolsSales:IsItemLink(itemLink))) then
             tooltip:AddControl(control, 0, false)
             control:SetAnchor(CENTER)
             control:SetHidden(false)
@@ -229,17 +272,11 @@ function ArkadiusTradeToolsSales.TooltipExtension:GetDays()
 end
 
 function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
-    if (not itemLink) then
+    if (not ArkadiusTradeToolsSales:IsItemLink(itemLink)) then
         return
     end
 
-local mss = GetGameTimeMilliseconds()
-    itemLink = itemLink:gsub("H1:", "H0:")
-
-    --- Clear crafted flag ---
-    local subString1 = itemLink:match("|H%d:item:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:")
-    local subString2 = itemLink:match(":%d+:%d+:%d+:%d+|h|h")
-    itemLink = subString1 .. "0" .. subString2
+    itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
 
     local itemSales = self:GetItemSalesInformation(itemLink, GetTimeStamp() - self.days * self.SECONDS_IN_DAY)
     local itemQuality = GetItemLinkQuality(itemLink)
@@ -270,9 +307,11 @@ self.graphControl.object:Clear()
                 if (price > maxPrice) then maxPrice = price end
             end
 
-            self.graphControl.object:SetRange(GetTimeStamp() - self.days * self.SECONDS_IN_DAY, GetTimeStamp(), minPrice, maxPrice)
-            self.graphControl.object:SetXLabels(-self.days .. " " .. L["ATT_STR_DAYS"], -self.days / 2 .. " " .. L["ATT_STR_DAYS"], L["ATT_STR_NOW"])
-            self.graphControl.object:SetYLabels(ZO_LocalizeDecimalNumber(math.attRound(maxPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", "", ZO_LocalizeDecimalNumber(math.attRound(minPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+            if (Settings.graphEnabled) then
+                self.graphControl.object:SetRange(GetTimeStamp() - self.days * self.SECONDS_IN_DAY, GetTimeStamp(), minPrice, maxPrice)
+                self.graphControl.object:SetXLabels(-self.days .. " " .. L["ATT_STR_DAYS"], -self.days / 2 .. " " .. L["ATT_STR_DAYS"], L["ATT_STR_NOW"])
+                self.graphControl.object:SetYLabels(ZO_LocalizeDecimalNumber(math.attRound(maxPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", "", ZO_LocalizeDecimalNumber(math.attRound(minPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+            end
         end
 
         for _, sale in pairs(sales) do
@@ -283,7 +322,9 @@ if (link == itemLink) then
         guildColors[sale.guildName] = ArkadiusTradeTools:GetGuildColor(sale.guildName)
     end
 
-    self.graphControl.object:AddDot(sale.timeStamp, sale.price / sale.quantity, guildColors[sale.guildName])
+    if (Settings.graphEnabled) then
+        self.graphControl.object:AddDot(sale.timeStamp, sale.price / sale.quantity, guildColors[sale.guildName])
+    end
 end
         end
 
@@ -319,14 +360,16 @@ end
     self.priceControl:SetText(priceString)
     --self.priceControl:SetText(ZO_LocalizeDecimalNumber(averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
 
-    if (#masterList == 0) then
-        self.itemListControl:SetHeight(47)
-	else
-        self.itemListControl:SetHeight(31 + #masterList * 16)
+    local h = 320
+    if (#masterList > 0) then
+        h = 304 + #masterList * 16
     end
 
+    if (not Settings.graphEnabled) then
+        h = h - 150
+	end
+
+    self.control:SetHeight(h)
     self.list:SetMasterList(masterList)
     self.list:RefreshData()
-local mse = GetGameTimeMilliseconds()
---d("UpdateStatistics: " .. mse - mss .. " ms")
 end

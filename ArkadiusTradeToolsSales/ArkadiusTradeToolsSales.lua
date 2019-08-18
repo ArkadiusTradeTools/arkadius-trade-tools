@@ -201,10 +201,12 @@ end
 
 ---------------------------------------------------------------------------------------
 function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
-    if (#SalesTables ~= NUM_SALES_TABLES) then
-        d("ArkadiusTradeToolsSales: Error! Number of data tables is not correct.")
+    for i = 1, NUM_SALES_TABLES do
+        if (SalesTables[i] == nil) then
+            d("ArkadiusTradeToolsSales: Error! Number of data tables is not correct. Maybe you forgot to activate them in the addons menu?")
 
-        return
+            return
+        end
     end
 
     self.serverName = serverName
@@ -245,9 +247,7 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
         self.TradingHouse:Install(Settings.tradingHouse)
     end
 
-    if (Settings.tooltips.enabled) then
-        self.TooltipExtensions:Install(Settings.tooltips)
-    end
+    self.TooltipExtensions:Initialize(Settings.tooltips)
 
     self.addMenuItems = {}
 
@@ -274,7 +274,8 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_YESTERDAY"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) - 1 end})
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_TWO_DAYS_AGO"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-2) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) - 1 end})
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_THIS_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR__LAST_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) - 1 end})
+    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_LAST_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) - 1 end})
+    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_PRIOR_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-2, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) - 1 end})
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_7_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-7) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_10_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-10) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_14_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-14) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
@@ -289,6 +290,7 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     ---------------------------------------------
 
     self.list:RefreshData()
+    ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDHISTORY_STORE, function(...) self:OnGuildHistoryEventStore(...) end)
 end
 
 function ArkadiusTradeToolsSales:Finalize()
@@ -303,7 +305,8 @@ function ArkadiusTradeToolsSales:GetSettingsMenu()
     table.insert(settingsMenu, {type = "header", name = L["ATT_STR_SALES"]})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_GUILD_ROSTER_EXTENSIONS"], getFunc = function() return Settings.guildRoster.enabled end, setFunc = function(bool) Settings.guildRoster.enabled = bool if (bool) then self.GuildRoster:Install(Settings.guildRoster) end end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS"], getFunc = function() return Settings.tradingHouse.enabled end, setFunc = function(bool) Settings.tradingHouse.enabled = bool if (bool) then self.TradingHouse:Install(Settings.tradingHouse) end end})
-    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS"], getFunc = function() return Settings.tooltips.enabled end, setFunc = function(bool) Settings.tooltips.enabled = bool if (bool) then self.TooltipExtensions:Install(Settings.tooltips) end end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS"], getFunc = function() return self.TooltipExtensions:IsEnabled() end, setFunc = function(bool) self.TooltipExtensions:Enable(bool) end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH"], getFunc = function() return self.TooltipExtensions:IsGraphEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableGraph(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
 
     for guildName, _ in pairs(TemporaryVariables.guildNamesLowered) do
         table.insert(guildNames, guildName)
@@ -368,16 +371,6 @@ function ArkadiusTradeToolsSales:SaveSettings()
 end
 
 function ArkadiusTradeToolsSales:LoadSales()
-    ------------ Deprecated ------------
-    --- conversion from older format ---
-	for t = 1, #SalesTables do
-        if (SalesTables[t].sales) then
-            SalesTables[t][self.serverName].sales = SalesTables[t].sales
-			SalesTables[t].sales = nil
-        end
-    end
-    ------------------------------------
-
     for t = 1, #SalesTables do
         for eventId, sale in pairs(SalesTables[t][self.serverName].sales) do
             self:UpdateTemporaryVariables(sale)
@@ -488,35 +481,34 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
         if (dataTable.sales[eventIdNum] == nil) then
             -- Add event to data table --
             dataTable.sales[eventIdNum] = {}
-            local sale = dataTable.sales[eventIdNum]
-            sale.timeStamp = eventTimeStamp
-            sale.guildName = guildName
-            sale.sellerName = seller
-            sale.buyerName = buyer
-            sale.quantity = quantity
-            sale.itemLink = itemLink
-            sale.price = price
-            sale.taxes = tax
+            dataTable.sales[eventIdNum].timeStamp = eventTimeStamp
+            dataTable.sales[eventIdNum].guildName = guildName
+            dataTable.sales[eventIdNum].sellerName = seller
+            dataTable.sales[eventIdNum].buyerName = buyer
+            dataTable.sales[eventIdNum].quantity = quantity
+            dataTable.sales[eventIdNum].itemLink = itemLink
+            dataTable.sales[eventIdNum].price = price
+            dataTable.sales[eventIdNum].taxes = tax
 
             if (GetGuildMemberIndexFromDisplayName(guildId, buyer)) then
-                sale.internal = 1
+                dataTable.sales[eventIdNum].internal = 1
             else
-                sale.internal = 0
+                dataTable.sales[eventIdNum].internal = 0
             end
 
             --- Update temporary lists ---
-            self:UpdateTemporaryVariables(sale)
+            self:UpdateTemporaryVariables(dataTable.sales[eventIdNum])
 
             --- Update guild roster ---
-            self.GuildRoster:Update(sale.guildName, sale.sellerName)
-            self.GuildRoster:Update(sale.guildName, sale.buyerName)
+            self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].sellerName)
+            self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].buyerName)
 
             --- Add event to lists master list ---
-            self.list:UpdateMasterList(sale)
+            self.list:UpdateMasterList(dataTable.sales[eventIdNum])
 
             -- Announce sale
-            if (sale.sellerName == self.displayName) then
-                local saleString = string.format(L["ATT_FMTSTR_ANNOUNCE_SALE"], sale.quantity, sale.itemLink, ZO_LocalizeDecimalNumber(sale.price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", sale.guildName)
+            if (dataTable.sales[eventIdNum].sellerName == self.displayName) then
+                local saleString = string.format(L["ATT_FMTSTR_ANNOUNCE_SALE"], dataTable.sales[eventIdNum].quantity, dataTable.sales[eventIdNum].itemLink, ZO_LocalizeDecimalNumber(dataTable.sales[eventIdNum].price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", dataTable.sales[eventIdNum].guildName)
                 ArkadiusTradeTools:ShowNotification(saleString)
             end
 
@@ -539,7 +531,7 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 end
 
 function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp, allQualities)
-    if (itemLink == nil) then
+    if (not self:IsItemLink(itemLink)) then
         return {}
     end
 
@@ -651,7 +643,7 @@ function ArkadiusTradeToolsSales:GetPurchasesAndSalesVolumes(guildName, displayN
 end
 
 function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeStamp)
-    if ((itemLink == nil) or (itemLink == "")) then
+    if (not self:IsItemLink(itemLink)) then
         return 0
     end
 
@@ -690,8 +682,8 @@ function ArkadiusTradeToolsSales:DeleteSales()
     end
 
     --- Delete old sales ---
-    for t = 1, NUM_SALES_TABLES do
-	    for serverName, data in pairs(SalesTables[t]) do
+    for _, salesTable in pairs(SalesTables) do
+	    for serverName, data in pairs(salesTable) do
             local sales = data.sales
 
 	        for id, sale in pairs(sales) do
@@ -706,14 +698,19 @@ function ArkadiusTradeToolsSales:DeleteSales()
 end
 
 function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
-    itemLink = itemLink:gsub("H1:", "H0:")
+    if (not self:IsItemLink(itemLink)) then
+        return
+    end
+
+    itemLink = self:NormalizeItemLink(itemLink)
     local L = L
 
     if ((language) and (L[language])) then
         L = L[language]
     end
 
-    local days = ArkadiusTradeToolsSalesPopupTooltip:GetDays()
+--    local days = ArkadiusTradeToolsSalesPopupTooltip:GetDays()
+    local days = Settings.tooltips.days
     local fromTimeStamp = GetTimeStamp() - days * 60 * 60 * 24
     local itemSales = self:GetItemSalesInformation(itemLink, fromTimeStamp)
     local numSales = 0
@@ -835,19 +832,37 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
     return result
 end
 
-function ArkadiusTradeToolsSales:OnGuildHistoryEvent(eventCode, guildId, category)
-    if (category ~= GUILD_HISTORY_STORE) then
-        return
+function ArkadiusTradeToolsSales:IsItemLink(itemLink)
+    if (type(itemLink) == "string") then
+        return (itemLink:match("|H%d:item:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+|h.*|h") ~= nil)
     end
 
+    return false
+end
+
+function ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
+    if (not self:IsItemLink(itemLink)) then
+        return nil
+    end
+
+    itemLink = itemLink:gsub("H1:", "H0:")
+
+    --- Clear crafted flag and extra text---
+    local subString1 = itemLink:match("|H%d:item:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:")
+    local subString2 = itemLink:match(":%d+:%d+:%d+:%d+|h.*|h")
+    subString2 = subString2:gsub("|h.*|h", "|h|h")
+    return subString1 .. "0" .. subString2
+end
+
+function ArkadiusTradeToolsSales:OnGuildHistoryEventStore(guildId)
     self.nextGuildHistoryScanIndex = self.nextGuildHistoryScanIndex or {}
     self.nextGuildHistoryScanIndex[guildId] = self.nextGuildHistoryScanIndex[guildId] or 1
 
-    local numGuildEvents = GetNumGuildEvents(guildId, category)
+    local numGuildEvents = GetNumGuildEvents(guildId, GUILD_HISTORY_STORE)
     local listNeedsRefresh = false
 
     for i = self.nextGuildHistoryScanIndex[guildId], numGuildEvents do
-        if (self:AddEvent(guildId, category, i) == true) then
+        if (self:AddEvent(guildId, GUILD_HISTORY_STORE, i) == true) then
             listNeedsRefresh = true
         end
     end
@@ -860,7 +875,7 @@ function ArkadiusTradeToolsSales:OnGuildHistoryEvent(eventCode, guildId, categor
         end
     end
 
-    self.nextGuildHistoryScanIndex[guildId] = GetNumGuildEvents(guildId, category) + 1
+    self.nextGuildHistoryScanIndex[guildId] = GetNumGuildEvents(guildId, GUILD_HISTORY_STORE) + 1
 end
 
 function ArkadiusTradeToolsSales.OnResize(frame, width, height)
@@ -874,7 +889,7 @@ end
 
 --- Prehooked API functions ---
 function ArkadiusTradeToolsSales:OnLinkClicked(itemLink, mouseButton)
-    if ((itemLink ~= "") and (mouseButton == MOUSE_BUTTON_INDEX_RIGHT)) then
+    if ((self:IsItemLink(itemLink)) and (mouseButton == MOUSE_BUTTON_INDEX_RIGHT)) then
         self.addMenuItems[L["ATT_STR_STATS_TO_CHAT"]] = function() self:StatsToChat(itemLink) end
 
         if (GetCVar("language.2") ~= "en") then
@@ -909,7 +924,7 @@ function ArkadiusTradeToolsSales:ShowContextMenu(inventorySlot)
         end
     end
 
-    if (itemLink) then 
+    if (self:IsItemLink(itemLink)) then 
         self.addMenuItems[L["ATT_STR_STATS_TO_CHAT"]] = function() self:StatsToChat(itemLink) end
         self.addMenuItems[L["ATT_STR_OPEN_POPUP_TOOLTIP"]] = function() ZO_LinkHandler_OnLinkClicked(itemLink, MOUSE_BUTTON_INDEX_LEFT) end
 
@@ -969,7 +984,7 @@ local function onAddOnLoaded(eventCode, addonName)
     Settings.guilds = Settings.guilds or {}
     Settings.guildRoster = Settings.guildRoster or {enabled = true, timeSelectionIndex = 1}
     Settings.tradingHouse = Settings.tradingHouse or {enabled = true, calcDays = 10}
-    Settings.tooltips = Settings.tooltips or {enabled = true}
+    Settings.tooltips = Settings.tooltips or {}
     Settings.filters = Settings.filters or {}
     Settings.filters.timeSelection = Settings.filters.timeSelection or 4
     if (Settings.filters.sellerName == nil) then Settings.filters.sellerName = true end

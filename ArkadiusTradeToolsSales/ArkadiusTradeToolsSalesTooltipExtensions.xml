@@ -11,17 +11,26 @@
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="25"/>
                 </Label>
                 <Control name="$(parent)Graph" inherits="ArkadiusTradeToolsSalesGraph">
+                    <Dimensions y="150" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Price" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10"/>
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Price" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="160"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Price" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="10"/>
                 </Control>
                 <Label name="$(parent)Stats" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="ZoFontGame">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Graph" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Graph" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="25"/>
                 </Label>
+                <Control name="$(parent)Days" inherits="ArkadiusTradeToolsSlider">
+                    <OnInitialized>
+                        ArkadiusTradeToolsSlider:New(self)
+                        self.slider:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_DAYS"])
+                    </OnInitialized>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="15" offsetY="0"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-15" offsetY="0"/>
+                </Control>
                 <Control name="$(parent)ItemList">
                     <Dimensions y="47" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/>
-                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Stats" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="15"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Days" relativePoint="TOPRIGHT" offsetX="0" offsetY="-5"/>
                     <Controls>
                         <Control name="$(parent)Headers">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="15" offsetY="0"/>
@@ -58,7 +67,7 @@
                         </Control>
                         <Line name="$(parent)Line1" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="1">
                             <Anchor point="LEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="1" />
-                            <Anchor point="RIGHT" relativeTo="$(parent)Headers" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="1" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)Headers" relativePoint="BOTTOMRIGHT" offsetX="15" offsetY="1" />
                         </Line>
                         <Control name="$(parent)List" inherits="ZO_ScrollList">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
@@ -66,17 +75,9 @@
                         </Control>
                         <Line name="$(parent)Line2" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="1">
                             <Anchor point="LEFT" relativeTo="$(parent)List" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
-                            <Anchor point="RIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetX="-30" offsetY="0" />
+                            <Anchor point="RIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetX="-15" offsetY="0" />
                         </Line>
                     </Controls>
-                </Control>
-                <Control name="$(parent)Days" inherits="ArkadiusTradeToolsSlider">
-                    <OnInitialized>
-                        ArkadiusTradeToolsSlider:New(self)
-                        self.slider:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_DAYS"])
-                    </OnInitialized>
-                    <Anchor point="TOPLEFT" relativeTo="$(parent)ItemList" relativePoint="BOTTOMLEFT" offsetX="15" offsetY="10"/>
-                    <Anchor point="TOPRIGHT" relativeTo="$(parent)ItemList" relativePoint="BOTTOMRIGHT" offsetX="-15" offsetY="10"/>
                 </Control>
             </Controls>
         </Control>

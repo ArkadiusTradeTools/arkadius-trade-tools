@@ -17,7 +17,8 @@ local localization =
     ATT_STR_YESTERDAY                       = "Yesterday",
     ATT_STR_TWO_DAYS_AGO                    = "Two days ago",
     ATT_STR_THIS_WEEK                       = "This week",
-    ATT_STR__LAST_WEEK                      = "Last week",
+    ATT_STR_LAST_WEEK                       = "Last week",
+    ATT_STR_PRIOR_WEEK                      = "Prior week",
     ATT_STR_7_DAYS                          = "7 days",
     ATT_STR_10_DAYS                         = "10 days",
     ATT_STR_14_DAYS                         = "14 days",
@@ -44,6 +45,7 @@ local localization =
     ATT_STR_ENABLE_GUILD_ROSTER_EXTENSIONS  = "Enable guild roster extensions",
     ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS = "Enable guild store extensions",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS       = "Enable tooltip extensions",
+    ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH = "Show graph",
     ATT_STR_KEEP_SALES_FOR_DAYS             = "Keep sales for x days",
 
     ATT_STR_BASE_PROFIT_MARGIN_CALC_ON      = "Profit margin based on",

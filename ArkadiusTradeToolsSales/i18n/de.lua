@@ -17,7 +17,8 @@ local localization =
     ATT_STR_YESTERDAY                       = "Gestern",
     ATT_STR_TWO_DAYS_AGO                    = "Vorgestern",
     ATT_STR_THIS_WEEK                       = "Diese Woche",
-    ATT_STR__LAST_WEEK                      = "Letzte Woche",
+    ATT_STR_LAST_WEEK                       = "Letzte Woche",
+    ATT_STR_PRIOR_WEEK                      = "Vorletzte Woche",
     ATT_STR_7_DAYS                          = "7 Tage",
     ATT_STR_10_DAYS                         = "10 Tage",
     ATT_STR_14_DAYS                         = "14 Tage",
@@ -44,11 +45,12 @@ local localization =
     ATT_STR_ENABLE_GUILD_ROSTER_EXTENSIONS  = "Erweitertes Guildenroster aktivieren",
     ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS = "Erweiterten Gildenladen aktivieren",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS       = "Erweiterte Tooltips aktivieren",
+    ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH = "Zeige Graphen",
     ATT_STR_KEEP_SALES_FOR_DAYS             = "Behalte Verkäufe für x Tage",
 
     ATT_STR_BASE_PROFIT_MARGIN_CALC_ON      = "Gewinnspanne auf Basis von",
 
-    ATT_STR_FILTER_TEXT_TOOLTIP             = "Textsuche nach User-, Gilden- oder Gegenstandsnamen, Gegenstandseigenschaft (z.B. präzise) oder Gegenstandsquaität (z. B. legendär)",
+    ATT_STR_FILTER_TEXT_TOOLTIP             = "Textsuche nach User-, Gilden- oder Gegenstandsnamen, Gegenstandseigenschaft (z.B. präzise) oder Gegenstandsqualität (z. B. legendär)",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP        = "Schalte zwischen Suche nach exaktem String oder Teilstring um. Groß- und Kleinschreibung wird in beiden Fällen ignoriert.",
     ATT_STR_FILTER_COLUMN_TOOLTIP           = "Schließe diese Spalte in die/von der Textsuche ein/aus",
 }

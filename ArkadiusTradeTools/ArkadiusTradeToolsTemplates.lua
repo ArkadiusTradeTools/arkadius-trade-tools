@@ -29,9 +29,6 @@ function ArkadiusTradeToolsModule:GetSettingsMenu()
     return nil
 end
 
---- meant to be averridden ---
-function ArkadiusTradeToolsModule:OnGuildHistoryEvent(eventCode, guildId, category)
-end
 -------------------------------------------------------------------------------
 ------------------------- ArkadiusTradeToolsObjectPool ------------------------
 -------------------------------------------------------------------------------
