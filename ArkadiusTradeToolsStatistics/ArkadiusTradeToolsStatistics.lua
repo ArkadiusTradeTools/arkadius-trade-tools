@@ -54,7 +54,7 @@ function ArkadiusTradeToolsStatisticsList:SetupFilters()
     local useSubStrings = ArkadiusTradeToolsStatistics.frame.filterBar.SubStrings:IsPressed()
 
     local CompareStringsFuncs = {}
-    CompareStringsFuncs[true] = function(string1, string2) return (string.find(string1:lower(), string2) ~= nil) end
+    CompareStringsFuncs[true] = function(string1, string2) string2 = string2:gsub("-", "--") return (string.find(string1:lower(), string2) ~= nil) end
     CompareStringsFuncs[false] = function(string1, string2) return (string1:lower() == string2) end
 
     self.Filter:SetKeywords(ArkadiusTradeToolsStatistics.frame.filterBar.Text:GetStrings())

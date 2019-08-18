@@ -55,4 +55,13 @@ local localization =
     ATT_STR_FILTER_COLUMN_TOOLTIP           = "Exclude/include this column from/to the text search",
 }
 
+localization["en"] =
+{
+    ATT_STR_STATS_TO_CHAT                   = localization["ATT_STR_STATS_TO_CHAT"],
+    ATT_FMTSTR_STATS_ITEM                   = localization["ATT_FMTSTR_STATS_ITEM"],
+    ATT_FMTSTR_STATS_NO_QUANTITY            = localization["ATT_FMTSTR_STATS_NO_QUANTITY"],
+    ATT_FMTSTR_STATS_MASTER_WRIT            = localization["ATT_FMTSTR_STATS_MASTER_WRIT"],
+    ATT_FMTSTR_STATS_NO_SALES               = localization["ATT_FMTSTR_STATS_NO_SALES"],
+}
+
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Sales.Localization)

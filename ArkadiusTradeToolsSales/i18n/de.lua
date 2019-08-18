@@ -55,13 +55,4 @@ local localization =
     ATT_STR_FILTER_COLUMN_TOOLTIP           = "Schließe diese Spalte in die/von der Textsuche ein/aus",
 }
 
-ArkadiusTradeTools.Modules.Sales.Localization["en"] =
-{
-    ATT_STR_STATS_TO_CHAT                   = ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_STATS_TO_CHAT"],
-    ATT_FMTSTR_STATS_ITEM                   = ArkadiusTradeTools.Modules.Sales.Localization["ATT_FMTSTR_STATS_ITEM"],
-    ATT_FMTSTR_STATS_NO_QUANTITY            = ArkadiusTradeTools.Modules.Sales.Localization["ATT_FMTSTR_STATS_NO_QUANTITY"],
-    ATT_FMTSTR_STATS_MASTER_WRIT            = ArkadiusTradeTools.Modules.Sales.Localization["ATT_FMTSTR_STATS_MASTER_WRIT"],
-    ATT_FMTSTR_STATS_NO_SALES               = ArkadiusTradeTools.Modules.Sales.Localization["ATT_FMTSTR_STATS_NO_SALES"],
-}
-
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Sales.Localization)
