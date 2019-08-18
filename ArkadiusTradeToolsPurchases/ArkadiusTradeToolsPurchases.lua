@@ -20,8 +20,9 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
     self.SORT_KEYS = {["sellerName"] = {tiebreaker = "timeStamp"},
                       ["buyerName"]  = {tiebreaker = "timeStamp"},
                       ["guildName"]  = {tiebreaker = "timeStamp"},
---                      ["itemName"]   = {tiebreaker = "timeStamp"},
-                      ["price"]      = {tiebreaker = "timeStamp"},
+--                    ["itemName"]   = {tiebreaker = "timeStamp"},
+--					  ["eaprice"]    = {tiebreaker = "timeStamp"},
+                      ["price"]      = {tiebreaker = "timeStamp"},					
                       ["timeStamp"]  = {}}
 
     ZO_ScrollList_AddDataType(self.list, 1, "ArkadiusTradeToolsPurchasesRow", 32,
@@ -43,12 +44,15 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
         Settings.filters[switch:GetParent().key] = pressed
     end
 
+	--- +/- toggle ---
+	
     self.buyerNameSwitch = Settings.filters.buyerName
     self.sellerNameSwitch = Settings.filters.sellerName
     self.guildNameSwitch = Settings.filters.guildName
     self.itemNameSwitch = Settings.filters.itemName
     self.timeStampSwitch = Settings.filters.timeStamp
-    self.priceSwitch = Settings.filters.price
+	self.eapriceSwitch = Settings.filters.eaprice
+	self.priceSwitch = Settings.filters.price
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
     self.sortHeaderGroup:HeaderForKey("buyerName").switch:SetPressed(self.buyerNameSwitch)
@@ -65,8 +69,10 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
     self.sortHeaderGroup:HeaderForKey("itemName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch:SetPressed(self.timeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch.OnToggle = OnHeaderToggle
-    --self.sortHeaderGroup:HeaderForKey("price").switch:SetPressed(self.priceSwitch)
-    --self.sortHeaderGroup:HeaderForKey("price").switch.OnToggle = OnHeaderToggle
+	--self.sortHeaderGroup:HeaderForKey("eaprice").switch:SetPressed(self.eapriceSwitch)
+    --self.sortHeaderGroup:HeaderForKey("eaprice").switch.OnToggle = OnHeaderToggle
+	--self.sortHeaderGroup:HeaderForKey("price").switch:SetPressed(self.priceSwitch)
+    --self.sortHeaderGroup:HeaderForKey("price").switch.OnToggle = OnHeaderToggle	
     self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
     self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
     self.currentSortKey = "timeStamp"
@@ -126,6 +132,7 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
     local sellerName = GetControl(rowControl, "SellerName")
     local guildName = GetControl(rowControl, "GuildName")
     local itemLink = GetControl(rowControl, "ItemLink")
+	local eaprice = GetControl(rowControl, "eaPrice")
     local price = GetControl(rowControl, "Price")
     local timeStamp = GetControl(rowControl, "TimeStamp")
     local icon = GetItemLinkInfo(data.itemLink)
@@ -149,7 +156,18 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
     itemLink:SetWidth(itemLink.header:GetWidth() - 10)
     itemLink:SetHidden(itemLink.header:IsHidden())
     itemLink:SetIcon(icon)
+	
+		if (data.quantity == 1) then
+        data.eaprice=data.price
+    else
+        data.eaprice=math.attRound(data.price/data.quantity, 2)
+		
+    end
 
+	eaprice:SetText(ZO_LocalizeDecimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+    eaprice:SetWidth(eaprice.header:GetWidth() - 10)
+    eaprice:SetHidden(eaprice.header:IsHidden())
+	
     price:SetText(ZO_LocalizeDecimalNumber(data.price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     price:SetWidth(price.header:GetWidth() - 10)
     price:SetHidden(price.header:IsHidden())
@@ -162,7 +180,8 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
 
     timeStamp:SetWidth(timeStamp.header:GetWidth() - 10)
     timeStamp:SetHidden(timeStamp.header:IsHidden())
-
+	
+	
     if (data.quantity == 1) then
         itemLink:SetQuantity("")
     else
@@ -188,6 +207,7 @@ function ArkadiusTradeToolsPurchases:Initialize()
     self.frame.headers.sellerName = self.frame.headers:GetNamedChild("SellerName")
     self.frame.headers.guildName = self.frame.headers:GetNamedChild("GuildName")
     self.frame.headers.itemLink = self.frame.headers:GetNamedChild("ItemLink")
+	self.frame.headers.eaprice = self.frame.headers:GetNamedChild("eaPrice")
     self.frame.headers.price = self.frame.headers:GetNamedChild("Price")
     self.frame.headers.timeStamp = self.frame.headers:GetNamedChild("TimeStamp")
     self.frame.OnResize = self.OnResize

@@ -22,7 +22,6 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
         local profitMarginControl = rowControl:GetNamedChild("ProfitMargin")
         local averagePriceControl = rowControl:GetNamedChild("AveragePrice")
         local nameControl = rowControl:GetNamedChild("Name")
-        local sellerNameControl = rowControl:GetNamedChild("SellerName")
         local itemLink = GetTradingHouseSearchResultItemLink(rowControl.dataEntry.data.slotIndex)
         local price = rowControl.dataEntry.data.purchasePrice / rowControl.dataEntry.data.stackCount
         local averagePrice = rowControl.dataEntry.data.averagePrice or 0
@@ -30,8 +29,7 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
         if (not profitMarginControl) then
             local h = nameControl:GetHeight()
 
-            nameControl:SetWidth(280)        -- original 342
-            sellerNameControl:SetWidth(248)  -- original 290
+            nameControl:SetWidth(100)        -- original 342
 
             profitMarginControl = CreateControlFromVirtual(rowControl:GetName() .. "ProfitMargin", rowControl, "ZO_KeyboardGuildRosterRowLabel")
             profitMarginControl:SetDimensions(42, h)
@@ -44,14 +42,10 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
             averagePriceControl = CreateControlFromVirtual(rowControl:GetName() .. "AveragePrice", rowControl, "ZO_KeyboardGuildRosterRowLabel")
             averagePriceControl:SetDimensions(64, h)
             averagePriceControl:ClearAnchors()
-            averagePriceControl:SetAnchor(LEFT, sellerNameControl, RIGHT, 10)
+            averagePriceControl:SetAnchor(LEFT, profitMarginControl, RIGHT, 10)
             averagePriceControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
             averagePriceControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
             averagePriceControl:SetFont("ZoFontGameShadow")
-
-            local timeRemainingControl = rowControl:GetNamedChild("TimeRemaining")
-            timeRemainingControl:ClearAnchors()
-            timeRemainingControl:SetAnchor(LEFT, profitMarginControl, BOTTOMRIGHT, 10)
         end
 
         local color = ZO_ColorDef:New(GetItemQualityColor(5))
@@ -79,23 +73,25 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
     return false
 end
 
-local function OnEvent(eventCode, ...)
-    if (eventCode == EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED) then
-        local _, numItemsOnPage = ...
+local function OnEvent(eventCode, responseType, result)
+--    if (eventCode == EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED) then
+    if (eventCode == EVENT_TRADING_HOUSE_RESPONSE_RECEIVED) and
+       (responseType == TRADING_HOUSE_RESULT_SEARCH_PENDING) and
+       (result == TRADING_HOUSE_RESULT_SUCCESS) then
 
-        if (numItemsOnPage == 0) then
-            return
-        end
-
-        local dataType = TRADING_HOUSE.m_searchResultsList.dataTypes[1]
+        local dataType = TRADING_HOUSE.searchResultsList.dataTypes[1]
         ZO_PreHook(dataType, "setupCallback", TradingHouseSearchResultsSetupRow)
 
-        EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED)
+        --EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED)
+        EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED)
+
+        -- Small hack to refreh the list
+        ZO_ScrollList_Commit(ZO_TradingHouseBrowseItemsRightPaneSearchResults)
     end
 end
 
 local function ZO_ScrollList_Commit_Hook(list)
-    if (list == ZO_TradingHouseItemPaneSearchResults) then
+    if (list == ZO_TradingHouseBrowseItemsRightPaneSearchResults) then
         local scrollData = ZO_ScrollList_GetDataList(list)
         local averagePrices = {}
         local itemLink
@@ -127,25 +123,21 @@ end
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     if ((enable) and (self.profitMarginDaysLabel == nil)) then
         ZO_PreHook("ZO_ScrollList_Commit", ZO_ScrollList_Commit_Hook)
-        EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, OnEvent)
+        EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
 
-        ZO_TradingHouseItemPaneSearchSortByTimeRemainingName:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
-        ZO_TradingHouseItemPaneSearchSortByTimeRemaining:ClearAnchors()
-        ZO_TradingHouseItemPaneSearchSortByTimeRemaining:SetAnchor(RIGHT, ZO_TradingHouseItemPaneSearchSortByPrice, LEFT, -20)
 
         --- Create Slider ---
-        local controlName = ZO_TradingHouseLeftPaneBrowseItems:GetName()
-        self.profitMarginDaysLabel = CreateControl(controlName .. "MarginDaysLabel", ZO_TradingHouseLeftPaneBrowseItems, CT_LABEL)
-        self.profitMarginDaysLabel:SetAnchor(TOPLEFT, ZO_TradingHouseLeftPaneBrowseItems, BOTTOMLEFT, 0, 0)
-        self.profitMarginDaysLabel:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseLeftPaneBrowseItems, BOTTOMRIGHT, 0, 20)
+        local controlName = ZO_TradingHouseBrowseItemsLeftPane:GetName()
+        self.profitMarginDaysLabel = CreateControl(controlName .. "MarginDaysLabel", ZO_TradingHouseBrowseItemsLeftPane, CT_LABEL)
+        self.profitMarginDaysLabel:SetAnchor(TOPLEFT, ZO_TradingHouseBrowseItemsLeftPane, BOTTOMLEFT, 0, 0)
+        self.profitMarginDaysLabel:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseBrowseItemsLeftPane, BOTTOMRIGHT, 0, 20)
         self.profitMarginDaysLabel:SetFont("esoui/common/fonts/univers67.otf|18||soft-shadow-thick")
         self.profitMarginDaysLabel:SetText(L["ATT_STR_BASE_PROFIT_MARGIN_CALC_ON"])
 
-        self.profitMarginDaysSelection = CreateControlFromVirtual(controlName .. "MarginDaysSelection", ZO_TradingHouseLeftPaneBrowseItems, "ArkadiusTradeToolsSlider")
+        self.profitMarginDaysSelection = CreateControlFromVirtual(controlName .. "MarginDaysSelection", ZO_TradingHouseBrowseItemsLeftPane, "ArkadiusTradeToolsSlider")
         self.profitMarginDaysSelection:SetAnchor(TOPLEFT, self.profitMarginDaysLabel, BOTTOMLEFT, 0, 5)
         self.profitMarginDaysSelection:SetAnchor(BOTTOMRIGHT, self.profitMarginDaysLabel, BOTTOMRIGHT, 0, 45)
-        self.profitMarginDaysSelection.OnValueChanged = function(_, value) ZO_ScrollList_Commit(ZO_TradingHouseItemPaneSearchResults) Settings.calcDays = self:GetCalcDays() end
-        ---------------------
+        self.profitMarginDaysSelection.OnValueChanged = function(_, value) ZO_ScrollList_Commit(ZO_TradingHouseBrowseItemsRightPaneSearchResults) Settings.calcDays = self:GetCalcDays() end
 
         --- Hook into search result functions ---
         TRADING_HOUSE_OnPurchaseSuccess = TRADING_HOUSE.OnPurchaseSuccess

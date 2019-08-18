@@ -1,8 +1,8 @@
 ## Title: Arkadius' Trade Tools - Statistics
 ## Author: Arkadius (@Arkadius1 EU)
-## APIVersion: 100024
+## APIVersion: 100026
 ## Description: None
-## Version: 1.0.10
+## Version: 1.0.11
 ## SavedVariables: ArkadiusTradeToolsStatisticsData
 ## DependsOn: ArkadiusTradeTools
 

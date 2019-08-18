@@ -45,7 +45,7 @@
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)SellerName" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
                                 ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Purchases.Localization.ATT_STR_GUILD, "guildName", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
-                                self.relativeWidth = 0.15
+                                self.relativeWidth = 0.125
                             </OnInitialized>
                             <Controls>
                                 <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
@@ -62,7 +62,7 @@
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
                                 ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Purchases.Localization.ATT_STR_ITEM, "itemName", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
-                                self.relativeWidth = 0.25
+                                self.relativeWidth = 0.2
                             </OnInitialized>
                             <Controls>
                                 <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
@@ -92,12 +92,22 @@
                                 </Button>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)Price" inherits="ArkadiusTradeToolsSortHeader">
+						
+						<Control name="$(parent)eaPrice" inherits="ArkadiusTradeToolsSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)TimeStamp" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeStamp" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Purchases.Localization.ATT_STR_EAPRICE, "eaprice", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                                self.relativeWidth = 0.1
+                            </OnInitialized>
+                        </Control>
+						
+                        <Control name="$(parent)Price" inherits="ArkadiusTradeToolsSortHeader">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)eaPrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)eaPrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                            <OnInitialized>
                                 ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Purchases.Localization.ATT_STR_PRICE, "price", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
-                                self.relativeWidth = 0.15
+                                self.relativeWidth = 0.1
                             </OnInitialized>
                             <!--<Controls>
                                 <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
@@ -213,10 +223,15 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)Price" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+				<Label name="$(parent)eaPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
                     <Dimensions x="85" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TimeStamp" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeStamp" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
+                </Label>
+                <Label name="$(parent)Price" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                    <Dimensions x="85" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)eaPrice" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)eaPrice" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
             </Controls>
         </Control>
