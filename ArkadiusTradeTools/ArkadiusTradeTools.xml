@@ -72,7 +72,7 @@
 
                 self.SetText = function(self, line, text)
                     local l
-		            l = GetControl(self.tooltip, "Line" .. line)
+		            l = GetControl(self.tooltip.content, "Line" .. line)
 
                     if (l) then
                         local t = GetControl(l, "Text")
@@ -82,7 +82,7 @@
 
                 self.SetIcon = function(self, line, icon)
                     local l
-		            l = GetControl(self.tooltip, "Line" .. line)
+		            l = GetControl(self.tooltip.content, "Line" .. line)
 
                     if (l) then
                         local i = GetControl(l, "Icon")
@@ -90,22 +90,15 @@
                     end
                 end
 
-                self.tooltip = CreateControlFromVirtual(self:GetName() .. "Tooltip", InformationTooltip, "ArkadiusTradeToolsGuildStatusTooltip")
-                self.tooltip:SetHidden(true)
+                local tooltipContent = CreateControlFromVirtual(self:GetName() .. "Tooltip", InformationTooltip, "ArkadiusTradeToolsGuildStatusTooltip")
+                tooltipContent:SetHidden(true)
+
+                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, tooltipContent, TOPRIGHT, 0, 0, BOTTOMRIGHT)
 
                 self:SetIcon(1, textureNotDone)
                 self:SetIcon(2, textureBusy)
                 self:SetIcon(3, textureDone)
             </OnInitialized>
-            <OnMouseEnter>
-                InitializeTooltip(InformationTooltip, self, TOPRIGHT, 0, 5, BOTTOMRIGHT)
-                InformationTooltip:AddControl(self.tooltip, 0, false)
-                self.tooltip:SetAnchor(CENTER)
-                self.tooltip:SetHidden(false)
-            </OnMouseEnter>
-            <OnMouseExit>
-                ClearTooltip(InformationTooltip)
-            </OnMouseExit>
             <Controls>
                 <Label name="$(parent)Text" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" resizeToFitDescendents="true">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="5" offsetY="0" />
@@ -156,9 +149,20 @@
                                 pressed="EsoUI/Art/Buttons/decline_down.dds"
                                 mouseOver="EsoUI/Art/Buttons/decline_over.dds"
                             />
+                            <OnInitialized>
+                                 ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
+                            </OnInitialized>
                             <OnClicked>
                                 self:GetParent():GetParent():SetHidden(true)
                             </OnClicked>
+                        </Button>
+                        <Button name="$(parent)DrawTier" inherits="ArkadiusTradeToolsToggleButton">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="RIGHT" relativeTo="$(parent)Close" relativePoint="LEFT" offsetX="0" offsetY="-1" />
+                            <Textures
+                                normal="/esoui/art/worldmap/mapnav_uparrow_up.dds"
+                                pressed="/esoui/art/worldmap/mapnav_downarrow_up.dds"
+                            />
                         </Button>
                         <Control name="$(parent)Background" inherits="ArkadiusTradeToolsBackground256X32">
                         </Control>
@@ -170,19 +174,10 @@
                     </Controls>
                 </Control>
 
-                <Line name="$(parent)LineLeft" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
-                    <Anchor point="LEFT" relativeTo="$(parent)Header" relativePoint="BOTTOMLEFT" offsetX="2" offsetY="0" />
-                    <Anchor point="RIGHT" relativeTo="$(parent)Header" relativePoint="BOTTOMLEFT" offsetX="10" offsetY="0" />
-                </Line>
-
-                <Control name="$(parent)TabButtonGroup" inherits="ArkadiusTradeToolsTabButtonGroup">
-                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)LineLeft" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="1" />
+                <Control name="$(parent)TabWindow" inherits="ArkadiusTradeToolsTabWindow">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Header" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="-36" />
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                 </Control>
-
-                <Line name="$(parent)LineRight" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
-                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TabButtonGroup" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-1" />
-                    <Anchor point="RIGHT" relativeTo="$(parent)Header" relativePoint="BOTTOMRIGHT" offsetX="-4" offsetY="0" />
-                </Line>
 
                 <Line name="$(parent)LineBottom" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="2" offsetY="-32" />
@@ -200,6 +195,9 @@
                         <Button name="$(parent)Donate" text="Spenden" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" inherits="ZO_DefaultButton">
                             <Dimensions x="96" y="20" />
                             <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-5" offsetY="0" />
+                            <OnInitialized>
+                                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
+                            </OnInitialized>
                             <OnClicked>
                                 local function PrepareMail()
                                     MAIL_SEND.to:SetText("@Arkadius1")
@@ -218,13 +216,6 @@
                                     PrepareMail()
                                 end
                             </OnClicked>
-                            <OnMouseEnter>
-                                InitializeTooltip(InformationTooltip, self, TOPRIGHT, 0, 5, BOTTOMRIGHT)
-                                SetTooltipText(InformationTooltip, self.tooltip)
-                            </OnMouseEnter>
-                            <OnMouseExit>
-                                ClearTooltip(InformationTooltip)
-                            </OnMouseExit>
                         </Button>
                     </Controls>
                 </Control>

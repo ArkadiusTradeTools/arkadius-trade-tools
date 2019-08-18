@@ -3,7 +3,7 @@
         <Control name="ArkadiusTradeToolsTabButton" mouseEnabled="true" resizeToFitDescendents="true" virtual="true">
             <ResizeToFitPadding width="35" />
             <OnInitialized>
-                ArkadiusTradeToolsTabButton_OnInitialize(self)
+                ArkadiusTradeTools.Templates.TabButton:Initialize(self)
             </OnInitialized>
             <OnMouseEnter>
                 self:OnMouseEnter()
@@ -11,9 +11,6 @@
             <OnMouseExit>
                 self:OnMouseExit()
             </OnMouseExit>
-            <OnMouseUp>
-                self:OnMouseUp(button, upInside)
-            </OnMouseUp>
             <Controls>
                 <Texture name="$(parent)Left" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/img/tab_top_inactive.dds">
                     <DimensionConstraints minX="12" maxX="12" />
@@ -46,16 +43,7 @@
             </Controls>
         </Control>
 
-        <Control name="ArkadiusTradeToolsTabButtonGroup" resizeToFitDescendents="true" virtual="true">
-            <DimensionConstraints minY="32" maxY="32" />
-            <OnInitialized>
-                ArkadiusTradeToolsTabButtonGroup_OnInitialize(self)
-            </OnInitialized>
-        </Control>
-
         <Control name="ArkadiusTradeToolsTabFrame" hidden="true" virtual="true">
-            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="80"/>
-            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-10" offsetY="-36"/>
             <OnUpdate>
                 local w, h = self:GetDimensions()
 			    if ((self.currentWidth ~= w) or (self.currentHeight ~= h)) then
@@ -69,8 +57,29 @@
             </OnUpdate>
         </Control>
 
+        <Control name="ArkadiusTradeToolsTabWindow" hidden="false" virtual="true">
+            <OnInitialized>
+                ArkadiusTradeTools.Templates.TabWindow:Initialize(self)
+            </OnInitialized>
+            <Controls>
+                <Control name="$(parent)ButtonGroup" resizeToFitDescendents="true">
+                    <DimensionConstraints minY="32" maxY="32"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="2" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="2" offsetY="32"/>
+                </Control>
+
+                <Line name="$(parent)LineRight" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
+                    <Anchor point="LEFT" relativeTo="$(parent)ButtonGroup" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-1" />
+                    <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-4" offsetY="31" />
+                </Line>
+            </Controls>
+		</Control>
+
         <EditBox name="ArkadiusTradeToolsEditBox" inherits="ZO_DefaultEdit" virtual="true">
             <Dimensions x="100" y="26"/>
+            <OnInitialized>
+                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
+            </OnInitialized>
             <OnEnter>
                if ((self.OnChanged) and (type(self.OnChanged) == "function")) then
                    self.OnChanged(self:GetText())
@@ -88,16 +97,8 @@
         <Button name="ArkadiusTradeToolsToggleButton" virtual="true">
             <OnInitialized>
                 ArkadiusTradeToolsToggleButton:New(self)
+                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
             </OnInitialized>
-            <OnMouseEnter>
-                if (self.tooltipText) then
-                    InitializeTooltip(InformationTooltip, self, TOPRIGHT, 0, 5, BOTTOMRIGHT)
-                    SetTooltipText(InformationTooltip, self.tooltipText)
-                end
-            </OnMouseEnter>
-            <OnMouseExit>
-                ClearTooltip(InformationTooltip)
-            </OnMouseExit>
         </Button>
 
         <Control name="ArkadiusTradeToolsBackground256X32" virtual="true">
@@ -296,15 +297,6 @@
                 <EditBox name="$(parent)Text" inherits="ArkadiusTradeToolsEditBox">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Icon" relativePoint="TOPRIGHT" offsetX="5" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)SubStrings" relativePoint="BOTTOMLEFT" offsetX="-5" offsetY="0"/>
-                    <OnMouseEnter>
-                        if (self.tooltipText) then
-                            InitializeTooltip(InformationTooltip, self, TOPRIGHT, 0, 5, BOTTOMRIGHT)
-                            SetTooltipText(InformationTooltip, self.tooltipText)
-                        end
-                    </OnMouseEnter>
-                    <OnMouseExit>
-                        ClearTooltip(InformationTooltip)
-                    </OnMouseExit>
                 </EditBox>
             </Controls>
         </Control>

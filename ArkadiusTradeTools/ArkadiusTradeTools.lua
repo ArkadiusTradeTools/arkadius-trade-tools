@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = "ArkadiusTradeTools"
 ArkadiusTradeTools.TITLE = "Arkadius Trade Tools"
-ArkadiusTradeTools.VERSION = "1.0.3"
+ArkadiusTradeTools.VERSION = "1.0.4"
 ArkadiusTradeTools.AUTHOR = "@Arkadius1"
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
@@ -25,7 +25,6 @@ local Settings
 local SECONDS_IN_HOUR = 60 * 60
 local SECONDS_IN_DAY = SECONDS_IN_HOUR * 24
 local SECONDS_IN_WEEK = SECONDS_IN_DAY * 7
-
 ---------------------------------
 
 function math.attRound(num, numDecimals)
@@ -98,7 +97,7 @@ end
 --------------------------------------------------------
 function ArkadiusTradeTools:Initialize()
     self.frame = ArkadiusTradeToolsWindow
-    self.tabButtonGroup = self.frame:GetNamedChild("TabButtonGroup")
+    self.TabWindow = GetControl(self.frame, "TabWindow")
 
     self.frame:ClearAnchors()
     self.frame:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, Settings.windowLeft or 100, Settings.windowTop or 100)
@@ -127,16 +126,35 @@ function ArkadiusTradeTools:Initialize()
 
     self:CreateSettingsMenu()
 
-    self.statusBar = GetControl(self.frame, "StatusBar")
-    self.guildStatus = GetControl(self.statusBar, "GuildStatus")
+    local header = GetControl(self.frame, "Header")
+    local buttonClose = GetControl(header, "Close")
+    local buttonDrawTier = GetControl(header, "DrawTier")
+    buttonClose.tooltip:SetContent(L["ATT_STR_BUTTON_CLOSE_TOOLTIP"])
+    buttonDrawTier.tooltip:SetContent(L["ATT_STR_BUTTON_DRAWTIER_TOOLTIP"])
+    buttonDrawTier.OnToggle = function(switch, pressed)
+        local drawTier
+        if (pressed) then
+            drawTier = DT_MEDIUM
+        else
+            drawTier = DT_HIGH
+        end
+        self.frame:SetDrawTier(drawTier)
+        Settings.drawTier = drawTier
+    end
+    buttonDrawTier:SetPressed(Settings.drawTier == DT_MEDIUM)
+
+
+    local statusBar = GetControl(self.frame, "StatusBar")
+    self.guildStatus = GetControl(statusBar, "GuildStatus")
     self.guildStatus:SetText(1, L["ATT_STR_GUILDSTATUS_TOOLTIP_LINE1"])
     self.guildStatus:SetText(2, L["ATT_STR_GUILDSTATUS_TOOLTIP_LINE2"])
     self.guildStatus:SetText(3, L["ATT_STR_GUILDSTATUS_TOOLTIP_LINE3"])
     local guildStatusText = GetControl(self.guildStatus, "Text")
     guildStatusText:SetText(L["ATT_STR_GUILDSTATUS_TEXT"])
-    self.donate = GetControl(self.statusBar, "Donate")
-    self.donate:SetText(L["ATT_STR_DONATE"])
-    self.donate.tooltip = L["ATT_STR_DONATE_TOOLTIP"]
+
+    local buttonDonate = GetControl(statusBar, "Donate")
+    buttonDonate:SetText(L["ATT_STR_DONATE"])
+    buttonDonate.tooltip:SetContent(L["ATT_STR_DONATE_TOOLTIP"])
 
     self.nextScanGuild = 1
 end
@@ -357,28 +375,6 @@ function ArkadiusTradeTools:ShowNotification(notification)
     CENTER_SCREEN_ANNOUNCE:AddMessage(nil, CSA_CATEGORY_SMALL_TEXT, SOUNDS.ITEM_MONEY_CHANGED, notification, nil, nil, nil, nil, nil, 5000, nil, QUEUE_IMMEDIATELY, SHOW_IMMEDIATELY, REINSERT_STOMPED_MESSAGE)
 end
 
-function ArkadiusTradeTools:CreateTab(options)
-    if ((options == nil) or (options.template == nil)) then
-        return nil
-    end
-
-    local tabBtnGrp = self.tabButtonGroup
-    local tabBtn = CreateControlFromVirtual(tabBtnGrp:GetName(), tabBtnGrp, "ArkadiusTradeToolsTabButton", options.name)
-    local frame = CreateControlFromVirtual(options.name, ArkadiusTradeToolsWindow, options.template)
-
-    if (options.iconCoords) then
-        local icon = GetControl(tabBtn, "Icon")
-        icon:SetTextureCoords(options.iconCoords.left, options.iconCoords.right, options.iconCoords.top, options.iconCoords.bottom)
-    end
-
-	tabBtn:SetText(options.text)
-	tabBtn:SetIcons(options.iconActive, options.iconInactive)
-	tabBtn:SetFrame(frame)
-    tabBtnGrp:Add(tabBtn)
-
-    return frame
-end
-
 function ArkadiusTradeTools:CreateDefaultSettings(settings, defaultSettings)
     if (settings == nil) then
         return
@@ -519,6 +515,7 @@ local function OnAddOnLoaded(eventCode, addonName)
     if (Settings.scanDuringCombat == nil) then Settings.scanDuringCombat = true end
     Settings.shortScanInterval = Settings.shortScanInterval or 2000
     Settings.longScanInterval = Settings.longScanInterval or 10
+    Settings.drawTier = Settings.drawTier or DT_HIGH
 
     --- Register for events ---
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)

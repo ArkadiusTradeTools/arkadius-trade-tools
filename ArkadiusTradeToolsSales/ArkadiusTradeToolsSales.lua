@@ -63,16 +63,16 @@ function ArkadiusTradeToolsSalesList:Initialize(listControl)
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
     self.sortHeaderGroup:HeaderForKey("sellerName").switch:SetPressed(self.sellerNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("sellerName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("sellerName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("sellerName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("buyerName").switch:SetPressed(self.buyerNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("buyerName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("buyerName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("buyerName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("guildName").switch:SetPressed(self.guildNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("guildName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("guildName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("guildName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("itemName").switch:SetPressed(self.itemNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("itemName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("itemName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("itemName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch:SetPressed(self.timeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch.OnToggle = OnHeaderToggle
@@ -213,12 +213,8 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     self.displayName = displayName
 
     --- Setup sales frame ---
-    self.frame = ArkadiusTradeTools:CreateTab({name = self.NAME .. "Frame",
-                                               text = L["ATT_STR_SALES"],
-                                               iconActive = "/esoui/art/vendor/vendor_tabicon_sell_up.dds",
-                                               iconInactive = "/esoui/art/vendor/vendor_tabicon_sell_up.dds",
-                                               iconCoords = {left = 0.15, top = 0.15, right = 0.85, bottom = 0.85},
-                                               template = "ArkadiusTradeToolsSalesFrame"})
+    self.frame = ArkadiusTradeToolsSalesFrame
+    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_SALES"], "/esoui/art/vendor/vendor_tabicon_sell_up.dds", "/esoui/art/vendor/vendor_tabicon_sell_up.dds", {left = 0.15, top = 0.15, right = 0.85, bottom = 0.85})
 
     self.list = ArkadiusTradeToolsSalesList:New(self, self.frame)
     self.frame.list = self.frame:GetNamedChild("List")
@@ -239,14 +235,8 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     self:LoadSales()
     self:LoadSettings()
 
-    if (Settings.guildRoster.enabled) then
-        self.GuildRoster:Install(Settings.guildRoster)
-    end
-
-    if (Settings.tradingHouse.enabled) then
-        self.TradingHouse:Install(Settings.tradingHouse)
-    end
-
+    self.GuildRoster:Initialize(Settings.guildRoster)
+    self.TradingHouse:Initialize(Settings.tradingHouse)
     self.TooltipExtensions:Initialize(Settings.tooltips)
 
     self.addMenuItems = {}
@@ -283,10 +273,10 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     self.frame.filterBar.Time:SelectByIndex(Settings.filters.timeSelection)
     self.frame.filterBar.Text.OnChanged = function(text) self.list:RefreshFilters() end
     self.frame.filterBar.Text:SetText(displayName:lower())
-    self.frame.filterBar.Text:SetTooltipText(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
+    self.frame.filterBar.Text.tooltip:SetContent(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
     self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed) self.list.Filter:SetNeedsRefilter() self.list:RefreshFilters() Settings.filters.useSubStrings = pressed end
     self.frame.filterBar.SubStrings:SetPressed(Settings.filters.useSubStrings)
-    self.frame.filterBar.SubStrings:SetTooltipText(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
+    self.frame.filterBar.SubStrings.tooltip:SetContent(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
     ---------------------------------------------
 
     self.list:RefreshData()
@@ -303,8 +293,8 @@ function ArkadiusTradeToolsSales:GetSettingsMenu()
     local guildNames = {}
 
     table.insert(settingsMenu, {type = "header", name = L["ATT_STR_SALES"]})
-    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_GUILD_ROSTER_EXTENSIONS"], getFunc = function() return Settings.guildRoster.enabled end, setFunc = function(bool) Settings.guildRoster.enabled = bool if (bool) then self.GuildRoster:Install(Settings.guildRoster) end end})
-    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS"], getFunc = function() return Settings.tradingHouse.enabled end, setFunc = function(bool) Settings.tradingHouse.enabled = bool if (bool) then self.TradingHouse:Install(Settings.tradingHouse) end end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_GUILD_ROSTER_EXTENSIONS"], getFunc = function() return self.GuildRoster:IsEnabled() end, setFunc = function(bool) self.GuildRoster:Enable(bool) end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS"], getFunc = function() return self.TradingHouse:IsEnabled() end, setFunc = function(bool) self.TradingHouse:Enable(bool) end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS"], getFunc = function() return self.TooltipExtensions:IsEnabled() end, setFunc = function(bool) self.TooltipExtensions:Enable(bool) end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH"], getFunc = function() return self.TooltipExtensions:IsGraphEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableGraph(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
 
@@ -982,8 +972,7 @@ local function onAddOnLoaded(eventCode, addonName)
 
     Settings = ArkadiusTradeToolsSalesData.settings
     Settings.guilds = Settings.guilds or {}
-    Settings.guildRoster = Settings.guildRoster or {enabled = true, timeSelectionIndex = 1}
-    Settings.tradingHouse = Settings.tradingHouse or {enabled = true, calcDays = 10}
+    Settings.guildRoster = Settings.guildRoster or {}
     Settings.tooltips = Settings.tooltips or {}
     Settings.filters = Settings.filters or {}
     Settings.filters.timeSelection = Settings.filters.timeSelection or 4

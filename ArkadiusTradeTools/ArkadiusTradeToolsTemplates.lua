@@ -64,17 +64,87 @@ function ArkadiusTradeToolsObjectPool:ReleaseObject(object)
         table.insert(self.free, object)
     end
 end
+
+-------------------------------------------------------------------------------
+------------------------- ArkadiusTradeToolsTabWindow -------------------------
+-------------------------------------------------------------------------------
+local ArkadiusTradeToolsTabWindow = {}
+ArkadiusTradeTools.Templates.TabWindow = ArkadiusTradeToolsTabWindow
+
+function ArkadiusTradeToolsTabWindow:Initialize(control)
+    ZO_ShallowTableCopy(self, control)
+    control.tabs = {}
+    control.buttonGroup = GetControl(control, "ButtonGroup")
+end
+
+function ArkadiusTradeToolsTabWindow:AddTab(frame, text, iconActive, iconInactive, iconCoords)
+    if (frame == nil) then
+        return
+    end
+
+    local tab = {}
+    tab.frame = frame
+
+    local i = 0
+    repeat
+        i = i + 1
+    until (GetControl(self, "Button" .. i) == nil)
+
+    tab.button = CreateControlFromVirtual(self:GetName() .. "Button" .. i, self.buttonGroup, "ArkadiusTradeToolsTabButton")
+    tab.button:SetText(text)
+    tab.button:SetIcons(iconActive, iconInactive)
+    tab.button:SetFrame(frame)
+    ZO_PreHookHandler(tab.button, "OnMouseUp", function(...) self:OnTabClicked(...) end)
+
+    frame:SetParent(self)
+    frame:ClearAnchors()
+    frame:SetAnchor(TOPLEFT, self.buttonGroup, BOTTOMLEFT, 10, 0)
+    frame:SetAnchor(BOTTOMRIGHT, self, BOTTOMRIGHT, -10, -34)
+
+    if (iconCoords) then
+        tab.button:SetIconCoords(iconCoords.left, iconCoords.right, iconCoords.top, iconCoords.bottom)
+    end
+
+
+    if (#self.tabs == 0) then
+        tab.button:SetAnchor(TOPLEFT, self.buttonGroup, TOPLEFT)
+        tab.button:SetAnchor(BOTTOMLEFT, self.buttonGroup, BOTTOMLEFT)
+        tab.button:SetActive(true)
+    else
+        tab.button:SetAnchor(TOPLEFT, self.tabs[#self.tabs].button, TOPRIGHT)
+        tab.button:SetAnchor(BOTTOMLEFT, self.tabs[#self.tabs].button, BOTTOMRIGHT)
+        tab.button:SetActive(false)
+    end
+
+    table.insert(self.tabs, tab)
+end
+
+function ArkadiusTradeToolsTabWindow:RemoveTab(frame)
+-- TODO
+end
+
+function ArkadiusTradeToolsTabWindow:OnTabClicked(tab, mouseButton, upInside)
+    if ((mouseButton == MOUSE_BUTTON_INDEX_LEFT) and (upInside == true)) then
+        for i = 1, #self.tabs do
+            self.tabs[i].button:SetActive(tab == self.tabs[i].button)
+        end
+    end
+end
+
 -------------------------------------------------------------------------------
 ------------------------- ArkadiusTradeToolsTabButton -------------------------
 -------------------------------------------------------------------------------
-
 local ArkadiusTradeToolsTabButton = {}
+ArkadiusTradeTools.Templates.TabButton = ArkadiusTradeToolsTabButton
 
-function ArkadiusTradeToolsTabButton:Initialize()
-    self.textureActive = "ArkadiusTradeTools/img/tab_top_active.dds"
-    self.textureInactive = "ArkadiusTradeTools/img/tab_top_inactive.dds"
-    self.textureMouseOver = "ArkadiusTradeTools/img/tab_top_inactive_mouseover.dds"
-    self.isActive = false
+function ArkadiusTradeToolsTabButton:Initialize(control)
+    ZO_ShallowTableCopy(ArkadiusTradeToolsTabButton, control)
+
+    control.textureActive = "ArkadiusTradeTools/img/tab_top_active.dds"
+    control.textureInactive = "ArkadiusTradeTools/img/tab_top_inactive.dds"
+    control.textureMouseOver = "ArkadiusTradeTools/img/tab_top_inactive_mouseover.dds"
+    control.isActive = false
+    control.icon = GetControl(control, "Icon")
 end
 
 function ArkadiusTradeToolsTabButton:SetText(text)
@@ -87,7 +157,15 @@ function ArkadiusTradeToolsTabButton:SetIcons(iconActive, iconInactive)
 end
 
 function ArkadiusTradeToolsTabButton:SetIcon(icon)
-    self:GetNamedChild("Icon"):SetTexture(icon)
+    if (self.icon) then
+        self.icon:SetTexture(icon)
+    end
+end
+
+function ArkadiusTradeToolsTabButton:SetIconCoords(left, right, top, bottom)
+    if (self.icon) then
+        self.icon:SetTextureCoords(left, right, top, bottom)
+    end
 end
 
 function ArkadiusTradeToolsTabButton:SetFrame(frame)
@@ -134,82 +212,6 @@ function ArkadiusTradeToolsTabButton:OnMouseExit()
         self:GetNamedChild("Center"):SetTexture(self.textureInactive)
         self:GetNamedChild("Right"):SetTexture(self.textureInactive)
     end
-end
-
-function ArkadiusTradeToolsTabButton:OnMouseUp(mouseButton, upInside)
-    if ((mouseButton == MOUSE_BUTTON_INDEX_LEFT) and (upInside == true)) then
-        self:SetActive(true)
-
-        if ((self.OnClicked) and (type(self.OnClicked) == "function")) then
-            self.OnClicked(self)
-        end
-    end
-end
-
-function ArkadiusTradeToolsTabButton_OnInitialize(tabButton)
-    ZO_ShallowTableCopy(ArkadiusTradeToolsTabButton, tabButton)
-    tabButton:Initialize()
-end
-
--------------------------------------------------------------------------------
----------------------- ArkadiusTradeToolsTabButtonGroup -----------------------
--------------------------------------------------------------------------------
-local ArkadiusTradeToolsTabButtonGroup = {}
-
-function ArkadiusTradeToolsTabButtonGroup:Initialize()
-    self.buttons = {}
-end
-
-function ArkadiusTradeToolsTabButtonGroup:Add(tabButton)
-    local numButtons = #self.buttons
-
-    for i = 1, numButtons do
-        if (self.buttons[i] == tabButton) then
-            return
-        end
-    end
-
-    tabButton:SetParent(self)
-
-    if (numButtons == 0) then
-        tabButton:SetAnchor(TOPLEFT, self, TOPLEFT, 0, 0)
-        tabButton:SetAnchor(BOTTOMLEFT, self, BOTTOMLEFT, 0, 0)
-        tabButton:SetActive(true)
-        self.activeButton = tabButton
-    else
-        tabButton:SetAnchor(TOPLEFT, self.buttons[numButtons], TOPRIGHT, 0, 0)
-        tabButton:SetAnchor(BOTTOMLEFT, self.buttons[numButtons], BOTTOMRIGHT, 0, 0)
-        tabButton:SetActive(false)
-    end
-
-    tabButton.OnClicked = function(tabButton)
-	    self:SetActiveTab(tabButton)
-	end
-
-    table.insert(self.buttons, tabButton)
-end
-
-function ArkadiusTradeToolsTabButtonGroup:SetActiveTab(tabButton)
-    if (self.activeButton == tabButton) then
-        return
-    end
-
-    for i = 1, #self.buttons do
-        if (self.buttons[i] == tabButton) then
-            if (self.activeButton) then
-                self.activeButton:SetActive(false)
-            end
-
-            self.activeButton = tabButton
-
-            return
-        end
-    end
-end
-
-function ArkadiusTradeToolsTabButtonGroup_OnInitialize(tabButtonGroup)
-    ZO_ShallowTableCopy(ArkadiusTradeToolsTabButtonGroup, tabButtonGroup)
-    tabButtonGroup:Initialize()
 end
 
 -------------------------------------------------------------------------------
@@ -858,3 +860,58 @@ ArkadiusTradeTools.Templates.ToolBar = ArkadiusTradeToolsToolBar
 function ArkadiusTradeToolsToolBar:Initialize(control)
     ZO_ShallowTableCopy(self, control)
 end
+
+-------------------------------------------------------------------------------
+------------------------- ArkadiusTradeToolsTooltip -------------------------
+-------------------------------------------------------------------------------
+local ArkadiusTradeToolsTooltip = {}
+ArkadiusTradeTools.Templates.Tooltip = ArkadiusTradeToolsTooltip
+
+function ArkadiusTradeToolsTooltip:Initialize(control, content, point, offsetX, offsetY, relativePoint)
+    control.tooltip = {}
+    ZO_ShallowTableCopy(self, control.tooltip)
+
+    control.tooltip.owner = control
+    control.tooltip:SetContent(content)
+    control.tooltip:SetPosition(point, offsetX, offsetY, relativePoint)
+    
+    ZO_PreHookHandler(control, "OnMouseEnter", function() control.tooltip:Show() end)
+    ZO_PreHookHandler(control, "OnMouseExit", function() control.tooltip:Hide() end)
+end
+
+function ArkadiusTradeToolsTooltip:SetContent(content)
+    self.content = content
+end
+
+function ArkadiusTradeToolsTooltip:SetPosition(point, offsetX, offsetY, relativePoint)
+    self.point = point
+    self.offsetX = offsetX
+    self.offsetY = offsetY
+    self.relativePoint = relativePoint
+end
+
+function ArkadiusTradeToolsTooltip:Show()
+    if (self.content == nil) then
+        return
+    end
+
+    InitializeTooltip(InformationTooltip, self.owner, self.point, self.offsetX, self.offsetY, self.relativePoint)
+
+    if (type(self.content) == "string") then
+        --InformationTooltip:AddLine(self.content)
+        SetTooltipText(InformationTooltip, self.content)
+    else
+        InformationTooltip:AddControl(self.content, 0, false)
+        self.content:SetAnchor(CENTER)
+        self.content:SetHidden(false)
+    end
+end
+
+function ArkadiusTradeToolsTooltip:Hide()
+    ClearTooltip(InformationTooltip)
+end
+
+
+--- Small hack to create text string for key bindings ---
+ZO_CreateStringId("SI_BINDING_NAME_ATT_TOGGLE_MAIN_WINDOW", ArkadiusTradeTools.Localization["ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW"])
+

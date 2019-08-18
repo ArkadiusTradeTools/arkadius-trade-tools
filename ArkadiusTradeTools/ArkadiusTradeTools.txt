@@ -2,7 +2,7 @@
 ## Author: Arkadius (@Arkadius1 EU)
 ## APIVersion: 100019
 ## Description: None
-## Version: 1.0.3
+## Version: 1.0.4
 ## SavedVariables: ArkadiusTradeToolsData
 
 libs\LibStub\LibStub.lua
@@ -28,3 +28,4 @@ i18n/$(language).lua
 ArkadiusTradeToolsTemplates.lua
 ArkadiusTradeToolsTemplates.xml
 ArkadiusTradeTools.xml
+bindings.xml

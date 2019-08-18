@@ -108,14 +108,8 @@ end
 
 ---------------------------------------------------------------------------------------
 function ArkadiusTradeToolsStatistics:Initialize()
-    self.frame = ArkadiusTradeTools:CreateTab({name = self.NAME .. "Frame",
-                                               text = L["ATT_STR_STATISTICS"],
-                                               --iconEnabled = "/esoui/art/tradinghouse/tradinghouse_listings_tabicon_up.dds",
-                                               --iconDisabled = "/esoui/art/tradinghouse/tradinghouse_listings_tabicon_disabled.dds",
-                                               iconActive = "/esoui/art/characterwindow/charsheet_statstab_icon.dds",
-                                               iconInactive = "/esoui/art/characterwindow/charsheet_statstab_icon_inactive.dds",
-                                               iconCoords = {left = 0.15, top = 0.15, right = 0.9, bottom = 0.85},
-                                               template = "ArkadiusTradeToolsStatisticsFrame"})
+    self.frame = ArkadiusTradeToolsStatisticsFrame
+    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_STATISTICS"], "/esoui/art/characterwindow/charsheet_statstab_icon.dds", "/esoui/art/characterwindow/charsheet_statstab_icon_inactive.dds", {left = 0.15, top = 0.15, right = 0.9, bottom = 0.85})
 
     self.list = ArkadiusTradeToolsStatisticsList:New(self, self.frame)
     self.frame.list = self.frame:GetNamedChild("List")
@@ -150,10 +144,10 @@ function ArkadiusTradeToolsStatistics:Initialize()
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_30_DAYS"], callback = callback, NewerThanTimeStamp = function() return 0 end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     self.frame.filterBar.Time:SelectByIndex(Settings.filters.timeSelection)
     self.frame.filterBar.Text.OnChanged = function(text) self.list:RefreshFilters() end
-    self.frame.filterBar.Text:SetTooltipText(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
+    self.frame.filterBar.Text.tooltip:SetContent(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
     self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed) self.list.Filter:SetNeedsRefilter() self.list:RefreshFilters() Settings.filters.useSubStrings = pressed end
     self.frame.filterBar.SubStrings:SetPressed(Settings.filters.useSubStrings)
-    self.frame.filterBar.SubStrings:SetTooltipText(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
+    self.frame.filterBar.SubStrings.tooltip:SetContent(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
     -----------------------
 --[[    ---------------------------------------------
     local function callback(_, name, item, _)

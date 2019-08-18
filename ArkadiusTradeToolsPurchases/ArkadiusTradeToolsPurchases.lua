@@ -52,16 +52,16 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
     self.sortHeaderGroup:HeaderForKey("buyerName").switch:SetPressed(self.buyerNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("buyerName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("buyerName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("buyerName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("sellerName").switch:SetPressed(self.sellerNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("sellerName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("sellerName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("sellerName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("guildName").switch:SetPressed(self.guildNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("guildName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("guildName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("guildName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("itemName").switch:SetPressed(self.itemNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("itemName").switch:SetTooltipText(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
+    self.sortHeaderGroup:HeaderForKey("itemName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
     self.sortHeaderGroup:HeaderForKey("itemName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch:SetPressed(self.timeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch.OnToggle = OnHeaderToggle
@@ -175,12 +175,8 @@ end
 ---------------------------------------------------------------------------------------
 
 function ArkadiusTradeToolsPurchases:Initialize()
-    self.frame = ArkadiusTradeTools:CreateTab({name = self.NAME .. "Frame",
-                                               text = self.Localization.ATT_STR_PURCHASES,
-                                               iconActive = "/esoui/art/vendor/vendor_tabicon_buy_up.dds",
-                                               iconInactive = "/esoui/art/vendor/vendor_tabicon_buy_up.dds",
-                                               iconCoords = {left = 0.15, top = 0.15, right = 0.85, bottom = 0.85},
-                                               template = "ArkadiusTradeToolsPurchasesFrame"})
+    self.frame = ArkadiusTradeToolsPurchasesFrame
+    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_PURCHASES"], "/esoui/art/vendor/vendor_tabicon_buy_up.dds", "/esoui/art/vendor/vendor_tabicon_buy_up.dds", {left = 0.15, top = 0.15, right = 0.85, bottom = 0.85})
 
     self.list = ArkadiusTradeToolsPurchasesList:New(self, self.frame)
     self.frame.list = self.frame:GetNamedChild("List")
@@ -219,10 +215,10 @@ function ArkadiusTradeToolsPurchases:Initialize()
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_30_DAYS"], callback = callback, NewerThanTimeStamp = function() return 0 end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     self.frame.filterBar.Time:SelectByIndex(Settings.filters.timeSelection)
     self.frame.filterBar.Text.OnChanged = function(text) self.list:RefreshFilters() end
-    self.frame.filterBar.Text:SetTooltipText(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
+    self.frame.filterBar.Text.tooltip:SetContent(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
     self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed) self.list.Filter:SetNeedsRefilter() self.list:RefreshFilters() Settings.filters.useSubStrings = pressed end
     self.frame.filterBar.SubStrings:SetPressed(Settings.filters.useSubStrings)
-    self.frame.filterBar.SubStrings:SetTooltipText(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
+    self.frame.filterBar.SubStrings.tooltip:SetContent(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
     -----------------------
     ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDSTORE_ITEM_BOUGHT, function(...) self:OnItemBought(...) end)
 end

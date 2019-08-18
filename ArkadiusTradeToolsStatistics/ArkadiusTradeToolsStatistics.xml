@@ -1,6 +1,6 @@
 <GuiXml>
     <Controls>
-        <Control name="ArkadiusTradeToolsStatisticsFrame" inherits="ArkadiusTradeToolsTabFrame" virtual="true">
+        <Control name="ArkadiusTradeToolsStatisticsFrame" inherits="ArkadiusTradeToolsTabFrame">
             <Controls>
                 <Control name="$(parent)Headers" inherits="ArkadiusTradeToolsSortHeaderGroup">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="10"/>

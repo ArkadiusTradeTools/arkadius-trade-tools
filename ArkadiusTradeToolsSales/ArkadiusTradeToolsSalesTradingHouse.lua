@@ -4,6 +4,18 @@ local L = ArkadiusTradeToolsSales.Localization
 local Settings
 
 local SECONDS_IN_DAY = 60 * 60 *24
+local TRADING_HOUSE_OnPurchaseSuccess
+
+--- Prevent the search result list to reset to top on purchase ---
+local function OnPurchaseSuccess(self)
+    local list = self.m_searchResultsList
+    local value = list.scrollbar:GetValue()
+
+    TRADING_HOUSE_OnPurchaseSuccess(self)
+
+    list.scrollbar:SetValue(value)
+end
+
 
 local function TradingHouseSearchResultsSetupRow(rowControl, ...)
     if (rowControl.dataEntry) then
@@ -103,50 +115,60 @@ local function ZO_ScrollList_Commit_Hook(list)
     return false 
 end
 
-function ArkadiusTradeToolsSales.TradingHouse:Install(settings)
-    if (self.isInstalled) then
-        return
+
+function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
+    Settings = settings
+    if (Settings.enabled == nil) then Settings.enabled = true end
+    Settings.calcDays = Settings.calcDays or 10
+
+    self:Enable(Settings.enabled)
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
+    if ((enable) and (self.profitMarginDaysLabel == nil)) then
+        ZO_PreHook("ZO_ScrollList_Commit", ZO_ScrollList_Commit_Hook)
+        EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, OnEvent)
+
+        ZO_TradingHouseItemPaneSearchSortByTimeRemainingName:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
+        ZO_TradingHouseItemPaneSearchSortByTimeRemaining:ClearAnchors()
+        ZO_TradingHouseItemPaneSearchSortByTimeRemaining:SetAnchor(RIGHT, ZO_TradingHouseItemPaneSearchSortByPrice, LEFT, -20)
+
+        --- Create Slider ---
+        local controlName = ZO_TradingHouseLeftPaneBrowseItems:GetName()
+        self.profitMarginDaysLabel = CreateControl(controlName .. "MarginDaysLabel", ZO_TradingHouseLeftPaneBrowseItems, CT_LABEL)
+        self.profitMarginDaysLabel:SetAnchor(TOPLEFT, ZO_TradingHouseLeftPaneBrowseItems, BOTTOMLEFT, 0, 0)
+        self.profitMarginDaysLabel:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseLeftPaneBrowseItems, BOTTOMRIGHT, 0, 20)
+        self.profitMarginDaysLabel:SetFont("esoui/common/fonts/univers67.otf|18||soft-shadow-thick")
+        self.profitMarginDaysLabel:SetText(L["ATT_STR_BASE_PROFIT_MARGIN_CALC_ON"])
+
+        self.profitMarginDaysSelection = CreateControlFromVirtual(controlName .. "MarginDaysSelection", ZO_TradingHouseLeftPaneBrowseItems, "ArkadiusTradeToolsSlider")
+        self.profitMarginDaysSelection:SetAnchor(TOPLEFT, self.profitMarginDaysLabel, BOTTOMLEFT, 0, 5)
+        self.profitMarginDaysSelection:SetAnchor(BOTTOMRIGHT, self.profitMarginDaysLabel, BOTTOMRIGHT, 0, 45)
+        self.profitMarginDaysSelection.OnValueChanged = function(_, value) ZO_ScrollList_Commit(ZO_TradingHouseItemPaneSearchResults) Settings.calcDays = self:GetCalcDays() end
+        ---------------------
+
+        --- Hook into search result functions ---
+        TRADING_HOUSE_OnPurchaseSuccess = TRADING_HOUSE.OnPurchaseSuccess
+        TRADING_HOUSE.OnPurchaseSuccess = OnPurchaseSuccess
+
+        self:SetCalcDays(Settings.calcDays or 10)
     end
 
-    Settings = settings
+    Settings.enabled = enable
+end
 
-    ZO_PreHook("ZO_ScrollList_Commit", ZO_ScrollList_Commit_Hook)
-    EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED, OnEvent)
-
-    ZO_TradingHouseItemPaneSearchSortByTimeRemainingName:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
-    ZO_TradingHouseItemPaneSearchSortByTimeRemaining:ClearAnchors()
-    ZO_TradingHouseItemPaneSearchSortByTimeRemaining:SetAnchor(RIGHT, ZO_TradingHouseItemPaneSearchSortByPrice, LEFT, -20)
-
-    --- Create Slider ---
-    local controlName = ZO_TradingHouseLeftPaneBrowseItems:GetName()
-    self.profitMarginDaysLabel = CreateControl(controlName .. "MarginDaysLabel", ZO_TradingHouseLeftPaneBrowseItems, CT_LABEL)
-    self.profitMarginDaysLabel:SetAnchor(TOPLEFT, ZO_TradingHouseLeftPaneBrowseItems, BOTTOMLEFT, 0, 0)
-    self.profitMarginDaysLabel:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseLeftPaneBrowseItems, BOTTOMRIGHT, 0, 20)
-    self.profitMarginDaysLabel:SetFont("esoui/common/fonts/univers67.otf|18||soft-shadow-thick")
-    self.profitMarginDaysLabel:SetText(L["ATT_STR_BASE_PROFIT_MARGIN_CALC_ON"])
-
-    self.profitMarginDaysSelection = CreateControlFromVirtual(controlName .. "MarginDaysSelection", ZO_TradingHouseLeftPaneBrowseItems, "ArkadiusTradeToolsSlider")
-    self.profitMarginDaysSelection:SetAnchor(TOPLEFT, self.profitMarginDaysLabel, BOTTOMLEFT, 0, 5)
-    self.profitMarginDaysSelection:SetAnchor(BOTTOMRIGHT, self.profitMarginDaysLabel, BOTTOMRIGHT, 0, 45)
-    self.profitMarginDaysSelection.OnValueChanged = function(_, value) ZO_ScrollList_Commit(ZO_TradingHouseItemPaneSearchResults) Settings.calcDays = self:GetCalcDays() end
-    ---------------------
-
-    self.isInstalled = true
-    self:SetCalcDays(Settings.calcDays or 10)
+function ArkadiusTradeToolsSales.TradingHouse:IsEnabled()
+    return Settings.enabled
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
-    if (not self.isInstalled) then
-        return
+    if (self.profitMarginDaysSelection) then
+        return self.profitMarginDaysSelection.slider:GetValue()
     end
-
-   return self.profitMarginDaysSelection.slider:GetValue()
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:SetCalcDays(days)
-    if (not self.isInstalled) then
-        return
+    if (self.profitMarginDaysSelection) then
+        return self.profitMarginDaysSelection.slider:SetValue(days)
     end
-
-   self.profitMarginDaysSelection.slider:SetValue(days)
 end
