@@ -8,7 +8,7 @@ local TRADING_HOUSE_OnPurchaseSuccess
 
 --- Prevent the search result list to reset to top on purchase ---
 local function OnPurchaseSuccess(self)
-    local list = self.m_searchResultsList
+    local list = self.searchResultsList
     local value = list.scrollbar:GetValue()
 
     TRADING_HOUSE_OnPurchaseSuccess(self)
