@@ -162,7 +162,7 @@ function ArkadiusTradeTools:Finalize()
 end
 
 function ArkadiusTradeTools:CreateSettingsMenu()
-  local LAM = LibStub('LibAddonMenu-2.0')
+  local LAM = LibAddonMenu2
 
   LAM:RegisterAddonPanel(
     self.TITLE,
@@ -181,101 +181,162 @@ function ArkadiusTradeTools:CreateSettingsMenu()
   table.insert(settingsMenu, {type = 'header', name = L['ATT_STR_GENERAL']})
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_SHOW_WINDOW_ON_MAIL'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_SHOW_WINDOW_ON_MAIL'],
+      getFunc = function()
         return Settings.showOnMailbox
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.showOnMailbox = bool
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_SHOW_WINDOW_ON_GUILDSTORE'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_SHOW_WINDOW_ON_GUILDSTORE'],
+      getFunc = function()
         return Settings.showOnGuildStore
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.showOnGuildStore = bool
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_SHOW_WINDOW_ON_CRAFTINGSTATION'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_SHOW_WINDOW_ON_CRAFTINGSTATION'],
+      getFunc = function()
         return Settings.showOnCraftingStation
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.showOnCraftingStation = bool
-      end}
+      end
+    }
   )
 
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_SHOW_NOTIFICATIONS'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_SHOW_NOTIFICATIONS'],
+      getFunc = function()
         return Settings.showNotifications
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.showNotifications = bool
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_SHOW_NOTIFICATIONS_DURING_COMBAT'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_SHOW_NOTIFICATIONS_DURING_COMBAT'],
+      getFunc = function()
         return Settings.showNotificationsDuringCombat
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.showNotificationsDuringCombat = bool
-      end, disabled = function()
+      end,
+      disabled = function()
         return not Settings.showNotifications
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_HIGHLIGHT_OWN_NAME_BY_COLOR'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_HIGHLIGHT_OWN_NAME_BY_COLOR'],
+      getFunc = function()
         return Settings.highlightUserDisplayName
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.highlightUserDisplayName = bool
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'colorpicker', name = L['ATT_STR_COLOR'], getFunc = function()
+    {
+      type = 'colorpicker',
+      name = L['ATT_STR_COLOR'],
+      getFunc = function()
         return Settings.userDisplayNameColor.r, Settings.userDisplayNameColor.g, Settings.userDisplayNameColor.b
-      end, setFunc = function(r, g, b)
+      end,
+      setFunc = function(r, g, b)
         Settings.userDisplayNameColor.r = r
         Settings.userDisplayNameColor.g = g
         Settings.userDisplayNameColor.b = b
-      end, disabled = function()
+      end,
+      disabled = function()
         return not Settings.highlightUserDisplayName
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_HIGHLIGHT_OWN_GUILDNAMES_BY_CHAT_COLOR'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_HIGHLIGHT_OWN_GUILDNAMES_BY_CHAT_COLOR'],
+      getFunc = function()
         return Settings.highlightGuildNames
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.highlightGuildNames = bool
-      end}
+      end
+    }
   )
   table.insert(settingsMenu, {type = 'custom'})
 
   table.insert(settingsMenu, {type = 'header', name = L['ATT_STR_EXTENDED']})
   table.insert(
     settingsMenu,
-    {type = 'checkbox', name = L['ATT_STR_SCAN_DURING_COMBAT'], getFunc = function()
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_SCAN_DURING_COMBAT'],
+      getFunc = function()
         return Settings.scanDuringCombat
-      end, setFunc = function(bool)
+      end,
+      setFunc = function(bool)
         Settings.scanDuringCombat = bool
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'slider', name = L['ATT_STR_SCAN_LONG_INTERVAL'], min = 5, max = 600, getFunc = function()
+    {
+      type = 'slider',
+      name = L['ATT_STR_SCAN_LONG_INTERVAL'],
+      min = 5,
+      max = 600,
+      getFunc = function()
         return Settings.longScanInterval
-      end, setFunc = function(value)
+      end,
+      setFunc = function(value)
         Settings.longScanInterval = value
-      end}
+      end
+    }
   )
   table.insert(
     settingsMenu,
-    {type = 'slider', name = L['ATT_STR_SCAN_SHORT_INTERVAL'], min = 1000, max = 5000, getFunc = function()
+    {
+      type = 'slider',
+      name = L['ATT_STR_SCAN_SHORT_INTERVAL'],
+      min = 1000,
+      max = 5000,
+      getFunc = function()
         return Settings.shortScanInterval
-      end, setFunc = function(value)
+      end,
+      setFunc = function(value)
         Settings.shortScanInterval = value
-      end}
+      end
+    }
   )
   table.insert(settingsMenu, {type = 'custom'})
 

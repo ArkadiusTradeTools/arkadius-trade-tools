@@ -24,12 +24,9 @@ local function GetControlsForSearchResults(rowControl)
   local sellPricePerUnitControl = rowControl:GetNamedChild('SellPricePerUnit')
   local sellPriceControl = rowControl:GetNamedChild('SellPrice')
   local timeRemainingControl = rowControl:GetNamedChild('TimeRemaining')
-  --local itemLink = GetTradingHouseSearchResultItemLink(rowControl.dataEntry.data.slotIndex)
-  --local stackCount = rowControl.dataEntry.data.stackCount
   local purchasePricePerUnit = rowControl.dataEntry.data.purchasePricePerUnit
   local averagePrice = rowControl.dataEntry.data.averagePrice or 0
   local averagePricePerUnit = rowControl.dataEntry.data.averagePricePerUnit or 0
-  --local currencyType = rowControl.dataEntry.data.currencyType
 
   return profitMarginControl, averagePricePerUnitControl, averagePriceControl, nameControl, sellPricePerUnitControl, sellPriceControl, timeRemainingControl, purchasePricePerUnit, averagePrice, averagePricePerUnit
 end
@@ -142,12 +139,7 @@ local function SetUpSearchResultsWithAGS(rowControl)
   if (not profitMarginControl) then
     local h = nameControl:GetHeight()
 
-    -- nameControl:SetWidth(220) -- original 198
-    timeRemainingControl:SetWidth(40) -- original 60
-    -- sellPricePerUnitControl:SetWidth(100) -- original 120
-    -- sellPricePerUnitControl:SetHeight(20) -- original 23.02
-    -- sellPriceControl:SetWidth(100) -- original 130
-    -- sellPriceControl:SetHeight(20) -- original 23.02
+    timeRemainingControl:SetWidth(45) -- original 60
 
     timeRemainingControl:ClearAnchors()
     timeRemainingControl:SetAnchor(LEFT, nameControl, RIGHT, 15)
@@ -160,47 +152,13 @@ local function SetUpSearchResultsWithAGS(rowControl)
     profitMarginControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
     profitMarginControl:SetVerticalAlignment(TEXT_ALIGN_CENTER) --Center and right look better, but left fits better
     profitMarginControl:SetFont('ZoFontGameShadow')
-
-  -- sellPricePerUnitControl:ClearAnchors()
-  -- sellPricePerUnitControl:SetAnchor(BOTTOMLEFT, profitMarginControl, RIGHT, 10)
-
-  -- sellPriceControl:ClearAnchors()
-  -- sellPriceControl:SetAnchor(LEFT, sellPricePerUnitControl, RIGHT, 0)
-
-  -- averagePricePerUnitControl = CreateControlFromVirtual(rowControl:GetName() .. 'AveragePricePerUnit', rowControl, 'ZO_KeyboardGuildRosterRowLabel')
-  -- averagePricePerUnitControl:SetDimensions(99, 20)
-  -- averagePricePerUnitControl:ClearAnchors()
-  -- averagePricePerUnitControl:SetAnchor(TOPLEFT, profitMarginControl, BOTTOMLEFT, 10)
-  -- averagePricePerUnitControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
-  -- averagePricePerUnitControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
-  -- averagePricePerUnitControl:SetFont('ZoFontGameShadow')
-
-  -- averagePriceControl = CreateControlFromVirtual(rowControl:GetName() .. 'AveragePrice', rowControl, 'ZO_KeyboardGuildRosterRowLabel')
-  -- averagePriceControl:SetDimensions(100, 20)
-  -- averagePriceControl:ClearAnchors()
-  -- averagePriceControl:SetAnchor(LEFT, averagePricePerUnitControl, RIGHT, 0)
-  -- averagePriceControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
-  -- averagePriceControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
-  -- averagePriceControl:SetFont('ZoFontGameShadow')
   end
 
   if (averagePrice == 0) then
-    -- averagePricePerUnitControl:SetText('- |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
-    -- averagePricePerUnitControl:SetColor(color:UnpackRGBA())
-    -- averagePriceControl:SetText('- |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
-    -- averagePriceControl:SetColor(color:UnpackRGBA())
     local color = ZO_ColorDef:New(1.0, 1.0, 1.0)
     profitMarginControl:SetText('------') --I would like to use 4 dashes and just change the alignment, but that seems to change all alignment
     profitMarginControl:SetColor(color:UnpackRGBA())
   else
-    --ZO_CurrencyControl_SetSimpleCurrency(averagePriceControl, currencyType, math.attRound(averagePrice), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
-    -- averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice) .. ' |t16:16:EsoUI/Art/currency/currency_gold.dds|t'))
-    -- averagePriceControl:SetColor(color:UnpackRGBA())
-    --ZO_CurrencyControl_SetSimpleCurrency(averagePricePerUnitControl, currencyType, math.attRound(averagePricePerUnit, 2), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
-    -- averagePricePerUnitControl:SetText(
-    --   ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePricePerUnit, 2) .. ' |t16:16:EsoUI/Art/currency/currency_gold.dds|t')
-    -- )
-    -- averagePricePerUnitControl:SetColor(color:UnpackRGBA())
     local color = ZO_ColorDef:New(GetItemQualityColor(5))
     local margin = math.attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
 
@@ -216,6 +174,7 @@ local function SetUpSearchResultsWithAGS(rowControl)
       color = ZO_ColorDef:New(GetItemQualityColor(4))
     end
 
+    -- If I could make this layout work, that'd be ideal
     --           |  Percent Difference (total)  |   AGS Total Price
     -- Time Left |  Market price (total)        |
     --           |  Market price (individual)   |   AGS Individual Price
@@ -257,16 +216,8 @@ local function ZO_ScrollList_Commit_Hook(list)
     local averagePrices = {}
     local itemLink
 
-    -- local listEnd
-    -- if AwesomeGuildStore then
-    --   listEnd = #scrollData - 1
-    -- else
-    --   listEnd = #scrollData
-    -- end
-
     for i = 1, #scrollData do
       itemLink = GetTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
-
       -- AGS appears to add an extra row at the bottom of the list (or override one)
       -- to render the Show More Results button, which causes parsing issues.
       -- We're gonna conditionally skip the last item if AGS is enabled so these errors aren't thrown.
@@ -281,13 +232,7 @@ local function ZO_ScrollList_Commit_Hook(list)
             averagePrices[itemLink].total = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
             averagePrices[itemLink].perUnit = averagePrices[itemLink].total / vouchers
           else
-            -- end
             averagePrices[itemLink].perUnit = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
-            -- if (scrollData[i].data.stackCount == nil) then
-            --     SCL = list
-            --     scrollData[i].index = i
-            --     table.insert(ATB, scrollData[i])
-            -- else
             averagePrices[itemLink].total = averagePrices[itemLink].perUnit * scrollData[i].data.stackCount
           end
         end
@@ -312,9 +257,7 @@ function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
-  --- Disable tradinghouse extensions for AwesomeGuildStore users for now ---
-  -- if ((enable) and (self.profitMarginDaysLabel == nil) and (not AwesomeGuildStore)) then
-  if ((enable) and (self.profitMarginDaysLabel == nil)) then
+  if enable and self.profitMarginDaysLabel == nil then
     ZO_PreHook('ZO_ScrollList_Commit', ZO_ScrollList_Commit_Hook)
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
 
