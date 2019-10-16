@@ -146,9 +146,9 @@ local function SetUpSearchResultsWithAGS(rowControl)
 
     profitMarginControl = CreateControlFromVirtual(rowControl:GetName() .. 'ProfitMargin', rowControl, 'ZO_KeyboardGuildRosterRowLabel')
     -- 55 is better for large sale prices, but 65 is better for items super overpriced or underpriced
-    profitMarginControl:SetDimensions(65, h)
+    profitMarginControl:SetDimensions(55, h)
     profitMarginControl:ClearAnchors()
-    profitMarginControl:SetAnchor(LEFT, timeRemainingControl, RIGHT, 5)
+    profitMarginControl:SetAnchor(LEFT, timeRemainingControl, RIGHT, -5)
     profitMarginControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
     profitMarginControl:SetVerticalAlignment(TEXT_ALIGN_CENTER) --Center and right look better, but left fits better
     profitMarginControl:SetFont('ZoFontGameShadow')

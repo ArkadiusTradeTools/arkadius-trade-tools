@@ -315,7 +315,7 @@ function ArkadiusTradeToolsSales:GetSettingsMenu()
 
     table.insert(settingsMenu, {type = "header", name = L["ATT_STR_SALES"]})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_GUILD_ROSTER_EXTENSIONS"], getFunc = function() return self.GuildRoster:IsEnabled() end, setFunc = function(bool) self.GuildRoster:Enable(bool) end})
-    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS"], getFunc = function() return self.TradingHouse:IsEnabled() end, setFunc = function(bool) self.TradingHouse:Enable(bool) end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS"], getFunc = function() return self.TradingHouse:IsEnabled() end, setFunc = function(bool) self.TradingHouse:Enable(bool) end, requiresReload = true})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS"], getFunc = function() return self.TooltipExtensions:IsEnabled() end, setFunc = function(bool) self.TooltipExtensions:Enable(bool) end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH"], getFunc = function() return self.TooltipExtensions:IsGraphEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableGraph(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING"], getFunc = function() return self.TooltipExtensions:IsCraftingEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableCrafting(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
