@@ -1,6 +1,6 @@
 let projectName = "ArkadiusTradeTools"
 let archiveName = "arkadius-trade-tools"
-let directoryGlob = sprintf "build/%s/" projectName
+let directoryGlob = "build/"
 
 open Fake.IO.Globbing
 #r "paket:
@@ -25,7 +25,6 @@ Target.create "Copy" (fun _ ->
   ++ "LICENSE"
   ++ "**/*.txt"
   ++ "**/*.xml"
-  ++ "**/*.md"
   ++ "**/*.dds"
   -- "**.fake/**/*"
   |> GlobbingPattern.setBaseDir "./"
