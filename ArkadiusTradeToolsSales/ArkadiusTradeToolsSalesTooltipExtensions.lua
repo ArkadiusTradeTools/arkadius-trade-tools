@@ -95,6 +95,8 @@ end
 
 function ArkadiusTradeToolsSales.TooltipExtensions:Enable(enable)
     if (enable) then
+        -- When these tooltips are initialized, they hook into their respective ESOUI tooltips from their templates.
+        -- This means any initialization changes need to be handled in the .xml file.
         if (self.itemTooltip == nil) then
             self.itemTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesItemTooltip", GuiRoot, "ArkadiusTradeToolsSalesItemTooltip")
         end
@@ -188,7 +190,6 @@ end
 
 function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
     local control = self.control
-
     self.daysControl = GetControl(control, "Days")
     self.listControl = GetControl(control, "ItemList")
     self.list = TooltipExtensionList:New(self.listControl, self.tooltip)
@@ -207,6 +208,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
         end
     end
 
+    -- These are all of the handlers for the various different tooltip usages.
     ---
     local TooltipSetLink = self.tooltip.SetLink
 
@@ -239,6 +241,15 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
         local itemLink = GetAttachedItemLink(id, index)
 
         TooltipSetAttachedMailItem(tooltip, id, index)
+        UpdateTooltip(tooltip, itemLink)
+    end
+    ---
+    local TooltipSetStoreItem = self.tooltip.SetStoreItem
+
+    function self.tooltip.SetStoreItem(tooltip, storeIndex)
+        local itemLink = GetStoreItemLink(storeIndex)
+
+        TooltipSetStoreItem(tooltip, storeIndex)
         UpdateTooltip(tooltip, itemLink)
     end
     ---
