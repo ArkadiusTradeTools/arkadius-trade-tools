@@ -904,13 +904,13 @@ function ArkadiusTradeToolsSales:OnGuildHistoryEventStore(guildId)
     local numGuildEvents = GetNumGuildEvents(guildId, GUILD_HISTORY_STORE)
     local listNeedsRefresh = false
 
-local mss=GetGameTimeMilliseconds()	
+-- local mss=GetGameTimeMilliseconds()
     for i = self.nextGuildHistoryScanIndex[guildId], numGuildEvents do
         if (self:AddEvent(guildId, GUILD_HISTORY_STORE, i) == true) then
             listNeedsRefresh = true
         end
     end
-local mse=GetGameTimeMilliseconds()
+-- local mse=GetGameTimeMilliseconds()
 --d(mse-mss)
 
     if (listNeedsRefresh) then
