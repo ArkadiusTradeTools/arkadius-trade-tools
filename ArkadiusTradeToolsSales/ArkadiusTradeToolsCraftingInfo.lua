@@ -40,6 +40,9 @@ local MASTER_WRIT_TYPES =
     [119693] = MASTER_WRIT_TYPE_PROVISIONING,
     [138798] = MASTER_WRIT_TYPE_JEWELRY,
     [138799] = MASTER_WRIT_TYPE_JEWELRY,
+    [153737] = MASTER_WRIT_TYPE_JEWELRY,
+    [153738] = MASTER_WRIT_TYPE_JEWELRY,
+    [153739] = MASTER_WRIT_TYPE_JEWELRY,
 }
 
 local MASTER_WRIT_BASE_MATERIAL =
@@ -230,11 +233,11 @@ local MASTER_WRIT_STYLES =
 --    [64] = "Not craftable",                                                 -- none
     [65] = "|H0:item:132617:30:1:0:0:0:0:0:0:0:0:0:0:0:0:65:0:0:0:0:0|h|h", -- Apostle, Polished Brass
     [66] = "|H0:item:132618:30:1:0:0:0:0:0:0:0:0:0:0:0:0:66:0:0:0:0:0|h|h", -- Ebonshadow, Tenebrous Cord
---    [67] = "Not craftable",                                                 -- Undaunted 
+--    [67] = "Not craftable",                                                 -- Undaunted
 --    [68] = "Not craftable",                                                 -- none
     [69] = "|H0:item:137958:30:1:0:0:0:0:0:0:0:0:0:0:0:0:69:0:0:0:0:0|h|h", -- Fang Lair, Dragon Bone
     [70] = "|H0:item:137961:30:1:0:0:0:0:0:0:0:0:0:0:0:0:70:0:0:0:0:0|h|h", -- Scalecaller, Infected Flesh
-    [71] = "|H0:item:137951:30:1:0:0:0:0:0:0:0:0:0:0:0:0:71:0:0:0:0:0|h|h", -- Psijic, Vitrified Malondo 
+    [71] = "|H0:item:137951:30:1:0:0:0:0:0:0:0:0:0:0:0:0:71:0:0:0:0:0|h|h", -- Psijic, Vitrified Malondo
     [72] = "|H0:item:137953:30:1:0:0:0:0:0:0:0:0:0:0:0:0:72:0:0:0:0:0|h|h", -- Sapiarch, Culanda Lacquer
     [73] = "|H0:item:141740:30:1:0:0:0:0:0:0:0:0:0:0:0:0:73:0:0:0:0:0|h|h", -- Welkynar Style, Gryphon Plume
     [74] = "|H0:item:137957:30:1:0:0:0:0:0:0:0:0:0:0:0:0:74:0:0:0:0:0|h|h", -- Dremora, Warrior's Heart Ashes
@@ -243,10 +246,19 @@ local MASTER_WRIT_STYLES =
     [77] = "|H0:item:141820:30:1:0:0:0:0:0:0:0:0:0:0:0:0:77:0:0:0:0:0|h|h", -- Huntsman, Bloodscent Dew
     [78] = "|H0:item:141821:30:1:0:0:0:0:0:0:0:0:0:0:0:0:78:0:0:0:0:0|h|h", -- Silver Dawn, Argent Pelt
     [79] = "|H0:item:145532:30:1:0:0:0:0:0:0:0:0:0:0:0:0:79:0:0:0:0:0|h|h", -- Dead Water, Crocodile Leather
---    [80] = "Not craftable",                                                 -- Honor Guard
+    [80] = "|H0:item:147288:30:1:0:0:0:0:0:0:0:0:0:0:0:0:80:0:0:0:0:0|h|h", -- Honor Guard, Red Diamond Seal
     [81] = "|H0:item:145533:30:1:0:0:0:0:0:0:0:0:0:0:0:0:81:0:0:0:0:0|h|h", -- Elder Argonian, Hackwing Plumage
---    [82] = "Not craftable",                                                 -- Coldsnap
---    [83] = "Not craftable",                                                 -- Meridia
+    [82] = "|H0:item:151907:30:1:0:0:0:0:0:0:0:0:0:0:0:0:82:0:0:0:0:0|h|h", -- Coldsnap, Goblin-Cloth Scrap
+    [83] = "|H0:item:151908:30:1:0:0:0:0:0:0:0:0:0:0:0:0:83:0:0:0:0:0|h|h", -- Meridian, Auroran Dust
+    [84] = "|H0:item:151621:30:1:0:0:0:0:0:0:0:0:0:0:0:0:84:0:0:0:0:0|h|h", -- Anequina, Shimmering Sand
+    [85] = "|H0:item:151622:30:1:0:0:0:0:0:0:0:0:0:0:0:0:85:0:0:0:0:0|h|h", -- Pellitine, Dragonthread
+    [86] = "|H0:item:152235:30:1:0:0:0:0:0:0:0:0:0:0:0:0:86:0:0:0:0:0|h|h", -- Sunspire, Frost Embers
+--    [87] = "Not craftable",                                               -- Dragon Bone
+--    [88] = "Not craftable",                                               -- Haven't looked
+--    [89] = "Not craftable",                                               -- Haven't looked
+--    [90] = "Not craftable",                                               -- Glenmoril Wyrd
+--    [91] = "Not craftable",                                               -- Haven't looked
+    [92] = "|H1:item:156571:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Dragonguard, Gilding Salts
 }
 
 local MASTER_WRIT_TRAITS =
@@ -298,7 +310,7 @@ function ArkadiusTradeToolsSales:GetMasterWritComponents(itemLink)
     local writType = MASTER_WRIT_TYPES[itemId]
 
     if (writType == nil) then
-        --d("ATT: Unknown master writ item id " .. itemId)
+        -- d("ATT: Unknown master writ item id " .. itemId)
 
         return {}
     end
@@ -340,6 +352,6 @@ function ArkadiusTradeToolsSales:GetMasterWritComponents(itemLink)
             return {}
         end
     end
-    
+
     return components
 end
