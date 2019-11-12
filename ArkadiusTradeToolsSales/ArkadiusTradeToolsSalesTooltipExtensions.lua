@@ -472,3 +472,6 @@ end
 
     self.control:SetHeight(height)
 end
+
+--- Small hack to create text string for key bindings ---
+ZO_CreateStringId("SI_BINDING_NAME_ATT_TOGGLE_POPUP_TOOLTIP", L["ATT_STR_OPEN_POPUP_TOOLTIP"])

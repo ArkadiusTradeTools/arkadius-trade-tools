@@ -18,3 +18,4 @@ ArkadiusTradeToolsSalesGraph.xml
 ArkadiusTradeToolsCraftingInfo.xml
 ArkadiusTradeToolsSalesTooltipExtensions.xml
 ArkadiusTradeToolsSales.xml
+bindings.xml

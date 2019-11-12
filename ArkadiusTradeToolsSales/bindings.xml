@@ -1,0 +1,11 @@
+<Bindings>
+	<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+		<Category name="Arkadius' Trade Tools">
+			<Action name="ATT_TOGGLE_POPUP_TOOLTIP">
+				<Down>
+                    ArkadiusTradeTools.Modules.Sales.OpenHoveredItemTooltip()
+				</Down>
+            </Action>
+		</Category>
+	</Layer>
+</Bindings>

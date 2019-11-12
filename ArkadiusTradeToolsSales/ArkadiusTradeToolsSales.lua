@@ -27,15 +27,15 @@ end
 
 function ArkadiusTradeToolsSalesList:Initialize(listControl)
     ArkadiusTradeToolsSortFilterList.Initialize(self, listControl)
-	
-	--- sort up down ---
+    
+    --- sort up down ---
 
     self.SORT_KEYS = {["sellerName"] = {tiebreaker = "timeStamp"},
                       ["buyerName"]  = {tiebreaker = "timeStamp"},
                       ["guildName"]  = {tiebreaker = "timeStamp"},
 --                    ["itemName"]   = {tiebreaker = "timeStamp"},
 --					  ["eaprice"]    = {tiebreaker = "price"},
-					  ["price"]      = {tiebreaker = "timeStamp"},
+                      ["price"]      = {tiebreaker = "timeStamp"},
                       ["timeStamp"]  = {}}
 
     ZO_ScrollList_AddDataType(self.list, 1, "ArkadiusTradeToolsSalesRow", 32,
@@ -57,16 +57,16 @@ function ArkadiusTradeToolsSalesList:Initialize(listControl)
         Settings.filters[switch:GetParent().key] = pressed
     end
 
-	--- +/- toggle ---
-	
+    --- +/- toggle ---
+    
     self.sellerNameSwitch = Settings.filters.sellerName
     self.buyerNameSwitch = Settings.filters.buyerName
     self.guildNameSwitch = Settings.filters.guildName
     self.itemNameSwitch = Settings.filters.itemName
     self.timeStampSwitch = Settings.filters.timeStamp
-	self.eapriceSwitch = Settings.filters.eaprice
-	self.priceSwitch = Settings.filters.price
-	
+    self.eapriceSwitch = Settings.filters.eaprice
+    self.priceSwitch = Settings.filters.price
+    
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
     self.sortHeaderGroup:HeaderForKey("sellerName").switch:SetPressed(self.sellerNameSwitch)
     self.sortHeaderGroup:HeaderForKey("sellerName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
@@ -82,9 +82,9 @@ function ArkadiusTradeToolsSalesList:Initialize(listControl)
     self.sortHeaderGroup:HeaderForKey("itemName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch:SetPressed(self.timeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch.OnToggle = OnHeaderToggle
-	--self.sortHeaderGroup:HeaderForKey("eaprice").switch:SetPressed(self.eapriceSwitch)
+    --self.sortHeaderGroup:HeaderForKey("eaprice").switch:SetPressed(self.eapriceSwitch)
     --self.sortHeaderGroup:HeaderForKey("eaprice").switch.OnToggle = OnHeaderToggle
-	--self.sortHeaderGroup:HeaderForKey("price").switch:SetPressed(self.priceSwitch)
+    --self.sortHeaderGroup:HeaderForKey("price").switch:SetPressed(self.priceSwitch)
     --self.sortHeaderGroup:HeaderForKey("price").switch.OnToggle = OnHeaderToggle
     self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
     self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
@@ -155,7 +155,7 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     local buyerName = GetControl(rowControl, "BuyerName")
     local guildName = GetControl(rowControl, "GuildName")
     local itemLink = GetControl(rowControl, "ItemLink")
-	local eaprice = GetControl(rowControl, "eaPrice")
+    local eaprice = GetControl(rowControl, "eaPrice")
     local price = GetControl(rowControl, "Price")
     local timeStamp = GetControl(rowControl, "TimeStamp")
     local icon = GetItemLinkInfo(data.itemLink)
@@ -179,14 +179,14 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     itemLink:SetWidth(itemLink.header:GetWidth() - 10)
     itemLink:SetHidden(itemLink.header:IsHidden())
     itemLink:SetIcon(icon)
-	
-	if (data.quantity == 1) then
+    
+    if (data.quantity == 1) then
         data.eaprice=data.price
     else
         data.eaprice=math.attRound(data.price/data.quantity, 2)
     end
-		
-	eaprice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+        
+    eaprice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.eaprice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     eaprice:SetWidth(eaprice.header:GetWidth() - 10)
     eaprice:SetHidden(eaprice.header:IsHidden())	
 
@@ -202,7 +202,7 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
 
     timeStamp:SetWidth(timeStamp.header:GetWidth() - 10)
     timeStamp:SetHidden(timeStamp.header:IsHidden())
-	
+    
 
     if (data.quantity == 1) then
         itemLink:SetQuantity("")
@@ -214,7 +214,7 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
         buyerName.normalColor = ZO_ColorDef:New(0.5, 0.5, 1, 1)
     else
         buyerName.normalColor = ZO_ColorDef:New(1, 1, 1, 1)
-	end
+    end
 
     ArkadiusTradeToolsSortFilterList.SetupRow(self, rowControl, rowData)
 end
@@ -246,7 +246,7 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     self.frame.headers.buyerName = self.frame.headers:GetNamedChild("BuyerName")
     self.frame.headers.guildName = self.frame.headers:GetNamedChild("GuildName")
     self.frame.headers.itemLink = self.frame.headers:GetNamedChild("ItemLink")
-	self.frame.headers.eaprice = self.frame.headers:GetNamedChild("eaPrice")
+    self.frame.headers.eaprice = self.frame.headers:GetNamedChild("eaPrice")
     self.frame.headers.price = self.frame.headers:GetNamedChild("Price")
     self.frame.headers.timeStamp = self.frame.headers:GetNamedChild("TimeStamp")
     self.frame.timeSelect = self.frame:GetNamedChild("TimeSelect")
@@ -255,6 +255,7 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
 
     self:LoadSales()
     self:LoadSettings()
+    self:CreateInventoryKeybinds()
 
     self.GuildRoster:Initialize(Settings.guildRoster)
     self.TradingHouse:Initialize(Settings.tradingHouse)
@@ -499,7 +500,7 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
             dataTable.sales[eventIdNum].buyerName = buyer
             dataTable.sales[eventIdNum].quantity = quantity
             dataTable.sales[eventIdNum].itemLink = itemLink
-			dataTable.sales[eventIdNum].eaprice = eaprice
+            dataTable.sales[eventIdNum].eaprice = eaprice
             dataTable.sales[eventIdNum].price = price
             dataTable.sales[eventIdNum].taxes = tax
 
@@ -600,16 +601,16 @@ function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp
 
                     if (sale.timeStamp > fromTimeStamp) then
                         if ((itemType == ITEMTYPE_POTION) or (itemType == ITEMTYPE_POISON)) then
-						    if (sale.itemLink ~= itemLink) then
+                            if (sale.itemLink ~= itemLink) then
                                 res1 = nil
                             end
                         end
 
                         local data = {}
                         data.price = sale.price
-					    data.timeStamp = sale.timeStamp
+                        data.timeStamp = sale.timeStamp
                         data.guildName = sale.guildName
-					
+                    
                         if (itemType == ITEMTYPE_MASTER_WRIT) then
                             data.quantity = itemLinkInfos[sale.itemLink].vouchers
                         else
@@ -726,10 +727,10 @@ function ArkadiusTradeToolsSales:DeleteSales()
 
     --- Delete old sales ---
     for _, salesTable in pairs(SalesTables) do
-	    for serverName, data in pairs(salesTable) do
+        for serverName, data in pairs(salesTable) do
             local sales = data.sales
 
-	        for id, sale in pairs(sales) do
+            for id, sale in pairs(sales) do
                 timeStamp = olderThanTimeStamps[sale.guildName] or DefaultSettings.keepSalesForDays * SECONDS_IN_DAY
 
                 if (sale.timeStamp <= timeStamp) then
@@ -737,7 +738,7 @@ function ArkadiusTradeToolsSales:DeleteSales()
                 end
             end
         end
-	end
+    end
 end
 
 function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
@@ -808,8 +809,8 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
     local salesCountPerPlayer
     local taxesPerGuild
     local taxesPerPlayer
-	local internalSalesVolumePerGuild
-	local internalSalesVolumePerPlayer
+    local internalSalesVolumePerGuild
+    local internalSalesVolumePerPlayer
     local itemCountPerGuild
     local itemCountPerPlayer
     local guildSales = TemporaryVariables.guildSales
@@ -829,7 +830,7 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
             itemCountPerPlayer = 0
 
             for _, saleIndex in pairs(displayNameData.sales) do
-		        if ((guildNameData.sales[saleIndex].timeStamp >= newerThanTimeStamp) and ((guildNameData.sales[saleIndex].timeStamp < olderThanTimeStamp))) then
+                if ((guildNameData.sales[saleIndex].timeStamp >= newerThanTimeStamp) and ((guildNameData.sales[saleIndex].timeStamp < olderThanTimeStamp))) then
                     salesVolumePerPlayer = salesVolumePerPlayer + guildNameData.sales[saleIndex].price
                     internalSalesVolumePerPlayer = internalSalesVolumePerPlayer + guildNameData.sales[saleIndex].price * guildNameData.sales[saleIndex].internal
                     itemCountPerPlayer = itemCountPerPlayer + guildNameData.sales[saleIndex].quantity
@@ -946,9 +947,9 @@ function ArkadiusTradeToolsSales:OnLinkClicked(itemLink, mouseButton)
     return false
 end
 
-function ArkadiusTradeToolsSales:ShowContextMenu(inventorySlot)
-    local slotType = ZO_InventorySlot_GetType(inventorySlot)
+function ArkadiusTradeToolsSales.GetItemLinkFromInventorySlot(inventorySlot)
     local itemLink = nil
+    local slotType = ZO_InventorySlot_GetType(inventorySlot)
 
     if ((slotType == SLOT_TYPE_ITEM) or (slotType == SLOT_TYPE_EQUIPMENT) or (slotType == SLOT_TYPE_BANK_ITEM) or (slotType == SLOT_TYPE_GUILD_BANK_ITEM) or (slotType == SLOT_TYPE_TRADING_HOUSE_POST_ITEM) or
         (slotType == SLOT_TYPE_REPAIR) or (slotType == SLOT_TYPE_CRAFTING_COMPONENT) or (slotType == SLOT_TYPE_PENDING_CRAFTING_COMPONENT) or (slotType == SLOT_TYPE_PENDING_CRAFTING_COMPONENT) or
@@ -969,6 +970,11 @@ function ArkadiusTradeToolsSales:ShowContextMenu(inventorySlot)
             end
         end
     end
+    return itemLink
+end
+
+function ArkadiusTradeToolsSales:ShowContextMenu(inventorySlot)
+    local itemLink = self.GetItemLinkFromInventorySlot(inventorySlot)
 
     if (self:IsItemLink(itemLink)) then 
         self.addMenuItems[L["ATT_STR_STATS_TO_CHAT"]] = function() self:StatsToChat(itemLink) end
@@ -990,6 +996,51 @@ function ArkadiusTradeToolsSales:ShowMenu()
     self.addMenuItems = {}
 
     return false
+end
+
+local keybindItemLink = nil
+
+local keybinds = {
+    alignment = KEYBIND_STRIP_ALIGN_CENTER,
+    {
+        name = function()return L['ATT_STR_OPEN_POPUP_TOOLTIP']end,
+        keybind = 'ATT_TOGGLE_POPUP_TOOLTIP',
+        callback = function()  end,
+        visible = function()return keybindItemLink ~= nil end
+    },
+}
+
+function ArkadiusTradeToolsSales.OpenHoveredItemTooltip()
+    if(keybindItemLink ~= nil) then
+        ZO_LinkHandler_OnLinkClicked(keybindItemLink, MOUSE_BUTTON_INDEX_LEFT)
+    end
+end
+
+function ArkadiusTradeToolsSales:OnSlotMouseEnter(slot)
+    local inventorySlot = ZO_InventorySlot_GetInventorySlotComponents(slot)
+    keybindItemLink = self.GetItemLinkFromInventorySlot(inventorySlot)
+end
+
+function ArkadiusTradeToolsSales.OnSlotMouseExit()
+    keybindItemLink = nil
+    KEYBIND_STRIP:UpdateKeybindButtonGroup(keybinds)
+end
+
+function ArkadiusTradeToolsSales:CreateInventoryKeybinds()
+    ZO_PreHook("ZO_InventorySlot_OnMouseEnter", function(...) self:OnSlotMouseEnter(...) end)
+    ZO_PreHook("ZO_InventorySlot_OnMouseExit", self.OnSlotMouseExit)
+
+    local function OnStateChanged(oldState, newState)
+    local key  = GetHighestPriorityActionBindingInfoFromName("ATT_TOGGLE_POPUP_TOOLTIP")
+    local isAssigned = key ~= KEY_INVALID
+        if newState == SCENE_SHOWING and isAssigned then
+            KEYBIND_STRIP:AddKeybindButtonGroup(keybinds)
+        elseif newState == SCENE_HIDING then
+            KEYBIND_STRIP:RemoveKeybindButtonGroup(keybinds)
+        end
+    end
+
+    INVENTORY_FRAGMENT:RegisterCallback("StateChange", OnStateChanged)
 end
 
 --------------------------------------------------------
