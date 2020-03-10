@@ -265,6 +265,17 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
       EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_CLOSE_TRADING_HOUSE, function() self.Filter:ResetCache() end)
     end
 
+    -- Trying to hook in after AGS to avoid any conflicts
+    local initialized = false
+    ZO_PreHook(TRADING_HOUSE, 'SetCurrentMode', function()
+      if initialized then
+        return
+      end
+      self:InitializeListingMarginDisplay()
+      initialized = true
+    end)
+  end
+
   Settings.enabled = enable
 end
 
@@ -310,6 +321,33 @@ local function GetMarginData(cache, data, itemLink, days)
 
   local margin = math.attRound((100 / data.averagePricePerUnit * data.purchasePricePerUnit - 100) * (-1))
   return margin
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:InitializeListingMarginDisplay()
+  local LISTING_MARGIN_FONT = "/esoui/common/fonts/univers67.otf|18|soft-shadow-thin"
+  local ITEM_LISTINGS_DATA_TYPE = 2
+
+  local dataType = TRADING_HOUSE.postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
+  local originalSetupCallback = dataType.setupCallback
+  local cache = {}
+
+  ZO_PostHook(dataType, 'setupCallback', function(rowControl, item)
+      local days = ArkadiusTradeToolsSalesData.settings.tooltips.days or 30
+      local timeRemainingControl = rowControl:GetNamedChild("TimeRemaining")
+      local listingMargin = rowControl:GetNamedChild("Margin")
+      if(not listingMargin) then
+          local controlName = rowControl:GetName() .. "Margin"
+          listingMargin = rowControl:CreateControl(controlName, CT_LABEL)
+          listingMargin:SetDimensionConstraints(48)
+          listingMargin:SetAnchor(TOPLEFT, timeRemainingControl, TOPRIGHT, -20, 0)
+          listingMargin:SetFont(LISTING_MARGIN_FONT)
+          local margin = GetMarginData(cache, item, item.itemLink, days)
+          local color = self.GetMarginColor(margin)
+          listingMargin:SetText(string.format('%d%%', margin))
+          listingMargin:SetColor(color:UnpackRGBA())
+          listingMargin:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
+      end
+  end)
 end
 
 function ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
