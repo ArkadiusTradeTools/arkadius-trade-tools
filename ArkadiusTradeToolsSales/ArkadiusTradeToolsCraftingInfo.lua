@@ -253,12 +253,15 @@ local MASTER_WRIT_STYLES =
     [84] = "|H0:item:151621:30:1:0:0:0:0:0:0:0:0:0:0:0:0:84:0:0:0:0:0|h|h", -- Anequina, Shimmering Sand
     [85] = "|H0:item:151622:30:1:0:0:0:0:0:0:0:0:0:0:0:0:85:0:0:0:0:0|h|h", -- Pellitine, Dragonthread
     [86] = "|H0:item:152235:30:1:0:0:0:0:0:0:0:0:0:0:0:0:86:0:0:0:0:0|h|h", -- Sunspire, Frost Embers
---    [87] = "Not craftable",                                               -- Dragon Bone
---    [88] = "Not craftable",                                               -- Haven't looked
---    [89] = "Not craftable",                                               -- Haven't looked
+--    [87] = "Not craftable",                                               -- none
+--    [88] = "Not craftable",                                               -- none
+    [89] = "|H0:item:156589:30:1:0:0:0:0:0:0:0:0:0:0:0:0:89:0:0:0:0:0|h|h",  -- Stags of Z'en, Oath Cord
 --    [90] = "Not craftable",                                               -- Glenmoril Wyrd
---    [91] = "Not craftable",                                               -- Haven't looked
-    [92] = "|H1:item:156571:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Dragonguard, Gilding Salts
+--    [91] = "Not craftable",                                               -- none
+    [92] = "|H0:item:156571:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Dragonguard, Gilding Salts
+    [93] = "|H0:item:156606:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Moongrave Fane, Blood of Sahrotnax
+    [94] = "|H0:item:156624:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- New Moon Priest, Aeonstone Shard
+    [95] = "|H0:item:156624:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Shield of Senchal, Carmine Shieldsilk
 }
 
 local MASTER_WRIT_TRAITS =
