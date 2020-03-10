@@ -96,20 +96,8 @@ local function SetUpSearchResultsWithoutAGS(rowControl)
     averagePricePerUnitControl:SetText('- |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
     averagePricePerUnitControl:SetColor(color:UnpackRGBA())
   else
-    local color = ZO_ColorDef:New(GetItemQualityColor(5))
     local margin = math.attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
-
-    if (margin < -1.5) then
-      color = ZO_ColorDef:New(1, 0, 0)
-    elseif (margin < 20) then
-      color = ZO_ColorDef:New(0.6, 0.6, 0.6)
-    elseif (margin < 35) then
-      color = ZO_ColorDef:New(GetItemQualityColor(2))
-    elseif (margin < 50) then
-      color = ZO_ColorDef:New(GetItemQualityColor(3))
-    elseif (margin < 65) then
-      color = ZO_ColorDef:New(GetItemQualityColor(4))
-    end
+    local color = ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
 
     profitMarginControl:SetText(margin .. '%')
     profitMarginControl:SetColor(color:UnpackRGBA())
@@ -159,20 +147,8 @@ local function SetUpSearchResultsWithAGS(rowControl)
     profitMarginControl:SetText('------') --I would like to use 4 dashes and just change the alignment, but that seems to change all alignment
     profitMarginControl:SetColor(color:UnpackRGBA())
   else
-    local color = ZO_ColorDef:New(GetItemQualityColor(5))
     local margin = math.attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
-
-    if (margin < -1.5) then
-      color = ZO_ColorDef:New(1, 0, 0)
-    elseif (margin < 20) then
-      color = ZO_ColorDef:New(0.6, 0.6, 0.6)
-    elseif (margin < 35) then
-      color = ZO_ColorDef:New(GetItemQualityColor(2))
-    elseif (margin < 50) then
-      color = ZO_ColorDef:New(GetItemQualityColor(3))
-    elseif (margin < 65) then
-      color = ZO_ColorDef:New(GetItemQualityColor(4))
-    end
+    local color = ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
 
     -- If I could make this layout work, that'd be ideal
     --           |  Percent Difference (total)  |   AGS Total Price
@@ -239,6 +215,7 @@ local function ZO_ScrollList_Commit_Hook(list)
 
         scrollData[i].data.averagePrice = averagePrices[itemLink].total
         scrollData[i].data.averagePricePerUnit = averagePrices[itemLink].perUnit
+        scrollData[i].data.ATT_INIT = true
       end
     end
   end
@@ -252,7 +229,6 @@ function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
     Settings.enabled = true
   end
   Settings.calcDays = Settings.calcDays or 10
-
   self:Enable(Settings.enabled)
 end
 
@@ -283,7 +259,11 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     TRADING_HOUSE.OnPurchaseSuccess = OnPurchaseSuccess
 
     self:SetCalcDays(Settings.calcDays or 10)
-  end
+      
+    if AwesomeGuildStore then
+      self:RegisterAGSInitCallback()    
+      EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_CLOSE_TRADING_HOUSE, function() self.Filter:ResetCache() end)
+    end
 
   Settings.enabled = enable
 end
@@ -302,4 +282,152 @@ function ArkadiusTradeToolsSales.TradingHouse:SetCalcDays(days)
   if (self.profitMarginDaysSelection) then
     return self.profitMarginDaysSelection.slider:SetValue(days)
   end
+end
+
+local function GetMarginData(cache, data, itemLink, days)
+  if not data.ATT_INIT then
+    -- We need to cache by days and item link in case the day slider is changed
+    -- We clear the cache on leaving the trading house, so it shouldn't become a performance drag
+    if cache[days] == nil then cache[days] = {} end
+    if (cache[days][itemLink] == nil) then
+      local itemType = GetItemLinkItemType(itemLink)
+      cache[days][itemLink] = {}
+
+      if (itemType == ITEMTYPE_MASTER_WRIT) then
+        local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match('[0-9]+'))
+        cache[days][itemLink].total = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+        cache[days][itemLink].perUnit = cache[days][itemLink].total / vouchers
+      else
+        cache[days][itemLink].perUnit = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+        cache[days][itemLink].total = cache[days][itemLink].perUnit * data.stackCount
+      end
+    end
+
+    data.averagePrice = cache[days][itemLink].total
+    data.averagePricePerUnit = cache[days][itemLink].perUnit
+    data.ATT_INIT = true
+  end
+
+  local margin = math.attRound((100 / data.averagePricePerUnit * data.purchasePricePerUnit - 100) * (-1))
+  return margin
+end
+
+function ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
+  local color = ZO_ColorDef:New(GetItemQualityColor(5))
+  if (margin < -1.5) then
+    color = ZO_ColorDef:New(1, 0, 0)
+  elseif (margin < 20) then
+    color = ZO_ColorDef:New(0.6, 0.6, 0.6)
+  elseif (margin < 35) then
+    color = ZO_ColorDef:New(GetItemQualityColor(2))
+  elseif (margin < 50) then
+    color = ZO_ColorDef:New(GetItemQualityColor(3))
+  elseif (margin < 65) then
+    color = ZO_ColorDef:New(GetItemQualityColor(4))
+  end
+  return color
+end
+
+-- AwesomeGuildStore integration
+--
+
+                        -- NOT the filter Type ID that appears in
+                        -- filterTypeIds.txt. Must avoid collision with any
+                        -- SUBFILTER_XXX values in CategoryPresets.lua,
+                        -- which currently range from 1..33. Using a high
+                        -- value here to avoid collision and might as well
+                        -- match our filter type ID for no real reason.
+local SUBFILTER_ATT = 104
+
+local STEPS = {
+  {id=1, value=-math.huge, label='Bad', icon="ArkadiusTradeToolsSales/img/baddeal_%s.dds"},
+  {id=2, value=-1.5, label='OK', icon="AwesomeGuildStore/images/qualitybuttons/normal_%s.dds"},
+  {id=3, value=20, label='Good', icon="AwesomeGuildStore/images/qualitybuttons/magic_%s.dds"},
+  {id=4, value=35, label='Great', icon="AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds"},
+  {id=5, value=50, label='Fantastic', icon="AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds"},
+  {id=6, value=65, label='Mind-Blowing!', icon="AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds"}
+}
+
+function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWrapper)
+    local AGS = AwesomeGuildStore
+    local FilterBase            = AGS.class.FilterBase
+    local ValueRangeFilterBase  = AGS.class.ValueRangeFilterBase
+    local FILTER_ID             = AGS.data.FILTER_ID
+    local SUB_CATEGORY_ID       = AGS.data.SUB_CATEGORY_ID
+    local MIN_VALUE             = 1
+    local MAX_VALUE             = 6
+    local AGSFilter         = ValueRangeFilterBase:Subclass()
+
+    function AGSFilter:New(...)
+        return ValueRangeFilterBase.New(self, ...)
+    end
+
+    function AGSFilter:ResetCache()
+      self.averagePrices = {}
+    end
+
+    function AGSFilter:Initialize()
+        self.averagePrices = {}
+        ValueRangeFilterBase.Initialize(
+                      self
+                    , SUBFILTER_ATT
+                    , FilterBase.GROUP_LOCAL
+                    , {
+                          label     = 'Deal Finder'
+                        , min       = MIN_VALUE
+                        , max       = MAX_VALUE
+                        , steps     = STEPS
+                    }
+        )
+        local qualityById = {}
+        for i = 1, #self.config.steps do
+            local step = self.config.steps[i]
+            local color = i == 1 and ZO_ColorDef:New(1, 0, 0) or GetItemQualityColor(step.id - 1)
+            step.colorizedLabel = color:Colorize(step.label)
+            qualityById[step.id] = step
+        end
+        self.qualityById = qualityById
+    end
+
+    function AGSFilter:CanFilter(...)
+			return true
+    end
+
+    function AGSFilter:FilterLocalResult(data)
+      local itemLink = GetTradingHouseSearchResultItemLink(data.slotIndex)
+      local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
+      local margin = GetMarginData(self.averagePrices, data, itemLink, days)
+      local min = self.localMin
+      local max = self.localMax
+      return margin >= STEPS[min].value and (max == MAX_VALUE or margin < STEPS[max+1].value)
+    end
+
+    function AGSFilter:IsLocal()
+        return true
+    end
+    
+    function AGSFilter:GetTooltipText(min, max)
+      if(min ~= self.config.min or max ~= self.config.max) then
+          local out = {}
+          for id = min, max do
+              local step = self.qualityById[id]
+              out[#out + 1] = step.colorizedLabel
+          end
+          return table.concat(out, ", ")
+      end
+      return ""
+    end
+
+    ArkadiusTradeToolsSales.TradingHouse.Filter = AGSFilter:New()
+    -- We need to register both the filter function and the actual UI fragment before it'll show up in AGS
+    AGS:RegisterFilter(ArkadiusTradeToolsSales.TradingHouse.Filter)
+    AGS:RegisterFilterFragment(AGS.class.QualityFilterFragment:New(SUBFILTER_ATT))
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:RegisterAGSInitCallback()
+  if self.AGSRegistered then return end
+  self.AGSRegistered = true
+  AwesomeGuildStore:RegisterCallback(AwesomeGuildStore.callback.AFTER_FILTER_SETUP
+                        , self.InitAGSIntegration
+                        )
 end

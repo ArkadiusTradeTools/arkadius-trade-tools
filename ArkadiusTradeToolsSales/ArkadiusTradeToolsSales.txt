@@ -5,6 +5,7 @@
 ## Version: 1.4.0
 ## SavedVariables: ArkadiusTradeToolsSalesData
 ## DependsOn: ArkadiusTradeTools
+## OptionalDependsOn: AwesomeGuildStore
 
 ArkadiusTradeToolsSales.lua
 ArkadiusTradeToolsSalesGuildRoster.lua
