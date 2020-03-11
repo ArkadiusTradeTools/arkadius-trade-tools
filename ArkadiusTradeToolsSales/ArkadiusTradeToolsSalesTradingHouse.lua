@@ -295,6 +295,7 @@ function ArkadiusTradeToolsSales.TradingHouse:SetCalcDays(days)
   end
 end
 
+---@return Number, String
 local function GetMarginData(cache, data, itemLink, days)
   if not data.ATT_INIT then
     -- We need to cache by days and item link in case the day slider is changed
@@ -320,7 +321,8 @@ local function GetMarginData(cache, data, itemLink, days)
   end
 
   local margin = math.attRound((100 / data.averagePricePerUnit * data.purchasePricePerUnit - 100) * (-1))
-  return margin
+  local marginFormatted = (data.averagePricePerUnit == 0 and '----') or string.format('%d%%', margin)
+  return margin, marginFormatted
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:InitializeListingMarginDisplay()
@@ -341,18 +343,21 @@ function ArkadiusTradeToolsSales.TradingHouse:InitializeListingMarginDisplay()
           listingMargin:SetDimensionConstraints(48)
           listingMargin:SetAnchor(TOPLEFT, timeRemainingControl, TOPRIGHT, -20, 0)
           listingMargin:SetFont(LISTING_MARGIN_FONT)
-          local margin = GetMarginData(cache, item, item.itemLink, days)
+          local margin, formatted = GetMarginData(cache, item, item.itemLink, days)
           local color = self.GetMarginColor(margin)
-          listingMargin:SetText(string.format('%d%%', margin))
+          listingMargin:SetText(formatted)
           listingMargin:SetColor(color:UnpackRGBA())
           listingMargin:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
       end
   end)
 end
 
+---@param margin Number
 function ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
   local color = ZO_ColorDef:New(GetItemQualityColor(5))
-  if (margin < -1.5) then
+  if (margin == -math.huge) then
+    color = ZO_ColorDef:New(1, 1, 1)
+  elseif (margin < -1.5) then
     color = ZO_ColorDef:New(1, 0, 0)
   elseif (margin < 20) then
     color = ZO_ColorDef:New(0.6, 0.6, 0.6)
