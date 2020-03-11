@@ -229,7 +229,16 @@ function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
     Settings.enabled = true
   end
   Settings.calcDays = Settings.calcDays or 10
+  Settings.defaultDealLevel = Settings.defaultDealLevel or 1
   self:Enable(Settings.enabled)
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:GetDefaultDealLevel(level)
+  return Settings.defaultDealLevel
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:SetDefaultDealLevel(level)
+  Settings.defaultDealLevel = level
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
@@ -383,15 +392,18 @@ end
 local SUBFILTER_ATT = 104
 
 local STEPS = {
-  {id=1, value=-math.huge, label='Bad', icon="ArkadiusTradeToolsSales/img/baddeal_%s.dds"},
-  {id=2, value=-1.5, label='OK', icon="AwesomeGuildStore/images/qualitybuttons/normal_%s.dds"},
-  {id=3, value=20, label='Good', icon="AwesomeGuildStore/images/qualitybuttons/magic_%s.dds"},
-  {id=4, value=35, label='Great', icon="AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds"},
-  {id=5, value=50, label='Fantastic', icon="AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds"},
-  {id=6, value=65, label='Mind-Blowing!', icon="AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds"}
+  {id=1, value=-math.huge, icon="ArkadiusTradeToolsSales/img/baddeal_%s.dds"},
+  {id=2, value=-1.5, icon="AwesomeGuildStore/images/qualitybuttons/normal_%s.dds"},
+  {id=3, value=20, icon="AwesomeGuildStore/images/qualitybuttons/magic_%s.dds"},
+  {id=4, value=35, icon="AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds"},
+  {id=5, value=50, icon="AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds"},
+  {id=6, value=65, icon="AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds"}
 }
 
 function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWrapper)
+    for _,value in ipairs(STEPS) do
+      value.label = L['ATT_STR_DEAL_LEVEL_' .. value.id]
+    end
     local AGS = AwesomeGuildStore
     local FilterBase            = AGS.class.FilterBase
     local ValueRangeFilterBase  = AGS.class.ValueRangeFilterBase
@@ -442,7 +454,7 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
       local margin = GetMarginData(self.averagePrices, data, itemLink, days)
       local min = self.localMin
       local max = self.localMax
-      return margin >= STEPS[min].value and (max == MAX_VALUE or margin < STEPS[max+1].value)
+      return margin >= STEPS[min].value and (max == MAX_VALUE or margin < STEPS[max+1].value) or (margin == -math.huge and Settings.defaultDealLevel >= min and Settings.defaultDealLevel <= max)
     end
 
     function AGSFilter:IsLocal()

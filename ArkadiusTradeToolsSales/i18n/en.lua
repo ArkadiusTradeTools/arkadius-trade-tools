@@ -53,6 +53,16 @@ local localization =
 
     ATT_STR_BASE_PROFIT_MARGIN_CALC_ON         = "Profit margin based on",
 
+    ATT_STR_DEFAULT_DEAL_LEVEL                 = "Default deal level",
+    ATT_STR_DEFAULT_DEAL_LEVEL_TOOLTIP         = "Sets the default deal level when there is no sales data for an item",
+
+    ATT_STR_DEAL_LEVEL_1                       = "Bad",
+    ATT_STR_DEAL_LEVEL_2                       = "OK",
+    ATT_STR_DEAL_LEVEL_3                       = "Good",
+    ATT_STR_DEAL_LEVEL_4                       = "Great",
+    ATT_STR_DEAL_LEVEL_5                       = "Fantastic",
+    ATT_STR_DEAL_LEVEL_6                       = "Mind-blowing!",
+
     ATT_STR_FILTER_TEXT_TOOLTIP                = "Text search for user-, guild- or item names, item traits (e. g. precise) or item quality (e. g. legendary)",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP           = "Toggle between search for exact strings or substrings. Case sensitivity is ignored in both cases.",
     ATT_STR_FILTER_COLUMN_TOOLTIP              = "Exclude/include this column from/to the text search",
