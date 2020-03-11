@@ -339,7 +339,6 @@ function ArkadiusTradeToolsSales.TradingHouse:InitializeListingMarginDisplay()
   local ITEM_LISTINGS_DATA_TYPE = 2
 
   local dataType = TRADING_HOUSE.postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]
-  local originalSetupCallback = dataType.setupCallback
   local cache = {}
 
   ZO_PostHook(dataType, 'setupCallback', function(rowControl, item)
@@ -352,12 +351,12 @@ function ArkadiusTradeToolsSales.TradingHouse:InitializeListingMarginDisplay()
           listingMargin:SetDimensionConstraints(48)
           listingMargin:SetAnchor(TOPLEFT, timeRemainingControl, TOPRIGHT, -20, 0)
           listingMargin:SetFont(LISTING_MARGIN_FONT)
-          local margin, formatted = GetMarginData(cache, item, item.itemLink, days)
-          local color = self.GetMarginColor(margin)
-          listingMargin:SetText(formatted)
-          listingMargin:SetColor(color:UnpackRGBA())
-          listingMargin:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
       end
+      local margin, formatted = GetMarginData(cache, item, item.itemLink, days)
+      local color = self.GetMarginColor(margin)
+      listingMargin:SetText(formatted)
+      listingMargin:SetColor(color:UnpackRGBA())
+      listingMargin:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
   end)
 end
 
@@ -383,12 +382,12 @@ end
 -- AwesomeGuildStore integration
 --
 
-                        -- NOT the filter Type ID that appears in
-                        -- filterTypeIds.txt. Must avoid collision with any
-                        -- SUBFILTER_XXX values in CategoryPresets.lua,
-                        -- which currently range from 1..33. Using a high
-                        -- value here to avoid collision and might as well
-                        -- match our filter type ID for no real reason.
+-- NOT the filter Type ID that appears in
+-- filterTypeIds.txt. Must avoid collision with any
+-- SUBFILTER_XXX values in CategoryPresets.lua,
+-- which currently range from 1..33. Using a high
+-- value here to avoid collision and might as well
+-- match our filter type ID for no real reason.
 local SUBFILTER_ATT = 104
 
 local STEPS = {
