@@ -191,6 +191,7 @@ local function ZO_ScrollList_Commit_Hook(list)
     local scrollData = ZO_ScrollList_GetDataList(list)
     local averagePrices = {}
     local itemLink
+    local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
 
     for i = 1, #scrollData do
       itemLink = GetTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
@@ -199,7 +200,6 @@ local function ZO_ScrollList_Commit_Hook(list)
       -- We're gonna conditionally skip the last item if AGS is enabled so these errors aren't thrown.
       if scrollData[i].data.stackCount ~= nil then
         if (averagePrices[itemLink] == nil) then
-          local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
           local itemType = GetItemLinkItemType(itemLink)
           averagePrices[itemLink] = {}
 
@@ -215,7 +215,7 @@ local function ZO_ScrollList_Commit_Hook(list)
 
         scrollData[i].data.averagePrice = averagePrices[itemLink].total
         scrollData[i].data.averagePricePerUnit = averagePrices[itemLink].perUnit
-        scrollData[i].data.ATT_INIT = true
+        scrollData[i].data.ATT_INIT = days
       end
     end
   end
@@ -261,6 +261,9 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     self.profitMarginDaysSelection.OnValueChanged = function(_, value)
       ZO_ScrollList_Commit(ZO_TradingHouseBrowseItemsRightPaneSearchResults)
       Settings.calcDays = self:GetCalcDays()
+      if self.Filter then
+        self.Filter:ForceUpdate()
+      end
     end
 
     --- Hook into search result functions ---
@@ -306,7 +309,7 @@ end
 
 ---@return Number, String
 local function GetMarginData(cache, data, itemLink, days)
-  if not data.ATT_INIT then
+  if data.ATT_INIT ~= days then
     -- We need to cache by days and item link in case the day slider is changed
     -- We clear the cache on leaving the trading house, so it shouldn't become a performance drag
     if cache[days] == nil then cache[days] = {} end
@@ -326,7 +329,7 @@ local function GetMarginData(cache, data, itemLink, days)
 
     data.averagePrice = cache[days][itemLink].total
     data.averagePricePerUnit = cache[days][itemLink].perUnit
-    data.ATT_INIT = true
+    data.ATT_INIT = days
   end
 
   local margin = math.attRound((100 / data.averagePricePerUnit * data.purchasePricePerUnit - 100) * (-1))
@@ -379,15 +382,6 @@ function ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
   return color
 end
 
--- AwesomeGuildStore integration
---
-
--- NOT the filter Type ID that appears in
--- filterTypeIds.txt. Must avoid collision with any
--- SUBFILTER_XXX values in CategoryPresets.lua,
--- which currently range from 1..33. Using a high
--- value here to avoid collision and might as well
--- match our filter type ID for no real reason.
 local SUBFILTER_ATT = 104
 
 local STEPS = {
@@ -446,14 +440,24 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
     function AGSFilter:CanFilter(...)
 			return true
     end
+    
+    function AGSFilter:ForceUpdate()
+      self:HandleChange(self.min, self.max)
+    end
+
+    function AGSFilter:IsDefaultDealLevel(margin)
+      return (margin == -math.huge and Settings.defaultDealLevel >= self.min and Settings.defaultDealLevel <= self.max and Settings.defaultDealLevel >= self.min and Settings.defaultDealLevel <= self.max)
+    end
+
+    function AGSFilter:IsWithinDealRange(margin)
+      return ((margin ~= -math.huge) and (margin >= STEPS[self.min].value) and (self.max == MAX_VALUE or margin < STEPS[self.max+1].value))
+    end
 
     function AGSFilter:FilterLocalResult(data)
       local itemLink = GetTradingHouseSearchResultItemLink(data.slotIndex)
       local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
       local margin = GetMarginData(self.averagePrices, data, itemLink, days)
-      local min = self.localMin
-      local max = self.localMax
-      return margin >= STEPS[min].value and (max == MAX_VALUE or margin < STEPS[max+1].value) or (margin == -math.huge and Settings.defaultDealLevel >= min and Settings.defaultDealLevel <= max)
+      return self:IsWithinDealRange(margin) or self:IsDefaultDealLevel(margin)
     end
 
     function AGSFilter:IsLocal()
