@@ -229,7 +229,7 @@ function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
     Settings.enabled = true
   end
   Settings.calcDays = Settings.calcDays or 10
-  Settings.defaultDealLevel = Settings.defaultDealLevel or 1
+  Settings.defaultDealLevel = Settings.defaultDealLevel or 2
   self:Enable(Settings.enabled)
 end
 
