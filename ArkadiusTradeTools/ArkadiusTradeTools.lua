@@ -613,6 +613,20 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
   end
 end
 
+ArkadiusTradeTools.Utilities = {}
+
+function ArkadiusTradeTools.Utilities.EnsureUnitPrice(purchase)
+  -- This is to avoid adding unitPrice to our saved variables
+  -- as it can be calculated very cheaply when needed
+  local entry = ZO_ShallowTableCopy(purchase)
+  if (entry.quantity == 1) then
+      entry.unitPrice = entry.price
+  else
+      entry.unitPrice = math.attRound(entry.price/entry.quantity, 2)            
+  end
+  return entry
+end
+
 --------------------------------------------------------
 ------------------- Local functions --------------------
 --------------------------------------------------------

@@ -4,6 +4,7 @@ ArkadiusTradeToolsSales.Localization = {}
 ArkadiusTradeToolsSales.SalesTables = {}
 
 local L = ArkadiusTradeToolsSales.Localization
+local Utilities = ArkadiusTradeTools.Utilities
 local SalesTables = ArkadiusTradeToolsSales.SalesTables
 local DefaultSettings
 local Settings
@@ -34,7 +35,7 @@ function ArkadiusTradeToolsSalesList:Initialize(listControl)
                       ["buyerName"]  = {tiebreaker = "timeStamp"},
                       ["guildName"]  = {tiebreaker = "timeStamp"},
 --                    ["itemName"]   = {tiebreaker = "timeStamp"},
---                    ["unitPrice"]    = {tiebreaker = "price"},
+                      ["unitPrice"]    = {tiebreaker = "price"},
                       ["price"]      = {tiebreaker = "timeStamp"},
                       ["timeStamp"]  = {}}
 
@@ -179,12 +180,6 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     itemLink:SetWidth(itemLink.header:GetWidth() - 10)
     itemLink:SetHidden(itemLink.header:IsHidden())
     itemLink:SetIcon(icon)
-
-    if (data.quantity == 1) then
-        data.unitPrice = data.price
-    else
-        data.unitPrice = math.attRound(data.price/data.quantity, 2)
-    end
 
     unitPrice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.unitPrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     unitPrice:SetWidth(unitPrice.header:GetWidth() - 10)
@@ -387,7 +382,8 @@ function ArkadiusTradeToolsSales:LoadSales()
     for t = 1, #SalesTables do
         for eventId, sale in pairs(SalesTables[t][self.serverName].sales) do
             self:UpdateTemporaryVariables(sale)
-            self.list:UpdateMasterList(sale)
+            local entry = Utilities.EnsureUnitPrice(sale)
+            self.list:UpdateMasterList(entry)
         end
     end
 end
@@ -468,6 +464,7 @@ end
 
 function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
     local eventType, secsSinceEvent, seller, buyer, quantity, itemLink, price, tax = GetGuildEventInfo(guildId, category, eventIndex)
+    local unitPrice = nil
 
     if (eventType ~= GUILD_EVENT_ITEM_SOLD) then
         return false
@@ -517,8 +514,10 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
             self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].sellerName)
             self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].buyerName)
 
+            
             --- Add event to lists master list ---
-            self.list:UpdateMasterList(dataTable.sales[eventIdNum])
+            local entry = Utilities.EnsureUnitPrice(dataTable.sales[eventIdNum])
+            self.list:UpdateMasterList(entry)
 
             -- Announce sale
             if (dataTable.sales[eventIdNum].sellerName == self.displayName) then
