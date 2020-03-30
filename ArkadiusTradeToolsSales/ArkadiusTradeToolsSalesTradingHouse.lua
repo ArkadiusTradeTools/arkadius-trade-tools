@@ -382,8 +382,6 @@ function ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
   return color
 end
 
-local SUBFILTER_ATT = 104
-
 local STEPS = {
   {id=1, value=-math.huge, icon="ArkadiusTradeToolsSales/img/baddeal_%s.dds"},
   {id=2, value=-1.5, icon="AwesomeGuildStore/images/qualitybuttons/normal_%s.dds"},
@@ -397,6 +395,8 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
     for _,value in ipairs(STEPS) do
       value.label = L['ATT_STR_DEAL_LEVEL_' .. value.id]
     end
+    -- Filter is constant of 104. Leaving this for compatibility until the AGS update releases.
+    local SUBFILTER_ATT = AwesomeGuildStore.data.FILTER_ID.ARKADIUS_TRADE_TOOLS_DEAL_FILTER or 104
     local AGS = AwesomeGuildStore
     local FilterBase            = AGS.class.FilterBase
     local ValueRangeFilterBase  = AGS.class.ValueRangeFilterBase
