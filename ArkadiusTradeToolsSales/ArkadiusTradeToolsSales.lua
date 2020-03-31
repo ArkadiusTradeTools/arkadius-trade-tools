@@ -35,7 +35,7 @@ function ArkadiusTradeToolsSalesList:Initialize(listControl)
                       ["buyerName"]  = {tiebreaker = "timeStamp"},
                       ["guildName"]  = {tiebreaker = "timeStamp"},
 --                    ["itemName"]   = {tiebreaker = "timeStamp"},
-                      ["unitPrice"]    = {tiebreaker = "price"},
+                    --   ["unitPrice"]    = {tiebreaker = "price"},
                       ["price"]      = {tiebreaker = "timeStamp"},
                       ["timeStamp"]  = {}}
 
@@ -180,6 +180,12 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     itemLink:SetWidth(itemLink.header:GetWidth() - 10)
     itemLink:SetHidden(itemLink.header:IsHidden())
     itemLink:SetIcon(icon)
+
+    if (data.quantity == 1) then
+        data.unitPrice = data.price
+    else
+        data.unitPrice = math.attRound(data.price/data.quantity, 2)            
+    end
 
     unitPrice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.unitPrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     unitPrice:SetWidth(unitPrice.header:GetWidth() - 10)
@@ -382,8 +388,8 @@ function ArkadiusTradeToolsSales:LoadSales()
     for t = 1, #SalesTables do
         for eventId, sale in pairs(SalesTables[t][self.serverName].sales) do
             self:UpdateTemporaryVariables(sale)
-            local entry = Utilities.EnsureUnitPrice(sale)
-            self.list:UpdateMasterList(entry)
+            -- local entry = Utilities.EnsureUnitPrice(sale)
+            self.list:UpdateMasterList(sale)
         end
     end
 end
@@ -516,8 +522,8 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 
             
             --- Add event to lists master list ---
-            local entry = Utilities.EnsureUnitPrice(dataTable.sales[eventIdNum])
-            self.list:UpdateMasterList(entry)
+            -- local entry = Utilities.EnsureUnitPrice(dataTable.sales[eventIdNum])
+            self.list:UpdateMasterList(dataTable.sales[eventIdNum])
 
             -- Announce sale
             if (dataTable.sales[eventIdNum].sellerName == self.displayName) then

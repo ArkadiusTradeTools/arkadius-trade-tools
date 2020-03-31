@@ -22,7 +22,7 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
                       ["buyerName"]  = {tiebreaker = "timeStamp"},
                       ["guildName"]  = {tiebreaker = "timeStamp"},
 --                    ["itemName"]   = {tiebreaker = "timeStamp"},
-                      ["unitPrice"]    = {tiebreaker = "timeStamp"},
+                    --   ["unitPrice"]    = {tiebreaker = "timeStamp"},
                       ["price"]      = {tiebreaker = "timeStamp"},					
                       ["timeStamp"]  = {}}
 
@@ -157,6 +157,12 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
     itemLink:SetWidth(itemLink.header:GetWidth() - 10)
     itemLink:SetHidden(itemLink.header:IsHidden())
     itemLink:SetIcon(icon)
+
+    if (data.quantity == 1) then
+        data.unitPrice = data.price
+    else
+        data.unitPrice = math.attRound(data.price/data.quantity, 2)            
+    end
 
 	unitPrice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.unitPrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     unitPrice:SetWidth(unitPrice.header:GetWidth() - 10)
@@ -301,8 +307,8 @@ end
 
 function ArkadiusTradeToolsPurchases:LoadPurchases()
     for _, purchase in pairs(Purchases) do
-        local entry = Utilities.EnsureUnitPrice(purchase)
-        self.list:UpdateMasterList(entry)
+        -- local entry = Utilities.EnsureUnitPrice(purchase)
+        self.list:UpdateMasterList(purchase)
     end
 end
 
@@ -320,8 +326,8 @@ function ArkadiusTradeToolsPurchases:OnItemBought(guildName, sellerName, itemLin
     table.insert(Purchases, purchase)
 
     --- Update list ---
-    local entry = Utilities.EnsureUnitPrice(purchase)
-    self.list:UpdateMasterList(entry)
+    -- local entry = Utilities.EnsureUnitPrice(purchase)
+    self.list:UpdateMasterList(purchase)
     self.list:RefreshData()
 end
 
