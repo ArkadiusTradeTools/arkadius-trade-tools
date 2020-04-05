@@ -273,8 +273,7 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     self:SetCalcDays(Settings.calcDays or 10)
       
     if AwesomeGuildStore then
-      self:RegisterAGSInitCallback()    
-      EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_CLOSE_TRADING_HOUSE, function() self.Filter:ResetCache() end)
+      self:RegisterAGSInitCallback()
     end
 
     -- Trying to hook in after AGS to avoid any conflicts
@@ -415,26 +414,26 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
     end
 
     function AGSFilter:Initialize()
-        self.averagePrices = {}
-        ValueRangeFilterBase.Initialize(
-                      self
-                    , SUBFILTER_ATT
-                    , FilterBase.GROUP_LOCAL
-                    , {
-                          label     = 'Deal Finder'
-                        , min       = MIN_VALUE
-                        , max       = MAX_VALUE
-                        , steps     = STEPS
-                    }
-        )
-        local qualityById = {}
-        for i = 1, #self.config.steps do
-            local step = self.config.steps[i]
-            local color = i == 1 and ZO_ColorDef:New(1, 0, 0) or GetItemQualityColor(step.id - 1)
-            step.colorizedLabel = color:Colorize(step.label)
-            qualityById[step.id] = step
-        end
-        self.qualityById = qualityById
+      self.averagePrices = {}
+      ValueRangeFilterBase.Initialize(
+                    self
+                  , SUBFILTER_ATT
+                  , FilterBase.GROUP_LOCAL
+                  , {
+                        label     = 'Deal Finder'
+                      , min       = MIN_VALUE
+                      , max       = MAX_VALUE
+                      , steps     = STEPS
+                  }
+      )
+      local qualityById = {}
+      for i = 1, #self.config.steps do
+          local step = self.config.steps[i]
+          local color = i == 1 and ZO_ColorDef:New(1, 0, 0) or GetItemQualityColor(step.id - 1)
+          step.colorizedLabel = color:Colorize(step.label)
+          qualityById[step.id] = step
+      end
+      self.qualityById = qualityById
     end
 
     function AGSFilter:CanFilter(...)
@@ -480,6 +479,7 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
     -- We need to register both the filter function and the actual UI fragment before it'll show up in AGS
     AGS:RegisterFilter(ArkadiusTradeToolsSales.TradingHouse.Filter)
     AGS:RegisterFilterFragment(AGS.class.QualityFilterFragment:New(SUBFILTER_ATT))
+    EVENT_MANAGER:RegisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_CLOSE_TRADING_HOUSE, function() ArkadiusTradeToolsSales.TradingHouse.Filter:ResetCache() end)
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:RegisterAGSInitCallback()
