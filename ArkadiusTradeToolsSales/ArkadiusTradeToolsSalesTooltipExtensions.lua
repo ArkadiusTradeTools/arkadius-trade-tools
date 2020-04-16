@@ -264,10 +264,10 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
     ---
     local TooltipSetTradeItem = self.tooltip.SetTradeItem
 
-    function self.tooltip.SetTradeItem(tooltip, tradeIndex)
-        local itemLink = GetTradeItemLink(tradeIndex)
+    function self.tooltip.SetTradeItem(tooltip, tradeType, tradeIndex)
+        local itemLink = GetTradeItemLink(tradeType, tradeIndex)
 
-        TooltipSetTradeItem(tooltip, tradeIndex)
+        TooltipSetTradeItem(tooltip, tradeType, tradeIndex)
         UpdateTooltip(tooltip, itemLink)
     end
     ---
