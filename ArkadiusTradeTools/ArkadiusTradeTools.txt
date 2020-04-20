@@ -6,7 +6,6 @@
 ## DependsOn: LibAddonMenu-2.0 
 ## SavedVariables: ArkadiusTradeToolsData
 
-# libs\LibGuildHistory-2.0\LibGuildHistory-2.0.lua
 ArkadiusTradeTools.lua
 i18n/en.lua
 i18n/$(language).lua

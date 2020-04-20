@@ -25,8 +25,6 @@ local SECONDS_IN_HOUR = 60 * 60
 local SECONDS_IN_DAY = SECONDS_IN_HOUR * 24
 local SECONDS_IN_WEEK = SECONDS_IN_DAY * 7
 
---local LGH = LibStub("LibGuildHistory-2.0")
-local LGH = LibGuildHistory2
 ---------------------------------
 
 function math.attRound(num, numDecimals)
@@ -676,7 +674,6 @@ local function OnPlayerActivated(eventCode)
   end
 
   ScanGuildHistoryEvents()
-  --LGH.RegisterForEvent("ATT", 0, 0, 0, function(guildId, category) d(guildId .. " " .. category .. " " .. GetNumGuildEvents(guildId, category)) end)
 end
 
 local function OnPlayerDeactivated(eventCode)
