@@ -261,7 +261,7 @@ local MASTER_WRIT_STYLES =
     [92] = "|H0:item:156571:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Dragonguard, Gilding Salts
     [93] = "|H0:item:156606:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Moongrave Fane, Blood of Sahrotnax
     [94] = "|H0:item:156624:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- New Moon Priest, Aeonstone Shard
-    [95] = "|H0:item:156624:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Shield of Senchal, Carmine Shieldsilk
+    [95] = "|H0:item:156643:30:1:0:0:0:0:0:0:0:0:0:0:0:0:95:0:0:0:0:0|h|h", -- Shield of Senchal, Carmine Shieldsilk
 }
 
 local MASTER_WRIT_TRAITS =
