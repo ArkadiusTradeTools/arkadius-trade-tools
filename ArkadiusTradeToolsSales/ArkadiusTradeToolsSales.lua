@@ -420,10 +420,19 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
         itemLevel = GetItemLinkRequiredLevel(itemLink)
         itemCP = GetItemLinkRequiredChampionPoints(itemLink)
         itemQuality = GetItemLinkQuality(itemLink)
-
-        if ((itemType == ITEMTYPE_ARMOR) or (itemType == ITEMTYPE_WEAPON) or (itemType == ITEMTYPE_ARMOR_TRAIT) or (itemType == ITEMTYPE_WEAPON_TRAIT) or (itemType == ITEMTYPE_JEWELRY_TRAIT)) then
+        
+        local isArmorOrWeapon = (itemType == ITEMTYPE_ARMOR) or (itemType == ITEMTYPE_WEAPON)
+        if (isArmorOrWeapon or (itemType == ITEMTYPE_ARMOR_TRAIT) or (itemType == ITEMTYPE_WEAPON_TRAIT) or (itemType == ITEMTYPE_JEWELRY_TRAIT)) then
             --- This function is EXTREMELY time consuming ---
             itemTrait = GetItemLinkTraitInfo(itemLink)
+            
+            -- Hack for EN issue with Nightmother's Embrace and Night Mother's Gaze set items having the same names
+            if isArmorOrWeapon then
+                local hasSet, _setName, _numBonuses, _numEquipped, _maxEquipped, setId = GetItemLinkSetInfo(itemLink)
+                if hasSet and setId == 34 or setId == 51 then
+                    itemName = itemName .. setId
+                end
+            end
         else
             itemTrait = ITEM_TRAIT_TYPE_NONE
         end
