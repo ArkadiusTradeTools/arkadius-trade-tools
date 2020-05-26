@@ -1057,6 +1057,17 @@ function ArkadiusTradeToolsSales:CreateInventoryKeybinds()
     INVENTORY_FRAGMENT:RegisterCallback("StateChange", OnStateChanged)
 end
 
+local MIN_ITEM_QUALITY
+local MAX_ITEM_QUALITY
+
+if (GetAPIVersion() < 100031) then
+    MIN_ITEM_QUALITY = ITEM_QUALITY_MIN_VALUE
+    MAX_ITEM_QUALITY = ITEM_QUALITY_MAX_VALUE
+else
+    MIN_ITEM_QUALITY = ITEM_FUNCTIONAL_QUALITY_ITERATION_BEGIN
+    MAX_ITEM_QUALITY = ITEM_FUNCTIONAL_QUALITY_ITERATION_END
+end
+
 --------------------------------------------------------
 ------------------- Local functions --------------------
 --------------------------------------------------------
@@ -1075,7 +1086,7 @@ local function PrepareTemporaryVariables()
         TemporaryVariables.traitNamesLowered[i] = GetString("SI_ITEMTRAITTYPE", i):lower()
     end
 
-    for i = ITEM_QUALITY_MIN_VALUE, ITEM_QUALITY_MAX_VALUE do
+    for i = MIN_ITEM_QUALITY, MAX_ITEM_QUALITY do
         TemporaryVariables.qualityNamesLowered[i] = GetString("SI_ITEMQUALITY", i):lower()
     end
 end
