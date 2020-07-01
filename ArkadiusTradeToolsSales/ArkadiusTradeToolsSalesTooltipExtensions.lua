@@ -289,9 +289,6 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
         UpdateTooltip(tooltip, itemLink)
     end
     ---
-
-    --ZO_Menus:SetDrawLayer(4)
-    ZO_Menus:SetDrawLevel(PopupTooltipTopLevel:GetDrawLevel() + 1)
 end
 
 function ArkadiusTradeToolsSales.TooltipExtension:GetItemSalesInformation(itemLink, fromTimeStamp)
