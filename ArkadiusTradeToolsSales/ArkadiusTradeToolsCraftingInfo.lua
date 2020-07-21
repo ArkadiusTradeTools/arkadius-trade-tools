@@ -226,7 +226,7 @@ local MASTER_WRIT_STYLES =
     [57] = "|H0:item:114984:30:1:0:0:0:0:0:0:0:0:0:0:0:0:57:0:0:0:0:0|h|h", -- Mazzatun , Leviathan Scrimshaw
     [58] = "|H0:item:82002:30:1:0:0:0:0:0:0:0:0:0:0:0:0:58:0:0:0:0:0|h|h",  -- Grim Harlequin, Grinstone
     [59] = "|H0:item:82000:30:1:0:0:0:0:0:0:0:0:0:0:0:0:59:0:0:0:0:0|h|h",  -- Hollow Jack, Amber Marble
---    [60] = "Not craftable",                                                 -- Reconstruction
+    [60] = "|H0:item:130061:30:1:0:0:0:0:0:0:0:0:0:0:0:0:60:0:0:0:0:0|h|h", -- Refabricated, Polished Rivets
     [61] = "|H0:item:132620:30:1:0:0:0:0:0:0:0:0:0:0:0:0:61:0:0:0:0:0|h|h", -- Bloodforge, Bloodroot Flux
     [62] = "|H0:item:132619:30:1:0:0:0:0:0:0:0:0:0:0:0:0:62:0:0:0:0:0|h|h", -- Dreadhorn, Minotaur Bezoar
 --    [63] = "Not craftable",                                                 -- none
@@ -262,6 +262,16 @@ local MASTER_WRIT_STYLES =
     [93] = "|H0:item:156606:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Moongrave Fane, Blood of Sahrotnax
     [94] = "|H0:item:156624:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- New Moon Priest, Aeonstone Shard
     [95] = "|H0:item:156643:30:1:0:0:0:0:0:0:0:0:0:0:0:0:95:0:0:0:0:0|h|h", -- Shield of Senchal, Carmine Shieldsilk
+--    [96] = "Not craftable",                                               --
+    [97] = "|H0:item:157533:30:1:0:0:0:0:0:0:0:0:0:0:0:0:97:0:0:0:0:0|h|h", -- Icereach Coven, Fryse Willow
+    [98] = "|H0:item:158307:30:1:0:0:0:0:0:0:0:0:0:0:0:0:98:0:0:0:0:0|h|h", -- Pyre Watch, Consecrated Myrrh
+--    [99] = "Not craftable",                                               --
+    [100] = "|H0:item:160509:30:1:0:0:0:0:0:0:0:0:0:0:0:0:100:0:0:0:0:0|h|h", -- Blackreach Vanguard, Gloomspore Chitin
+--    [101] = "Not craftable",                                               --
+--    [102] = "Not craftable",                                               --
+    [103] = "|H0:item:160592:30:1:0:0:0:0:0:0:0:0:0:0:0:0:103:0:0:0:0:0|h|h", -- Ancestral Nord, Etched Corundum
+    [104] = "|H0:item:160609:30:1:0:0:0:0:0:0:0:0:0:0:0:0:104:0:0:0:0:0|h|h", -- Ancestral High Elf, Etched Adamantite
+    [105] = "|H0:item:160626:30:1:0:0:0:0:0:0:0:0:0:0:0:0:105:0:0:0:0:0|h|h", -- Ancestral Orc, Etched Manganese
 }
 
 local MASTER_WRIT_TRAITS =
