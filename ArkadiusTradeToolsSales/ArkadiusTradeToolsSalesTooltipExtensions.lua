@@ -105,6 +105,10 @@ function ArkadiusTradeToolsSales.TooltipExtensions:Enable(enable)
             self.popupTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesPopupTooltip", GuiRoot, "ArkadiusTradeToolsSalesPopupTooltip")
         end
 
+        if (self.provisionerTooltip == nil) then
+            self.provisionerTooltip = CreateControlFromVirtual("ArkadiusTradeToolsSalesProvisionerTooltip", GuiRoot, "ArkadiusTradeToolsSalesProvisionerTooltip")
+        end
+
         self:EnableGraph(Settings.graphEnabled)
         self:EnableCrafting(Settings.craftingEnabled)
         self:SetDays(Settings.days)
@@ -138,6 +142,7 @@ function ArkadiusTradeToolsSales.TooltipExtensions:EnableGraph(enable)
 
     SetGraphVisibility(self.itemTooltip, not enable)
     SetGraphVisibility(self.popupTooltip, not enable)
+    SetGraphVisibility(self.provisionerTooltip, not enable)
 
     Settings.graphEnabled = enable
 end
@@ -162,6 +167,10 @@ function ArkadiusTradeToolsSales.TooltipExtensions:SetDays(days)
 
     if (self.popupTooltip) then
         self.popupTooltip:SetDays(days)
+    end
+
+    if (self.provisionerTooltip) then
+        self.provisionerTooltip:SetDays(days)
     end
 end
 ----------------------------------------------------------------------------
@@ -289,6 +298,17 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
         UpdateTooltip(tooltip, itemLink)
     end
     ---
+    local TooltipSetProvisionerResultItem = self.tooltip.SetProvisionerResultItem
+
+    function self.tooltip.SetProvisionerResultItem(tooltip, recipeListIndex, recipeIndex)
+        TooltipSetProvisionerResultItem(tooltip, recipeListIndex, recipeIndex)
+        local itemLink = GetRecipeResultItemLink(recipeListIndex, recipeIndex)
+        UpdateTooltip(tooltip, itemLink)
+        -- This is so the right-click menu works for furniture and provisioning.
+        -- The UI doesn't set the link at all, so we're gonna set it here.
+        self.tooltip.lastLink = itemLink
+    end
+    ---
 end
 
 function ArkadiusTradeToolsSales.TooltipExtension:GetItemSalesInformation(itemLink, fromTimeStamp)
@@ -362,15 +382,15 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
         for _, sale in pairs(sales) do
             averagePrice = averagePrice + sale.price
             quantity = quantity + sale.quantity
-if (link == itemLink) then
-    if (not guildColors[sale.guildName]) then
-        guildColors[sale.guildName] = ArkadiusTradeTools:GetGuildColor(sale.guildName)
-    end
+            if (link == itemLink) then
+                if (not guildColors[sale.guildName]) then
+                    guildColors[sale.guildName] = ArkadiusTradeTools:GetGuildColor(sale.guildName)
+                end
 
-    if (Settings.graphEnabled) then
-        self.graphControl.object:AddDot(sale.timeStamp, sale.price / sale.quantity, guildColors[sale.guildName])
-    end
-end
+                if (Settings.graphEnabled) then
+                    self.graphControl.object:AddDot(sale.timeStamp, sale.price / sale.quantity, guildColors[sale.guildName])
+                end
+            end
         end
 
         if (quantity > 0) then

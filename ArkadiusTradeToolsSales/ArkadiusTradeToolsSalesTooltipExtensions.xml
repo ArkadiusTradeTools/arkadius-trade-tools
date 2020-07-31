@@ -176,5 +176,22 @@
             </OnInitialized>
         </Control>
 
+        <Control name="ArkadiusTradeToolsSalesProvisionerTooltip" inherits="ArkadiusTradeToolsSalesTooltipExtension" virtual="true">
+            <OnInitialized>
+                ArkadiusTradeTools.Modules.Sales.TooltipExtension:New(self, ZO_ProvisionerTopLevelTooltip)
+                local daysControl = self:GetNamedChild("Days")
+
+                daysControl.OnValueChanged = function(_, value)
+                    ArkadiusTradeToolsSalesItemTooltip:SetDays(value)
+                    self:SetDays(value)
+                end
+
+                ZO_ProvisionerTopLevelTooltip:SetHandler("OnMouseUp", function(self, mouseButton, upInside)
+                    if ((upInside) and (mouseButton == MOUSE_BUTTON_INDEX_RIGHT)) then
+                        ZO_LinkHandler_OnLinkClicked(self.lastLink, mouseButton, self)
+                    end
+                end)
+            </OnInitialized>
+        </Control>
     </Controls>
 </GuiXml>
