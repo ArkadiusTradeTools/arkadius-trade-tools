@@ -261,6 +261,7 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     self.GuildRoster:Initialize(Settings.guildRoster)
     self.TradingHouse:Initialize(Settings.tradingHouse)
     self.TooltipExtensions:Initialize(Settings.tooltips)
+    self.InventoryExtensions:Initialize(Settings.inventories)
 
     self.addMenuItems = {}
 
@@ -268,12 +269,6 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     ZO_PreHook('ZO_LinkHandler_OnLinkMouseUp', function(...) return self:OnLinkClicked(...) end)
     ZO_PreHook('ZO_InventorySlot_ShowContextMenu', function(...) return self:ShowContextMenu(...) end)
     ZO_PreHook('ShowMenu', function() return self:ShowMenu() end)
-
---ZO_PreHookHandler(ZO_SmithingTopLevelCreationPanelResultTooltip, "OnMouseUp", function(...)
---    d("xxx")
---end)
---local ZO_SmithingTopLevelCreationPanelResultTooltipSetPendingSmithingItem = ZO_SmithingTopLevelCreationPanelResultTooltip.SetPendingSmithingItem
---ZO_SmithingTopLevelCreationPanelResultTooltip.SetPendingSmithingItem = function(...) ZO_SmithingTopLevelCreationPanelResultTooltipSetPendingSmithingItem(...) d(...) end
 
 
     --- Setup FilterBar ---
@@ -321,6 +316,7 @@ function ArkadiusTradeToolsSales:GetSettingsMenu()
     table.insert(settingsMenu, {type = "dropdown", name = L["ATT_STR_DEFAULT_DEAL_LEVEL"], tooltip = L['ATT_STR_DEFAULT_DEAL_LEVEL_TOOLTIP'], choices = {L["ATT_STR_DEAL_LEVEL_1"], L["ATT_STR_DEAL_LEVEL_2"], L["ATT_STR_DEAL_LEVEL_3"], L["ATT_STR_DEAL_LEVEL_4"], L["ATT_STR_DEAL_LEVEL_5"], L["ATT_STR_DEAL_LEVEL_6"]}, choicesValues = {1, 2, 3, 4, 5, 6}, getFunc = function() return self.TradingHouse:GetDefaultDealLevel() end, setFunc = function(number) self.TradingHouse:SetDefaultDealLevel(number) end, disabled = function() return not self.TradingHouse:IsEnabled() end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS"], getFunc = function() return self.TooltipExtensions:IsEnabled() end, setFunc = function(bool) self.TooltipExtensions:Enable(bool) end})
     table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH"], getFunc = function() return self.TooltipExtensions:IsGraphEnabled() end, setFunc = function(bool) self.TooltipExtensions:EnableGraph(bool) end, disabled = function() return not self.TooltipExtensions:IsEnabled() end})
+    table.insert(settingsMenu, {type = "checkbox", name = L["ATT_STR_ENABLE_INVENTORY_PRICES"], getFunc = function() return self.InventoryExtensions:IsEnabled() end, setFunc = function(bool) self.InventoryExtensions:Enable(bool) end, warning = L["ATT_STR_ENABLE_INVENTORY_PRICES_WARNING"]})
 
     for guildName, _ in pairs(TemporaryVariables.guildNamesLowered) do
         table.insert(guildNames, guildName)
@@ -1106,6 +1102,7 @@ local function onAddOnLoaded(eventCode, addonName)
     Settings.guilds = Settings.guilds or {}
     Settings.guildRoster = Settings.guildRoster or {}
     Settings.tooltips = Settings.tooltips or {}
+    Settings.inventories = Settings.inventories or {}
     Settings.tradingHouse = Settings.tradingHouse or {}
     Settings.filters = Settings.filters or {}
     Settings.filters.timeSelection = Settings.filters.timeSelection or 4
