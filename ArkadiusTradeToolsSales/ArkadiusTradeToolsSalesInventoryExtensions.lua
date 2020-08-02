@@ -143,6 +143,7 @@ function ArkadiusTradeToolsSales.InventoryExtensions:ShowMarketValue(control, sl
         local currencyMarkup =
             "|cffdc33|u0:4:currency:" .. formattedAmount .. "|u|r|t80%:80%:/esoui/art/currency/gold_mipmap.dds|t"
         marketValueControl:SetText(currencyMarkup)
+        marketValueControl:SetFont("ZoFontGameShadow")
     elseif control.dataEntry.data.marketValue then
         ZO_CurrencyControl_SetSimpleCurrency(
             marketValueControl,
