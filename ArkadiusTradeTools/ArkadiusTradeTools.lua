@@ -444,51 +444,37 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   result = result + relativeWeek * SECONDS_IN_WEEK
 
   if (useTradeWeek) then
-    -- Adjust to server locations
-    if (self.USE_TRADITIONAL_WEEKS) then
-      if (GetWorldName() == 'EU Megaserver') then
-        -- EU - Sundays 19:00 pm UTC
-        local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
-        local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
+    local megaserver = GetWorldName()
+    if (megaserver == 'EU Megaserver' and self.USE_TRADITIONAL_WEEKS or (megaserver ~= 'EU Megaserver' and not self.USE_TRADITIONAL_WEEKS)) then
+      -- EU Traditional / NA Not Traditional
+      local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
+      local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
 
-        if (hoursLeftThisWeek < 5) then
-          result = result + SECONDS_IN_WEEK
-        end
-
-        result = result - 5 * SECONDS_IN_HOUR
-      else
-        -- NA/PTS - Mondays 01:00 am UTC
-        local secondsGoneThisWeek = currentTimeStamp - self:GetStartOfWeek(0)
-        local hoursGoneThisWeek = math.floor(secondsGoneThisWeek / SECONDS_IN_HOUR)
-
-        if (hoursGoneThisWeek < 1) then
-          result = result - SECONDS_IN_WEEK
-        end
-
-        result = result + 1 * SECONDS_IN_HOUR
+      if (hoursLeftThisWeek < 5) then
+        result = result + SECONDS_IN_WEEK
       end
+
+      result = result - 5 * SECONDS_IN_HOUR
+    elseif (megaserver ~= 'EU Megaserver') then
+      -- NA Traditional
+      local secondsGoneThisWeek = currentTimeStamp - self:GetStartOfWeek(0)
+      local hoursGoneThisWeek = math.floor(secondsGoneThisWeek / SECONDS_IN_HOUR)
+
+      if (hoursGoneThisWeek < 1) then
+        result = result - SECONDS_IN_WEEK
+      end
+
+      result = result + 1 * SECONDS_IN_HOUR
     else
-      if (GetWorldName() == 'EU Megaserver') then
-        -- EU - Sundays 19:00 pm UTC
-        local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
-        local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
+      -- EU Not Traditional
+      local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
+      local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
 
-        if (hoursLeftThisWeek < 11) then
-          result = result + SECONDS_IN_WEEK
-        end
-
-        result = result - 11 * SECONDS_IN_HOUR
-      else
-        -- NA: Tuesdays - 19:00 UTC, 3pm EDT / 2pm EST
-        local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
-        local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
-
-        if (hoursLeftThisWeek < 5) then
-          result = result + SECONDS_IN_WEEK
-        end
-
-        result = result - 5 * SECONDS_IN_HOUR
+      if (hoursLeftThisWeek < 11) then
+        result = result + SECONDS_IN_WEEK
       end
+
+      result = result - 11 * SECONDS_IN_HOUR
     end
   end
 
