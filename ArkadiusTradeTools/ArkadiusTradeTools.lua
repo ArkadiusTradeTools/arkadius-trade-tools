@@ -402,7 +402,7 @@ function ArkadiusTradeTools:GetStartOfDay(relativeDay)
   return timeStamp
 end
 
-ArkadiusTradeTools.USE_TRADITIONAL_WEEKS = true
+ArkadiusTradeTools.FORCE_TRADITIONAL_WEEK = false
 -- EU: Sundays - 19:00 UTC
 -- NA: Mondays - 01:00 UTC, 9pm EDT / 8pm EST
 local TRADITIONAL_WEEK = {
@@ -427,25 +427,60 @@ local NEW_WEEK = {
   [6] = 0, -- Wednesday
 }
 
+local elongatedWeekTimes = {
+  ['EU Megaserver'] = {
+    -- 08-02-2020 19:00 UTC
+    startTime = 1596394800,
+    -- 08-11-2020 13:00 UTC
+    endTime = 1597150800,
+  },
+  ['NA Megaserver'] = {
+    -- 08-03-2020 01:00 UTC
+    startTime = 1596416400,
+    -- 08-11-2020 19:00 UTC
+    endTime = 1597172400,
+  },
+  ['PTS'] = {
+    -- 07-27-2020 01:00 UTC
+    startTime = 1595811600,
+    -- 08-4-2020 19:00 UTC
+    endTime = 1596567600,
+  }
+}
+
 --- Returns the UTC timestamp for the start of trading week ---
 function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   relativeWeek = relativeWeek or 0
 
+  local megaserver = GetWorldName()
+  local elongatedWeek = elongatedWeekTimes[megaserver]
   local currentTimeStamp = GetTimeStamp()
   local days = math.floor(currentTimeStamp / SECONDS_IN_DAY)
   local today = days % 7
 
   local result = days * SECONDS_IN_DAY
-
-  local goBack = self.USE_TRADITIONAL_WEEKS and TRADITIONAL_WEEK or NEW_WEEK
-
-  -- Start of week --
-  result = result - goBack[today]
   result = result + relativeWeek * SECONDS_IN_WEEK
 
+  -- If we're in the bonus 2 days at the end of the elongated week, shift the date back 2 days
+  local TODAY_IS_ELONGATED = currentTimeStamp >= (elongatedWeek.startTime + 7 * SECONDS_IN_DAY) and currentTimeStamp < elongatedWeek.endTime
+  if TODAY_IS_ELONGATED and useTradeWeek then
+    result = result - 2 * SECONDS_IN_DAY
+    today = (days - 2) % 7
+  end
+
+  -- Before the trader flip day change, so use Sundays as start
+  local USE_TRADITIONAL_WEEK_START = self.FORCE_TRADITIONAL_WEEK or result < elongatedWeek.endTime
+  local goBack = USE_TRADITIONAL_WEEK_START and TRADITIONAL_WEEK or NEW_WEEK
+
+  result = result - goBack[today]
+  
   if (useTradeWeek) then
-    local megaserver = GetWorldName()
-    if (megaserver == 'EU Megaserver' and self.USE_TRADITIONAL_WEEKS or (megaserver ~= 'EU Megaserver' and not self.USE_TRADITIONAL_WEEKS)) then
+    local isElongatedWeek = result >= elongatedWeek.startTime and result < elongatedWeek.endTime
+    if isElongatedWeek then
+      -- Elongated week, so let's use static dates
+      return elongatedWeek.startTime
+    end
+    if (megaserver == 'EU Megaserver' and USE_TRADITIONAL_WEEK_START or (megaserver ~= 'EU Megaserver' and not USE_TRADITIONAL_WEEK_START)) then
       -- EU Traditional / NA Not Traditional
       local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
       local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
