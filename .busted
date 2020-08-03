@@ -1,0 +1,13 @@
+return {
+  default = {
+    pattern= ".test",
+    ROOT = { "./" },
+    lpath="./?.lua;./?/?.lua;/workspaces/?.lua;"
+  },
+  coverage = {
+    coverage = true,
+    pattern= ".test",
+    ROOT = { "./" },
+    lpath="./?.lua;./?/?.lua;/workspaces/?.lua;"
+  },
+}

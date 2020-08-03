@@ -402,7 +402,32 @@ function ArkadiusTradeTools:GetStartOfDay(relativeDay)
   return timeStamp
 end
 
---- Returns the UTC timestamp for last Monday midnight ---
+ArkadiusTradeTools.USE_TRADITIONAL_WEEKS = true
+-- EU: Sundays - 19:00 UTC
+-- NA: Mondays - 01:00 UTC, 9pm EDT / 8pm EST
+local TRADITIONAL_WEEK = {
+  [0] = 3 * SECONDS_IN_DAY, -- Thursday
+  [1] = 4 * SECONDS_IN_DAY, -- Friday
+  [2] = 5 * SECONDS_IN_DAY, -- Saturday
+  [3] = 6 * SECONDS_IN_DAY, -- Sunday
+  [4] = 0, -- Monday
+  [5] = 1 * SECONDS_IN_DAY, -- Tuesday
+  [6] = 2 * SECONDS_IN_DAY, -- Wednesday
+}
+
+-- EU: Tuesdays - 13:00 UTC, 10am EDT / 9am EST
+-- NA: Tuesdays - 19:00 UTC, 3pm EDT / 2pm EST
+local NEW_WEEK = {
+  [0] = 1 * SECONDS_IN_DAY, -- Thursday
+  [1] = 2 * SECONDS_IN_DAY, -- Friday
+  [2] = 3 * SECONDS_IN_DAY, -- Saturday
+  [3] = 4 * SECONDS_IN_DAY, -- Sunday
+  [4] = 5 * SECONDS_IN_DAY, -- Monday
+  [5] = 6 * SECONDS_IN_DAY, -- Tuesday
+  [6] = 0, -- Wednesday
+}
+
+--- Returns the UTC timestamp for the start of trading week ---
 function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   relativeWeek = relativeWeek or 0
 
@@ -412,41 +437,58 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
 
   local result = days * SECONDS_IN_DAY
 
-  local goBack = {}
-  goBack[0] = 3 * SECONDS_IN_DAY -- Thursday
-  goBack[1] = 4 * SECONDS_IN_DAY -- Friday
-  goBack[2] = 5 * SECONDS_IN_DAY -- Saturday
-  goBack[3] = 6 * SECONDS_IN_DAY -- Sunday
-  goBack[4] = 0 -- Monday
-  goBack[5] = 1 * SECONDS_IN_DAY -- Tuesday
-  goBack[6] = 2 * SECONDS_IN_DAY -- Wednesday
+  local goBack = self.USE_TRADITIONAL_WEEKS and TRADITIONAL_WEEK or NEW_WEEK
 
-  -- Monday midnight --
+  -- Start of week --
   result = result - goBack[today]
   result = result + relativeWeek * SECONDS_IN_WEEK
 
   if (useTradeWeek) then
     -- Adjust to server locations
-    if (GetWorldName() == 'EU Megaserver') then
-      -- EU - Sundays 19:00 pm UTC
-      local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
-      local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
+    if (self.USE_TRADITIONAL_WEEKS) then
+      if (GetWorldName() == 'EU Megaserver') then
+        -- EU - Sundays 19:00 pm UTC
+        local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
+        local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
 
-      if (hoursLeftThisWeek < 5) then
-        result = result + SECONDS_IN_WEEK
+        if (hoursLeftThisWeek < 5) then
+          result = result + SECONDS_IN_WEEK
+        end
+
+        result = result - 5 * SECONDS_IN_HOUR
+      else
+        -- NA/PTS - Mondays 01:00 am UTC
+        local secondsGoneThisWeek = currentTimeStamp - self:GetStartOfWeek(0)
+        local hoursGoneThisWeek = math.floor(secondsGoneThisWeek / SECONDS_IN_HOUR)
+
+        if (hoursGoneThisWeek < 1) then
+          result = result - SECONDS_IN_WEEK
+        end
+
+        result = result + 1 * SECONDS_IN_HOUR
       end
-
-      result = result - 5 * SECONDS_IN_HOUR
     else
-      -- NA/PTS - Mondays 01:00 am UTC
-      local secondsGoneThisWeek = currentTimeStamp - self:GetStartOfWeek(0)
-      local hoursGoneThisWeek = math.floor(secondsGoneThisWeek / SECONDS_IN_HOUR)
+      if (GetWorldName() == 'EU Megaserver') then
+        -- EU - Sundays 19:00 pm UTC
+        local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
+        local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
 
-      if (hoursGoneThisWeek < 1) then
-        result = result - SECONDS_IN_WEEK
+        if (hoursLeftThisWeek < 11) then
+          result = result + SECONDS_IN_WEEK
+        end
+
+        result = result - 11 * SECONDS_IN_HOUR
+      else
+        -- NA: Tuesdays - 19:00 UTC, 3pm EDT / 2pm EST
+        local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
+        local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
+
+        if (hoursLeftThisWeek < 5) then
+          result = result + SECONDS_IN_WEEK
+        end
+
+        result = result - 5 * SECONDS_IN_HOUR
       end
-
-      result = result + 1 * SECONDS_IN_HOUR
     end
   end
 

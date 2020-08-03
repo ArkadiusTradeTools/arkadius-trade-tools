@@ -1,0 +1,5 @@
+*.lua    eol=lf
+*.xml    eol=lf
+*.txt    eol=lf
+*.md    eol=lf
+*.lock eol=lf
