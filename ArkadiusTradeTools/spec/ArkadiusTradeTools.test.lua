@@ -177,7 +177,7 @@ describe('ArkadiusTradeTools', function()
       describe('when using weeks tied to server flip-time on Tuesdays', function()
         before_each(function()
           _G.GetWorldName = function() return 'EU Megaserver' end
-          _G.GetTimeStamp = function() return 1598967000 end
+          _G.GetTimeStamp = function() return 1598970600 end
         end)
 
         after_each(function()
@@ -185,65 +185,68 @@ describe('ArkadiusTradeTools', function()
           _G.GetTimeStamp = nil
         end)
     
-        local TUE_SEPTEMBER_8_2020_12PM_UTC = 1599566400
+        local SEPTEMBER_8TH_12PM_UTC = 1599566400
+        local SEPTEMBER_1ST_2PM_UTC = 1598968800
         describe('when asking for the start of the current trader week', function()
           describe('with fewer than 5 hours remaining', function()
             before_each(function()
-              _G.GetTimeStamp = function() return TUE_SEPTEMBER_8_2020_12PM_UTC end
+              _G.GetTimeStamp = function() return SEPTEMBER_8TH_12PM_UTC end
             end)
 
             after_each(function()
               _G.GetTimeStamp = nil
             end)
 
-            it('should return Tuesday 1pm UTC', function()
+            it('should return Tuesday 2pm UTC', function()
               local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
-              expect.equals(1598965200, result)
+              expect.equals(SEPTEMBER_1ST_2PM_UTC, result)
             end)
           end)
 
-          it('should return Tuesday 1pm UTC', function()
+          it('should return Tuesday 2pm UTC', function()
             local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
-            expect.equals(1598965200, result)
+            expect.equals(SEPTEMBER_1ST_2PM_UTC, result)
           end)
         end)
-
+        
+        local AUGUST_25TH_2PM_UTC = 1598364000
         describe('when asking for the start of the previous trader week', function() 
           describe('with fewer than 5 hours remaining', function()
             before_each(function()
-              _G.GetTimeStamp = function() return TUE_SEPTEMBER_8_2020_12PM_UTC end
+              _G.GetTimeStamp = function() return SEPTEMBER_8TH_12PM_UTC end
             end)
             after_each(function()           
               _G.GetTimeStamp = nil
             end)
 
-            it('should return last Tuesday 1pm UTC', function()
+            it('should return last Tuesday 2pm UTC', function()
               local result = ArkadiusTradeTools:GetStartOfWeek(-1, true)
-              expect.equals(1598360400, result)
+              expect.equals(AUGUST_25TH_2PM_UTC, result)
             end)                
           end)
 
-          it('should return last Tuesday 1pm UTC', function()
+          it('should return last Tuesday 2pm UTC', function()
             local result = ArkadiusTradeTools:GetStartOfWeek(-1, true)
-            expect.equals(1598360400, result)
+            expect.equals(AUGUST_25TH_2PM_UTC, result)
           end)
         end)
 
+        local AUGUST_25TH_2PM_UTC = 1597759200
         describe('when asking for the start of the trader week two weeks ago', function() 
           describe('with fewer than 5 hours remaining', function()
             before_each(function()
-              _G.GetTimeStamp = function() return TUE_SEPTEMBER_8_2020_12PM_UTC end
+              _G.GetTimeStamp = function() return SEPTEMBER_8TH_12PM_UTC end
             end)
 
             it('should return last Tuesday 1pm UTC', function()
               local result = ArkadiusTradeTools:GetStartOfWeek(-2, true)
-              expect.equals(1597755600, result)
+              expect.equals(AUGUST_25TH_2PM_UTC, result)
             end)                
           end)
 
-          it('should return two Tuesdays ago at 7pm UTC', function()
+          it('should return two Tuesdays ago at 2pm UTC', function()
               local result = ArkadiusTradeTools:GetStartOfWeek(-2, true)
-              expect.equals(1597755600, result)
+              expect.equals(AUGUST_25TH_2PM_UTC, result)
           end)
         end)
       end)
@@ -472,7 +475,7 @@ describe('ArkadiusTradeTools', function()
 
         describe('with fewer 1 hour into the week', function()
           before_each(function()
-              _G.GetTimeStamp = function() return 1597152600 end
+              _G.GetTimeStamp = function() return 1597156200 end
           end)
           after_each(function()
               _G.GetTimeStamp = nil

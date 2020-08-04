@@ -428,7 +428,7 @@ local TRADITIONAL_WEEK = {
   [6] = 2 * SECONDS_IN_DAY, -- Wednesday
 }
 
--- EU: Tuesdays - 13:00 UTC, 10am EDT / 9am EST
+-- EU: Tuesdays - 14:00 UTC, 10am EDT / 9am EST
 -- NA: Tuesdays - 19:00 UTC, 3pm EDT / 2pm EST
 local NEW_WEEK = {
   [0] = 1 * SECONDS_IN_DAY, -- Thursday
@@ -444,8 +444,8 @@ local elongatedWeekTimes = {
   ['EU Megaserver'] = {
     -- 08-02-2020 19:00 UTC
     startTime = 1596394800,
-    -- 08-11-2020 13:00 UTC
-    endTime = 1597150800,
+    -- 08-11-2020 14:00 UTC
+    endTime = 1597154400,
   },
   ['NA Megaserver'] = {
     -- 08-03-2020 01:00 UTC
@@ -518,11 +518,11 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
       local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp
       local hoursLeftThisWeek = math.floor(secondsLeftThisWeek / SECONDS_IN_HOUR)
 
-      if (hoursLeftThisWeek < 11) then
+      if (hoursLeftThisWeek < 10) then
         result = result + SECONDS_IN_WEEK
       end
 
-      result = result - 11 * SECONDS_IN_HOUR
+      result = result - 10 * SECONDS_IN_HOUR
     end
   end
 
