@@ -45,15 +45,16 @@ local function ATT_ZO_ScrollList_Commit_Hook(list)
         local scrollData = ZO_ScrollList_GetDataList(list)
         for i = 1, #scrollData do
             local data = scrollData[i].data
-            if not (data.marketValue and data.marketValueStackCount == data.stackCount) then
-                local bagId = data.bagId
-                local slotIndex = data.slotIndex
-                local itemLink = bagId and GetItemLink(bagId, slotIndex) or GetItemLink(slotIndex)
+            local bagId = data.bagId
+            local slotIndex = data.slotIndex
+            local itemLink = bagId and GetItemLink(bagId, slotIndex) or GetItemLink(slotIndex)
+            if not (data.marketValue and data.marketValueStackCount == data.stackCount and data.marketValueItemLink == itemLink) then
                 if itemLink then
                     local avgPrice = ArkadiusTradeToolsSales.InventoryExtensions:GetPrice(itemLink)
                     if avgPrice > 0 then
                         data.marketValue = math.floor(avgPrice * data.stackCount)
                         data.marketValueStackCount = data.stackCount
+                        data.marketValueItemLink = itemLink
                         data.ATT_PRICE = true
                     else
                         data.marketValue = data.stackCount * data.sellPrice
