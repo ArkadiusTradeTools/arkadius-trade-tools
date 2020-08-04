@@ -1,6 +1,6 @@
 ## Title: Arkadius' Trade Tools - Statistics
 ## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
-## APIVersion: 100030 100031
+## APIVersion: 100031 100032
 ## Description: None
 ## Version: 1.6.0-alpha.1
 ## SavedVariables: ArkadiusTradeToolsStatisticsData
