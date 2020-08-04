@@ -290,6 +290,20 @@ function ArkadiusTradeTools:CreateSettingsMenu()
       end
     }
   )
+  table.insert(
+    settingsMenu,
+    {
+      type = 'checkbox',
+      name = L['ATT_STR_FORCE_TRADITIONAL_TRADER_WEEK'],
+      getFunc = function()
+        return Settings.forceTraditionalTraderWeek
+      end,
+      setFunc = function(bool)
+        Settings.forceTraditionalTraderWeek = bool
+      end,
+      warning = L['ATT_STR_FORCE_TRADITIONAL_TRADER_WEEK_WARNING']
+    }
+  )
   table.insert(settingsMenu, {type = 'custom'})
 
   table.insert(settingsMenu, {type = 'header', name = L['ATT_STR_EXTENDED']})
@@ -402,7 +416,6 @@ function ArkadiusTradeTools:GetStartOfDay(relativeDay)
   return timeStamp
 end
 
-ArkadiusTradeTools.FORCE_TRADITIONAL_WEEK = false
 -- EU: Sundays - 19:00 UTC
 -- NA: Mondays - 01:00 UTC, 9pm EDT / 8pm EST
 local TRADITIONAL_WEEK = {
@@ -463,20 +476,20 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
 
   -- If we're in the bonus 2 days at the end of the elongated week, shift the date back 2 days
   local TODAY_IS_ELONGATED = currentTimeStamp >= (elongatedWeek.startTime + 7 * SECONDS_IN_DAY) and currentTimeStamp < elongatedWeek.endTime
-  if TODAY_IS_ELONGATED and useTradeWeek then
+  if TODAY_IS_ELONGATED and useTradeWeek and not Settings.forceTraditionalTraderWeek then
     result = result - 2 * SECONDS_IN_DAY
     today = (days - 2) % 7
   end
 
   -- Before the trader flip day change, so use Sundays as start
-  local USE_TRADITIONAL_WEEK_START = self.FORCE_TRADITIONAL_WEEK or result < elongatedWeek.endTime
+  local USE_TRADITIONAL_WEEK_START = Settings.forceTraditionalTraderWeek or result < elongatedWeek.endTime
   local goBack = USE_TRADITIONAL_WEEK_START and TRADITIONAL_WEEK or NEW_WEEK
 
   result = result - goBack[today]
   
   if (useTradeWeek) then
     local isElongatedWeek = result >= elongatedWeek.startTime and result < elongatedWeek.endTime
-    if isElongatedWeek then
+    if isElongatedWeek and not Settings.forceTraditionalTraderWeek then
       -- Elongated week, so let's use static dates
       return elongatedWeek.startTime
     end
@@ -781,6 +794,7 @@ local function OnAddOnLoaded(eventCode, addonName)
   Settings.shortScanInterval = Settings.shortScanInterval or 2000
   Settings.longScanInterval = Settings.longScanInterval or 10
   Settings.drawTier = Settings.drawTier or DT_HIGH
+  Settings.forceTraditionalTraderWeek = Settings.forceTraditionalTraderWeek or false
 
   --- Register for events ---
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_PLAYER_ACTIVATED, OnPlayerActivated)
