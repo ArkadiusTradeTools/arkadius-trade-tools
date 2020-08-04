@@ -22,6 +22,7 @@ Target.create "Clean" (fun _ ->
 )
 Target.create "Copy" (fun _ -> 
   !! "**/*.lua"
+  -- "**/*.test.lua"
   ++ "LICENSE"
   ++ "**/*.txt"
   ++ "**/*.xml"
