@@ -440,6 +440,9 @@ local NEW_WEEK = {
   [6] = 0, -- Wednesday
 }
 
+--------------------------------------------------------
+----------------------- Temp Code ----------------------
+--------------------------------------------------------
 local elongatedWeekTimes = {
   ['EU Megaserver'] = {
     -- 08-02-2020 19:00 UTC
@@ -460,19 +463,35 @@ local elongatedWeekTimes = {
     endTime = 1596567600,
   }
 }
+--------------------------------------------------------
+----------------------End Temp Code --------------------
+--------------------------------------------------------
 
 --- Returns the UTC timestamp for the start of trading week ---
 function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   relativeWeek = relativeWeek or 0
 
   local megaserver = GetWorldName()
-  local elongatedWeek = elongatedWeekTimes[megaserver]
   local currentTimeStamp = GetTimeStamp()
   local days = math.floor(currentTimeStamp / SECONDS_IN_DAY)
   local today = days % 7
 
+  -- Get today at midnight UTC
   local result = days * SECONDS_IN_DAY
+  -- Shift to the desired week
   result = result + relativeWeek * SECONDS_IN_WEEK
+  
+
+  --------------------------------------------------------
+  ----------------------- Temp Code ----------------------
+  --------------------------------------------------------
+  -- A better solution is definitely out there (with time shifts because of the hours left in the day but skipping the elongated week check)
+  -- but this is temp code and it's working, so I'm gonna stick with that
+  local elongatedWeek = elongatedWeekTimes[megaserver]
+  local compareTimeStamp = currentTimeStamp + relativeWeek * SECONDS_IN_WEEK
+  if compareTimeStamp >= elongatedWeek.endTime and compareTimeStamp < elongatedWeek.endTime + SECONDS_IN_WEEK then
+    return elongatedWeek.endTime
+  end
 
   -- If we're in the bonus 2 days at the end of the elongated week, shift the date back 2 days
   local TODAY_IS_ELONGATED = currentTimeStamp >= (elongatedWeek.startTime + 7 * SECONDS_IN_DAY) and currentTimeStamp < elongatedWeek.endTime
@@ -480,19 +499,36 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
     result = result - 2 * SECONDS_IN_DAY
     today = (days - 2) % 7
   end
+  --------------------------------------------------------
+  ----------------------End Temp Code --------------------
+  --------------------------------------------------------
 
   -- Before the trader flip day change, so use Sundays as start
-  local USE_TRADITIONAL_WEEK_START = Settings.forceTraditionalTraderWeek or result < elongatedWeek.endTime
+  local USE_TRADITIONAL_WEEK_START = Settings.forceTraditionalTraderWeek
+    --------------------------------------------------------
+    ----------------------- Temp Code ----------------------
+    --------------------------------------------------------
+    or result < elongatedWeek.endTime
+    --------------------------------------------------------
+    ----------------------End Temp Code --------------------
+    --------------------------------------------------------
   local goBack = USE_TRADITIONAL_WEEK_START and TRADITIONAL_WEEK or NEW_WEEK
 
   result = result - goBack[today]
   
   if (useTradeWeek) then
+    --------------------------------------------------------
+    ----------------------- Temp Code ----------------------
+    --------------------------------------------------------
     local isElongatedWeek = result >= elongatedWeek.startTime and result < elongatedWeek.endTime
     if isElongatedWeek and not Settings.forceTraditionalTraderWeek then
       -- Elongated week, so let's use static dates
       return elongatedWeek.startTime
     end
+    --------------------------------------------------------
+    ----------------------End Temp Code --------------------
+    --------------------------------------------------------
+
     if (megaserver == 'EU Megaserver' and USE_TRADITIONAL_WEEK_START or (megaserver ~= 'EU Megaserver' and not USE_TRADITIONAL_WEEK_START)) then
       -- EU Traditional / NA Not Traditional
       local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp

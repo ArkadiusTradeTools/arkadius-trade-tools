@@ -609,7 +609,7 @@ describe('ArkadiusTradeTools', function()
     end)
   end)
 
-  describe('if we\'re on PTS the current date is during the last two days of the elongated week', function()
+  describe('if we\'re on PTS and the current date is during the last two days of the elongated week', function()
     before_each(function()
       _G.GetWorldName = function() return 'PTS' end
       _G.GetTimeStamp = function() return 1596502800 end
@@ -645,7 +645,7 @@ describe('ArkadiusTradeTools', function()
   end)
 
   -- This only works if we make Settings global, at least until I can call OnAddonLoaded and set the settings properly
-  describe('if we\'re on PTS the current date is during the last two days of the elongated week and we have force traditional weeks enabled', function()
+  describe('if we\'re on PTS and the current date is during the last two days of the elongated week and we have force traditional weeks enabled', function()
     before_each(function()
       _G.GetWorldName = function() return 'PTS' end
       _G.GetTimeStamp = function() return 1596502800 end
@@ -681,7 +681,158 @@ describe('ArkadiusTradeTools', function()
       end)
     end)
   end)
-  
+
+  describe('if we\'re on PTS and the current date is during the first new trader week', function()
+    local AUGUST_4TH_930PM_UTC = 1596576600    
+    before_each(function()
+      _G.GetWorldName = function() return 'PTS' end
+      _G.GetTimeStamp = function() return AUGUST_4TH_930PM_UTC end
+      _G.Settings = { forceTraditionalTraderWeek = false }
+    end)
+
+    after_each(function()
+      _G.GetTimeStamp = nil
+    end)    
+    
+    local JULY_13TH_1AM_UTC = 1594602000
+    local JULY_20TH_1AM_UTC = 1595206800
+    local JULY_27TH_1AM_UTC = 1595811600
+    local AUGUST_3RD_1AM_UTC = 1596416400
+    local AUGUST_4TH_7PM_UTC = 1596567600
+    local AUGUST_5TH_7PM_UTC = 1596654000
+    local AUGUST_12TH_7PM_UTC = 1597258800
+
+    describe('when asking for the start of the current trader week  #only', function()
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
+        expect.equals(AUGUST_4TH_7PM_UTC, result)
+      end)
+    end)
+
+    local AUGUST_4TH_7PM_UTC = 1596567600
+    local AUGUST_11TH_7PM_UTC = 1597172400
+    local AUGUST_11TH_630PM_UTC = 1597170600
+    describe('when asking for the start of the current trader week', function()
+      before_each(function()
+        _G.GetWorldName = function() return 'PTS' end
+        _G.GetTimeStamp = function() return AUGUST_11TH_630PM_UTC end
+        _G.Settings = { forceTraditionalTraderWeek = false }
+      end)
+
+      after_each(function()
+        _G.GetTimeStamp = nil
+      end)    
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
+        expect.equals(AUGUST_4TH_7PM_UTC, result)
+      end)
+    end)
+
+    describe('when asking for the start of the last trader week', function()
+      before_each(function()
+        _G.GetWorldName = function() return 'PTS' end
+        _G.GetTimeStamp = function() return 1597181400 end
+        _G.Settings = { forceTraditionalTraderWeek = false }
+      end)
+
+      after_each(function()
+        _G.GetTimeStamp = nil
+      end)    
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(-1, true)
+        expect.equals(AUGUST_4TH_7PM_UTC, result)
+      end)
+    end)
+
+    describe('when asking for the start of the prior trader week', function()
+      before_each(function()
+        _G.GetWorldName = function() return 'PTS' end
+        _G.GetTimeStamp = function() return 1597786200 end
+        _G.Settings = { forceTraditionalTraderWeek = false }
+      end)
+
+      after_each(function()
+        _G.GetTimeStamp = nil
+      end)    
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(-2, true)
+        expect.equals(AUGUST_4TH_7PM_UTC, result)
+      end)
+    end)
+  end)
+
+  describe('if we\'re on NA and the current date is during the first new trader week', function()
+    local AUGUST_11TH_930PM_UTC = 1597181400
+    local AUGUST_18TH_930PM_UTC = 1597786200
+    local AUGUST_25TH_930PM_UTC = 1598391000
+    local AUGUST_12TH_7PM_UTC = 1597258800
+    before_each(function()
+      _G.GetWorldName = function() return 'NA Megaserver' end
+      _G.GetTimeStamp = function() return AUGUST_12TH_7PM_UTC end
+      _G.Settings = { forceTraditionalTraderWeek = false }
+    end)
+
+    after_each(function()
+      _G.GetTimeStamp = nil
+    end)    
+
+    local AUGUST_11TH_7PM_UTC = 1597172400
+    describe('when asking for the start of the current trader week', function()
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
+        expect.equals(AUGUST_11TH_7PM_UTC, result)
+      end)
+    end)
+
+    describe('when asking for the start of the current trader week', function()
+      before_each(function()
+        _G.GetWorldName = function() return 'NA Megaserver' end
+        _G.GetTimeStamp = function() return AUGUST_11TH_930PM_UTC end
+        _G.Settings = { forceTraditionalTraderWeek = false }
+      end)
+
+      after_each(function()
+        _G.GetTimeStamp = nil
+      end)    
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
+        expect.equals(AUGUST_11TH_7PM_UTC, result)
+      end)
+    end)
+
+    describe('when asking for the start of the last trader week', function()
+      before_each(function()
+        _G.GetWorldName = function() return 'NA Megaserver' end
+        _G.GetTimeStamp = function() return AUGUST_18TH_930PM_UTC end
+        _G.Settings = { forceTraditionalTraderWeek = false }
+      end)
+
+      after_each(function()
+        _G.GetTimeStamp = nil
+      end)    
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(-1, true)
+        expect.equals(AUGUST_11TH_7PM_UTC, result)
+      end)
+    end)
+
+    describe('when asking for the start of the prior trader week', function()
+      before_each(function()
+        _G.GetWorldName = function() return 'NA Megaserver' end
+        _G.GetTimeStamp = function() return AUGUST_25TH_930PM_UTC end
+        _G.Settings = { forceTraditionalTraderWeek = false }
+      end)
+
+      after_each(function()
+        _G.GetTimeStamp = nil
+      end)    
+      it('should return Tuesday 7pm UTC', function()
+        local result = ArkadiusTradeTools:GetStartOfWeek(-2, true)
+        expect.equals(AUGUST_11TH_7PM_UTC, result)
+      end)
+    end)
+  end)
+
   describe('if we\'re on NA and the current date is during the last two days of the elongated week', function()
     before_each(function()
       _G.GetWorldName = function() return 'NA Megaserver' end
