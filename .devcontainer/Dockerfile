@@ -14,8 +14,12 @@ FROM mcr.microsoft.com/vscode/devcontainers/base:0-${VARIANT}
 # RUN apt-get update \
 #     && export DEBIAN_FRONTEND=noninteractive \
 #     && apt-get -y install --no-install-recommends <your-package-list-here>
-
+RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+RUN sudo dpkg -i packages-microsoft-prod.deb
 RUN apt-get update && apt-get -y install luarocks default-jre
+RUN apt-get update && apt-get -y install apt-transport-https
+RUN apt-get update && apt-get -y install dotnet-sdk-3.1
 
-RUN luarocks install busted luacov
-RUN git config --global core.autocrlf
+RUN luarocks install busted
+RUN luarocks install luacov
+# RUN git config --global core.autocrlf
