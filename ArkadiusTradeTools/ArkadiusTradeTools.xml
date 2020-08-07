@@ -192,7 +192,7 @@
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="160" offsetY="0" />
                         </Control>
-						<!--
+						
                         <Button name="$(parent)Donate" text="Spenden" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" inherits="ZO_DefaultButton">
                             <Dimensions x="96" y="20" />
                             <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="RIGHT" offsetX="-5" offsetY="0" />
@@ -201,11 +201,10 @@
                             </OnInitialized>
                             <OnClicked>
                                 local function PrepareMail()
-                                    MAIL_SEND.to:SetText("@Arkadius1")
+                                    MAIL_SEND.to:SetText("@Aldanga")
                                     MAIL_SEND.subject:SetText("Arkadius Trade Tools - Donation")
                                     MAIL_SEND.body:SetText("")
                                     MAIL_SEND:SetMoneyAttachmentMode()
-                                    MAIL_SEND:AttachMoney(0, 1000)
                                 end
 
                                 MAIL_SEND:ClearFields()
@@ -218,7 +217,7 @@
                                 end
                             </OnClicked>
                         </Button>
-						-->
+						
                     </Controls>
                 </Control>
             </Controls>
