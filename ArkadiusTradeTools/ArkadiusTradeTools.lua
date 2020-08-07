@@ -140,10 +140,13 @@ function ArkadiusTradeTools:Initialize()
   guildStatusText:SetText(L['ATT_STR_GUILDSTATUS_TEXT'])
 
   local megaserver = GetWorldName()
+  local buttonDonate = GetControl(statusBar, "Donate")
   if megaserver == 'NA Megaserver' then
-    local buttonDonate = GetControl(statusBar, "Donate")
     buttonDonate:SetText(L["ATT_STR_DONATE"])
     buttonDonate.tooltip:SetContent(L["ATT_STR_DONATE_TOOLTIP"])
+  else
+    buttonDonate = GetControl(statusBar, "Donate")
+    buttonDonate:SetHidden(true)
   end
 
   self.nextScanGuild = 1
