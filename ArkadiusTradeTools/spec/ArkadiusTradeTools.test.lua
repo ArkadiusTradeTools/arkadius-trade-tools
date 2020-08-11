@@ -384,9 +384,10 @@ describe('ArkadiusTradeTools', function()
           _G.GetTimeStamp = nil
         end)
 
-        describe('with fewer than 5 hours remaining', function()
+        describe('with fewer than 1 hour into the new week #only', function()
           before_each(function()
-            _G.GetTimeStamp = function() return 1597773600 end
+            _G.GetTimeStamp = function() return 1597172848 end
+            _G.Settings = { forceTraditionalTraderWeek = false }
           end)
           after_each(function()
             _G.GetTimeStamp = nil
@@ -402,20 +403,26 @@ describe('ArkadiusTradeTools', function()
           local result = ArkadiusTradeTools:GetStartOfWeek(-1, true)
           expect.equals(1596416400, result)
         end)
+
+        it('when asking for two weeks ago should return two Sundays ago at 7pm UTC', function()
+          local result = ArkadiusTradeTools:GetStartOfWeek(-2, true)
+          expect.equals(1595811600, result)
+        end)
       end)
 
       describe('when asking for the start of the trader week two weeks ago', function() 
         before_each(function()
           _G.GetTimeStamp = function() return 1597865400 end
+          _G.Settings = { forceTraditionalTraderWeek = false }
         end)
 
         after_each(function()           
           _G.GetTimeStamp = nil
         end)
 
-        describe('with fewer than 5 hours remaining', function()
+        describe('with fewer than 1 hour into the new week', function()
           before_each(function()
-            _G.GetTimeStamp = function() return 1598378400 end
+            _G.GetTimeStamp = function() return 1597777648 end
           end)
 
           it('should return last Sunday 7pm UTC', function()
@@ -702,7 +709,7 @@ describe('ArkadiusTradeTools', function()
     local AUGUST_5TH_7PM_UTC = 1596654000
     local AUGUST_12TH_7PM_UTC = 1597258800
 
-    describe('when asking for the start of the current trader week  #only', function()
+    describe('when asking for the start of the current trader week', function()
       it('should return Tuesday 7pm UTC', function()
         local result = ArkadiusTradeTools:GetStartOfWeek(0, true)
         expect.equals(AUGUST_4TH_7PM_UTC, result)

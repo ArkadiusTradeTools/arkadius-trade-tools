@@ -527,7 +527,8 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
     ----------------------- Temp Code ----------------------
     --------------------------------------------------------
     local isElongatedWeek = result >= elongatedWeek.startTime and result < elongatedWeek.endTime
-    if isElongatedWeek and not Settings.forceTraditionalTraderWeek then
+
+    if (result == 1596412800 and relativeWeek == -1) or isElongatedWeek and not Settings.forceTraditionalTraderWeek then
       -- Elongated week, so let's use static dates
       return elongatedWeek.startTime
     end
