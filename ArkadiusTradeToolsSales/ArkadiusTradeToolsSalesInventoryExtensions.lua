@@ -57,7 +57,7 @@ local function ATT_ZO_ScrollList_Commit_Hook(list)
                         data.marketValueItemLink = itemLink
                         data.ATT_PRICE = true
                     else
-                        data.marketValue = data.stackCount * data.sellPrice
+                        data.marketValue = (data.stackCount or 0) * (data.sellPrice or 0)
                     end
                 end
             end
