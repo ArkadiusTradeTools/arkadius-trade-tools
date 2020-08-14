@@ -309,6 +309,15 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
         self.tooltip.lastLink = itemLink
     end
     ---
+
+    -- This allows us to force the context menu above the tooltip
+    -- without screwing up the draw level for other menus
+	ZO_PreHookHandler(PopupTooltip, 'OnShow', function(self, hidden)
+        ZO_Menus:SetDrawLevel(PopupTooltipTopLevel:GetDrawLevel() + 1)
+    end)
+	ZO_PreHookHandler(PopupTooltip, 'OnHide', function(self, hidden)
+        ZO_Menus:SetDrawLevel(PopupTooltipTopLevel:GetDrawLevel() - 1)
+    end)
 end
 
 function ArkadiusTradeToolsSales.TooltipExtension:GetItemSalesInformation(itemLink, fromTimeStamp)

@@ -163,16 +163,6 @@
                         ZO_LinkHandler_OnLinkClicked(self.lastLink, mouseButton, self)
                     end
                 end)
-                
-                -- This allows us to force the context menu above the tooltip
-                -- without screwing up the draw level for other menus
-                PopupTooltip:SetHandler("OnShow", function(self, hidden)
-                    ZO_Menus:SetDrawLevel(PopupTooltipTopLevel:GetDrawLevel() + 1)
-                end)
-
-                PopupTooltip:SetHandler("OnHide", function(self, hidden)
-                    ZO_Menus:SetDrawLevel(PopupTooltipTopLevel:GetDrawLevel() - 1)
-                end)
             </OnInitialized>
         </Control>
 
