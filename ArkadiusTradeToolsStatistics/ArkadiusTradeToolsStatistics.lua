@@ -143,7 +143,8 @@ function ArkadiusTradeToolsStatistics:Initialize()
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_14_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-14) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     self.frame.filterBar.Time:AddItem({name = L["ATT_STR_30_DAYS"], callback = callback, NewerThanTimeStamp = function() return 0 end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     self.frame.filterBar.Time:SelectByIndex(Settings.filters.timeSelection)
-    self.frame.filterBar.Text.OnChanged = function(text) self.list:RefreshFilters() end
+    self.frame.filterBar.Text.OnChanged = function(text) Settings.filters.text = text self.list:RefreshFilters() end
+    self.frame.filterBar.Text:SetText(Settings.filters.text)
     self.frame.filterBar.Text.tooltip:SetContent(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
     self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed) self.list.Filter:SetNeedsRefilter() self.list:RefreshFilters() Settings.filters.useSubStrings = pressed end
     self.frame.filterBar.SubStrings:SetPressed(Settings.filters.useSubStrings)
@@ -235,6 +236,7 @@ local function onAddOnLoaded(eventCode, addonName)
 --    Settings.keepDataDays = Settings.keepDataDays or 30
     Settings.filters = Settings.filters or {}
     Settings.filters.timeSelection = Settings.filters.timeSelection or 4
+    Settings.filters.text = Settings.filters.text or ''
     if (Settings.filters.useSubStrings == nil) then Settings.filters.useSubStrings = true end
 
     EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsStatistics.NAME, EVENT_ADD_ON_LOADED)
