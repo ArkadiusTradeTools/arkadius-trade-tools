@@ -241,6 +241,27 @@ function ArkadiusTradeToolsSales.TradingHouse:SetDefaultDealLevel(level)
   Settings.defaultDealLevel = level
 end
 
+--Copying a lot of stuff from AGS SellTabWrapper to duplicate functionality until AGS adds price providers
+local LISTING_INPUT_BUTTON_SIZE = 24
+local ATT_AVERAGE_PRICE_TEXTURE = "/esoui/art/vendor/vendor_tabicon_sell_%s.dds"
+
+function ArkadiusTradeToolsSales.TradingHouse:AddAGSPriceButton()
+  local buttonContainer = WINDOW_MANAGER:GetControlByName("AwesomeGuildStoreFormInvoicePriceButtons")
+  local lastSellPriceButton = --[[ in case MM is loaded too]]buttonContainer:GetNamedChild("AveragePriceButton") or buttonContainer:GetNamedChild('LastSellPriceButton')
+  local averagePriceButtonLabel = "Select ATT Price"
+  local averagePriceButton = AwesomeGuildStore.class.ToggleButton:New(buttonContainer, "$(parent)ATTPriceButton", ATT_AVERAGE_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, averagePriceButtonLabel)
+  averagePriceButton.control:ClearAnchors()
+  averagePriceButton.control:SetAnchor(RIGHT, lastSellPriceButton, LEFT, 2, 0)
+  averagePriceButton.HandlePress = function(button)
+    local itemLink = AwesomeGuildStore.internal.tradingHouse.sellTab.pendingItemLink
+    local days = ArkadiusTradeToolsSalesData.settings.tooltips.days
+    local price = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+    if (price) then
+      AwesomeGuildStore.internal.tradingHouse.sellTab:SetUnitPrice(math.floor(price + 0.5))
+    end
+  end
+end
+
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
   if enable and self.profitMarginDaysLabel == nil then
     ZO_PreHook('ZO_ScrollList_Commit', ZO_ScrollList_Commit_Hook)
@@ -274,6 +295,7 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
       
     if AwesomeGuildStore then
       self:RegisterAGSInitCallback()
+      ZO_PostHook(AwesomeGuildStore.class.SellTabWrapper, 'InitializeListingInput', function() self:AddAGSPriceButton() end)
     end
 
     -- Trying to hook in after AGS to avoid any conflicts
