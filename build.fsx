@@ -49,4 +49,4 @@ open Fake.Core.TargetOperators
   ==> "Deploy"
 
 // start build
-Target.runOrDefaultWithArguments "Default"
+Target.runOrDefaultWithArguments "Deploy"
