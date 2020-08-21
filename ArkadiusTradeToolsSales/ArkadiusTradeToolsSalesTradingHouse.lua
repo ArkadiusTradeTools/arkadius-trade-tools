@@ -204,7 +204,7 @@ local function ZO_ScrollList_Commit_Hook(list)
           averagePrices[itemLink] = {}
 
           if (itemType == ITEMTYPE_MASTER_WRIT) then
-            local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match('[0-9]+'))
+            local vouchers = ArkadiusTradeToolsSales:GetVoucherCount(itemLink)
             averagePrices[itemLink].total = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
             averagePrices[itemLink].perUnit = averagePrices[itemLink].total / vouchers
           else
@@ -339,7 +339,7 @@ local function GetMarginData(cache, data, itemLink, days)
       cache[days][itemLink] = {}
 
       if (itemType == ITEMTYPE_MASTER_WRIT) then
-        local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match('[0-9]+'))
+        local vouchers = ArkadiusTradeToolsSales:GetVoucherCount(itemLink)
         cache[days][itemLink].total = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
         cache[days][itemLink].perUnit = cache[days][itemLink].total / vouchers
       else

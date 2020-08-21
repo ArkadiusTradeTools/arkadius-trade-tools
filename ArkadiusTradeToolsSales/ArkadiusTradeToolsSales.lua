@@ -434,7 +434,7 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
         end
 
         if (itemType == ITEMTYPE_MASTER_WRIT) then
-            itemVouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
+            itemVouchers = self:GetVoucherCount(itemLink)
         end
 
         itemLinkInfos[itemLink] = {name = itemName, itype = itemType, level = itemLevel, cp = itemCP, trait = itemTrait, quality = itemQuality, vouchers = itemVouchers}
@@ -555,9 +555,10 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 end
 
 function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp, allQualities)
-    if (not self:IsItemLink(itemLink)) then
-        return {}
-    end
+    -- This is already called by all callers, so no need to double up
+    -- if (not self:IsItemLink(itemLink)) then
+    --     return {}
+    -- end
 
     fromTimeStamp = fromTimeStamp or 0
     local result = {[itemLink] = {}}
@@ -666,6 +667,13 @@ function ArkadiusTradeToolsSales:GetPurchasesAndSalesVolumes(guildName, displayN
     return purchasesVolume, salesVolume
 end
 
+
+
+function ArkadiusTradeToolsSales:GetVoucherCount(itemLink)
+    local _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_, vouchers = ZO_LinkHandler_ParseLink(itemLink)
+    return math.floor((tonumber(vouchers) / 10000) + .5)
+end
+
 function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeStamp)
     if (not self:IsItemLink(itemLink)) then
         return 0
@@ -690,7 +698,7 @@ function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeS
     end
 
     if (itemType == ITEMTYPE_MASTER_WRIT) then
-        local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
+        local vouchers = self:GetVoucherCount(itemLink)
         averagePrice = averagePrice * vouchers
     end
 
@@ -792,7 +800,7 @@ function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
 
     if (numSales > 0) then
         if (itemType == ITEMTYPE_MASTER_WRIT) then
-            local vouchers = tonumber(GenerateMasterWritRewardText(itemLink):match("[0-9]+"))
+            local vouchers = self:GetVoucherCount(itemLink)
             chatString = string.format(L["ATT_FMTSTR_STATS_MASTER_WRIT"], itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice * vouchers), ArkadiusTradeTools:LocalizeDezimalNumber(numSales), ArkadiusTradeTools:LocalizeDezimalNumber(quantity), ArkadiusTradeTools:LocalizeDezimalNumber(averagePrice), days)
         else
             if (quantity > numSales) then
