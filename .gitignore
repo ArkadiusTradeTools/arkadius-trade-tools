@@ -6,6 +6,7 @@
 
 # Build output
 build/
+releases/
 
 # Compiled Lua sources
 luac.out

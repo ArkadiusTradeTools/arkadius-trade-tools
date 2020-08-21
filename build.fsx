@@ -1,12 +1,13 @@
-let projectName = "ArkadiusTradeTools"
-let archiveName = "arkadius-trade-tools"
-let directoryGlob = "build/"
-
 open Fake.IO.Globbing
 #r "paket:
 nuget Fake.Core.Target
 nuget Fake.IO.Zip //"
 #load "./.fake/build.fsx/intellisense.fsx"
+
+let projectName = "ArkadiusTradeTools"
+let archiveName = "arkadius-trade-tools"
+let directoryGlob = "build/"
+
 
 open Fake.Core
 open Fake.IO
@@ -33,9 +34,11 @@ Target.create "Copy" (fun _ ->
 )
 
 Target.create "Deploy" (fun p ->
-  (sprintf "%s-%s.zip" archiveName p.Context.Arguments.Head, !! (sprintf "%s/**" directoryGlob))
-  ||> Zip.zip "build/"
+  let fileName = sprintf "%s-%s.zip" archiveName p.Context.Arguments.Head
+  (fileName, !! (sprintf "%s/**" directoryGlob)) ||> Zip.zip "build/"
   Shell.cleanDir buildDir
+  Directory.ensure "releases"
+  Shell.moveFile "releases" fileName
 )
 
 Target.create "Default" ignore
