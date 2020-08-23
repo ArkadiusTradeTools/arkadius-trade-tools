@@ -340,11 +340,8 @@ function ArkadiusTradeToolsSales.TooltipExtension:GetDays()
 end
 
 function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
-    if (not ArkadiusTradeToolsSales:IsItemLink(itemLink)) then
-        return
-    end
-
     itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
+    if itemLink == nil then return end
 
     local itemSales = self:GetItemSalesInformation(itemLink, GetTimeStamp() - self.days * self.SECONDS_IN_DAY)
     local itemQuality = GetItemLinkQuality(itemLink)

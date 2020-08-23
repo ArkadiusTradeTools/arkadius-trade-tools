@@ -760,11 +760,8 @@ function ArkadiusTradeToolsSales:DeleteSales()
 end
 
 function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
-    if (not self:IsItemLink(itemLink)) then
-        return
-    end
-
     itemLink = self:NormalizeItemLink(itemLink)
+    if itemLink == nil then return end
     local L = L
 
     if ((language) and (L[language])) then
