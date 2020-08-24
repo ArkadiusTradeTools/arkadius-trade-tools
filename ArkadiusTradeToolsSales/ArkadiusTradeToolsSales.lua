@@ -729,7 +729,8 @@ function ArkadiusTradeToolsSales:GetCrafingComponentPrices(itemLink, fromTimeSta
         return {}
     end
 
-    for _, component in ipairs(components) do
+    for i = 1, #components do
+        local component = components[i]
         component.price = self:GetAveragePricePerItem(component.itemLink, fromTimeStamp)
     end
 

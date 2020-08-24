@@ -818,7 +818,8 @@ end
 function ArkadiusTradeToolsFilterBar.Time:GetSelectedIndex()
     local selectedItem = self:GetSelectedItem()
 
-    for i, item in ipairs(self.m_comboBox.m_sortedItems) do
+    for i = 1, #self.m_comboBox.m_sortedItems do
+        local item = self.m_comboBox.m_sortedItems[i]
         if (item == selectedItem) then
             return i
         end

@@ -414,7 +414,8 @@ local STEPS = {
 }
 
 function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWrapper)
-    for _,value in ipairs(STEPS) do
+    for i = 1, #STEPS do
+      local value = STEPS[i]
       value.label = L['ATT_STR_DEAL_LEVEL_' .. value.id]
     end
     -- Filter is constant of 104. Leaving this for compatibility until the AGS update releases.
