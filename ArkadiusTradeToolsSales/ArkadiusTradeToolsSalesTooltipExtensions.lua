@@ -59,14 +59,14 @@ end
 
 function TooltipExtensionList:SetupItemRow(control, data)
     control.data = data
-    local itemLinkControl = GetControl(control, "ItemLink")
+    local itemLinkControl = control:GetNamedChild("ItemLink")
     itemLinkControl:SetText(data.itemLink)
 
-    local averagePriceControl = GetControl(control, "AveragePrice")
+    local averagePriceControl = control:GetNamedChild("AveragePrice")
     averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.averagePrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
     averagePriceControl.normalColor = ZO_ColorDef:New(1, 1, 1)
 
-    local numberSalesControl = GetControl(control, "NumberSales")
+    local numberSalesControl = control:GetNamedChild("NumberSales")
     numberSalesControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.numberSales))
     numberSalesControl.normalColor = ZO_ColorDef:New(1, 1, 1)
 
@@ -128,7 +128,7 @@ function ArkadiusTradeToolsSales.TooltipExtensions:EnableGraph(enable)
             return
         end
 
-        local graph = GetControl(tooltip, "Graph")
+        local graph = tooltip:GetNamedChild("Graph")
 
         if (hidden) then
             tooltip:SetHeight(170)
@@ -200,13 +200,13 @@ end
 
 function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
     local control = self.control
-    self.daysControl = GetControl(control, "Days")
-    self.listControl = GetControl(control, "ItemList")
+    self.daysControl = control:GetNamedChild("Days")
+    self.listControl = control:GetNamedChild("ItemList")
     self.list = TooltipExtensionList:New(self.listControl, self.tooltip)
-    self.statsControl = GetControl(control, "Stats")
-    self.graphControl = GetControl(control, "Graph")
-    self.priceControl = GetControl(control, "Price")
-    self.craftingControl = GetControl(control, "CraftingInfo")
+    self.statsControl = control:GetNamedChild("Stats")
+    self.graphControl = control:GetNamedChild("Graph")
+    self.priceControl = control:GetNamedChild("Price")
+    self.craftingControl = control:GetNamedChild("CraftingInfo")
 
     local function UpdateTooltip(tooltip, itemLink)
         if ((Settings.enabled) and (ArkadiusTradeToolsSales:IsItemLink(itemLink))) then

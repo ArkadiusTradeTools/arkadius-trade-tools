@@ -130,13 +130,13 @@ end
 function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
     rowControl.data = rowData
     local data = rowData.rawData
-    local buyerName = GetControl(rowControl, "BuyerName")
-    local sellerName = GetControl(rowControl, "SellerName")
-    local guildName = GetControl(rowControl, "GuildName")
-    local itemLink = GetControl(rowControl, "ItemLink")
-	local unitPrice = GetControl(rowControl, "unitPrice")
-    local price = GetControl(rowControl, "Price")
-    local timeStamp = GetControl(rowControl, "TimeStamp")
+    local buyerName = rowControl:GetNamedChild("BuyerName")
+    local sellerName = rowControl:GetNamedChild("SellerName")
+    local guildName = rowControl:GetNamedChild("GuildName")
+    local itemLink = rowControl:GetNamedChild("ItemLink")
+	local unitPrice = rowControl:GetNamedChild("unitPrice")
+    local price = rowControl:GetNamedChild("Price")
+    local timeStamp = rowControl:GetNamedChild("TimeStamp")
     local icon = GetItemLinkInfo(data.itemLink)
 
     buyerName:SetText(data.buyerName)

@@ -87,7 +87,7 @@ end
 --------------------------------------------------------
 function ArkadiusTradeTools:Initialize()
   self.frame = ArkadiusTradeToolsWindow
-  self.TabWindow = GetControl(self.frame, 'TabWindow')
+  self.TabWindow = self.frame:GetNamedChild('TabWindow')
 
   self.frame:ClearAnchors()
   self.frame:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, Settings.windowLeft or 100, Settings.windowTop or 100)
@@ -116,9 +116,9 @@ function ArkadiusTradeTools:Initialize()
 
   self:CreateSettingsMenu()
 
-  local header = GetControl(self.frame, 'Header')
-  local buttonClose = GetControl(header, 'Close')
-  local buttonDrawTier = GetControl(header, 'DrawTier')
+  local header = self.frame:GetNamedChild('Header')
+  local buttonClose = header:GetNamedChild('Close')
+  local buttonDrawTier = header:GetNamedChild('DrawTier')
   buttonClose.tooltip:SetContent(L['ATT_STR_BUTTON_CLOSE_TOOLTIP'])
   buttonDrawTier.tooltip:SetContent(L['ATT_STR_BUTTON_DRAWTIER_TOOLTIP'])
   buttonDrawTier.OnToggle = function(switch, pressed)
@@ -133,21 +133,21 @@ function ArkadiusTradeTools:Initialize()
   end
   buttonDrawTier:SetPressed(Settings.drawTier == DT_MEDIUM)
 
-  local statusBar = GetControl(self.frame, 'StatusBar')
-  self.guildStatus = GetControl(statusBar, 'GuildStatus')
+  local statusBar = self.frame:GetNamedChild('StatusBar')
+  self.guildStatus = statusBar:GetNamedChild('GuildStatus')
   self.guildStatus:SetText(1, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE1'])
   self.guildStatus:SetText(2, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE2'])
   self.guildStatus:SetText(3, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE3'])
-  local guildStatusText = GetControl(self.guildStatus, 'Text')
+  local guildStatusText = self.guildStatus:GetNamedChild('Text')
   guildStatusText:SetText(L['ATT_STR_GUILDSTATUS_TEXT'])
 
   local megaserver = GetWorldName()
-  local buttonDonate = GetControl(statusBar, "Donate")
+  local buttonDonate = statusBar:GetNamedChild("Donate")
   if megaserver == 'NA Megaserver' then
     buttonDonate:SetText(L["ATT_STR_DONATE"])
     buttonDonate.tooltip:SetContent(L["ATT_STR_DONATE_TOOLTIP"])
   else
-    buttonDonate = GetControl(statusBar, "Donate")
+    buttonDonate = statusBar:GetNamedChild("Donate")
     buttonDonate:SetHidden(true)
   end
 

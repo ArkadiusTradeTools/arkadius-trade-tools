@@ -153,13 +153,13 @@ end
 function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     rowControl.data = rowData
     local data = rowData.rawData
-    local sellerName = GetControl(rowControl, "SellerName")
-    local buyerName = GetControl(rowControl, "BuyerName")
-    local guildName = GetControl(rowControl, "GuildName")
-    local itemLink = GetControl(rowControl, "ItemLink")
-    local unitPrice = GetControl(rowControl, "unitPrice")
-    local price = GetControl(rowControl, "Price")
-    local timeStamp = GetControl(rowControl, "TimeStamp")
+    local sellerName = rowControl:GetNamedChild("SellerName")
+    local buyerName = rowControl:GetNamedChild("BuyerName")
+    local guildName = rowControl:GetNamedChild("GuildName")
+    local itemLink = rowControl:GetNamedChild("ItemLink")
+    local unitPrice = rowControl:GetNamedChild("unitPrice")
+    local price = rowControl:GetNamedChild("Price")
+    local timeStamp = rowControl:GetNamedChild("TimeStamp")
     local icon = GetItemLinkInfo(data.itemLink)
 
     sellerName:SetText(data.sellerName)

@@ -7,13 +7,13 @@ function ArkadiusTradeToolsSalesGraph:New(control, ...)
     object.maxX = 0
     object.minY = 0
     object.maxY = 0
-    object.drawArea = GetControl(control, "DrawArea")
-    object.labelYTop = GetControl(control, "LabelYTop")
-    object.labelYCenter = GetControl(control, "LabelYCenter")
-    object.labelYBottom = GetControl(control, "LabelYBottom")
-    object.labelXLeft = GetControl(control, "LabelXLeft")
-    object.labelXCenter = GetControl(control, "LabelXCenter")
-    object.labelXRight = GetControl(control, "LabelXRight")
+    object.drawArea = control:GetNamedChild("DrawArea")
+    object.labelYTop = control:GetNamedChild("LabelYTop")
+    object.labelYCenter = control:GetNamedChild("LabelYCenter")
+    object.labelYBottom = control:GetNamedChild("LabelYBottom")
+    object.labelXLeft = control:GetNamedChild("LabelXLeft")
+    object.labelXCenter = control:GetNamedChild("LabelXCenter")
+    object.labelXRight = control:GetNamedChild("LabelXRight")
     object.drawArea:SetColor(nil, 0, 1, 0, 1)
     object.numSurfaces = 0
     object.numDots = 0

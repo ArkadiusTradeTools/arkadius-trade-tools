@@ -70,12 +70,12 @@ end
 function ArkadiusTradeToolsStatisticsList:SetupStatisticRow(rowControl, rowData)
     rowControl.data = rowData
     local data = rowData.rawData
-    local displayName = GetControl(rowControl, "DisplayName")
-    local guildName = GetControl(rowControl, "GuildName")
-    local salesVolume = GetControl(rowControl, "SalesVolume")
-    local taxes = GetControl(rowControl, "Taxes")
-    local internalSalesVolumePercentage = GetControl(rowControl, "InternalSalesVolumePercentage")
-    local itemCount = GetControl(rowControl, "ItemCount")
+    local displayName = rowControl:GetNamedChild("DisplayName")
+    local guildName = rowControl:GetNamedChild("GuildName")
+    local salesVolume = rowControl:GetNamedChild("SalesVolume")
+    local taxes = rowControl:GetNamedChild("Taxes")
+    local internalSalesVolumePercentage = rowControl:GetNamedChild("InternalSalesVolumePercentage")
+    local itemCount = rowControl:GetNamedChild("ItemCount")
 
     displayName:SetText(data.displayName)
     displayName:SetWidth(displayName.header:GetWidth() - 10)

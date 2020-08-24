@@ -74,7 +74,7 @@ ArkadiusTradeTools.Templates.TabWindow = ArkadiusTradeToolsTabWindow
 function ArkadiusTradeToolsTabWindow:Initialize(control)
     ZO_ShallowTableCopy(self, control)
     control.tabs = {}
-    control.buttonGroup = GetControl(control, "ButtonGroup")
+    control.buttonGroup = control:GetNamedChild("ButtonGroup")
 end
 
 function ArkadiusTradeToolsTabWindow:AddTab(frame, text, iconActive, iconInactive, iconCoords)
@@ -88,7 +88,7 @@ function ArkadiusTradeToolsTabWindow:AddTab(frame, text, iconActive, iconInactiv
     local i = 0
     repeat
         i = i + 1
-    until (GetControl(self, "Button" .. i) == nil)
+    until (self:GetNamedChild("Button" .. i) == nil)
 
     tab.button = CreateControlFromVirtual(self:GetName() .. "Button" .. i, self.buttonGroup, "ArkadiusTradeToolsTabButton")
     tab.button:SetText(text)
@@ -144,7 +144,7 @@ function ArkadiusTradeToolsTabButton:Initialize(control)
     control.textureInactive = "ArkadiusTradeTools/img/tab_top_inactive.dds"
     control.textureMouseOver = "ArkadiusTradeTools/img/tab_top_inactive_mouseover.dds"
     control.isActive = false
-    control.icon = GetControl(control, "Icon")
+    control.icon = control:GetNamedChild("Icon")
 end
 
 function ArkadiusTradeToolsTabButton:SetText(text)
@@ -270,8 +270,8 @@ function ArkadiusTradeToolsSortHeader:Initialize(control, text, key, sortOrder, 
     ZO_ShallowTableCopy(self, control)
     ZO_SortHeader_Initialize(control, text, key, sortOrder, textAlignment, font)
 
-    control.switch = GetControl(control, "Switch")
-    control.name = GetControl(control, "Name")
+    control.switch = control:GetNamedChild("Switch")
+    control.name = control:GetNamedChild("Name")
 
     if (control.switch) then
         local textWidth = control.name:GetTextWidth()
@@ -294,7 +294,7 @@ function ArkadiusTradeToolsSortHeaderGroup:SelectHeader(header)
     ZO_SortHeaderGroup.SelectHeader(self, header)
 
     if (self.showArrows) then 
-        local nameControl = GetControl(header, "Name")
+        local nameControl = header:GetNamedChild("Name")
         self.arrowTexture:ClearAnchors()
 
         if (nameControl:GetHorizontalAlignment() == TEXT_ALIGN_RIGHT) then
@@ -310,7 +310,7 @@ function ArkadiusTradeToolsSortHeaderGroup:SelectHeader(header)
         --end
     end
 
-    local background = GetControl(header, "Background")
+    local background = header:GetNamedChild("Background")
 
     if(background) then
         background:SetTexture("ArkadiusTradeTools/img/blade_closed_down.dds")
@@ -357,7 +357,6 @@ function ArkadiusTradeToolsSortHeaderGroup:OnHeaderClicked(header, suppressCallb
 
             if ((header.key) and (header.key ~= "headerSettings")) then
                 local headerName = header:GetNamedChild("Name"):GetText()
-                local headerName = GetControl(header, "Name"):GetText()
                 local itemIndex = AddMenuItem(headerName, function(item, checked) item.header:SetHidden(not checked) end, MENU_ADD_OPTION_CHECKBOX)
 
                 ZO_Menu.items[itemIndex].checkbox.header = header
@@ -413,11 +412,11 @@ end
 
 function ArkadiusTradeToolsSortFilterList:InitializeSortFilterList(control)
     self.control = control
-    self.list = GetControl(control, "List") 
+    self.list = control:GetNamedChild("List") 
     ZO_ScrollList_AddResizeOnScreenResize(self.list)
     self:SetUpdateInterval(1)
 
-    self.headersContainer = GetControl(control, "Headers")
+    self.headersContainer = control:GetNamedChild("Headers")
     if(self.headersContainer) then
         self.sortHeaderGroup = ArkadiusTradeToolsSortHeaderGroup:New(self.headersContainer, true)
         self.sortHeaderGroup:RegisterCallback(ZO_SortHeaderGroup.HEADER_CLICKED, function(key, order) self:OnSortHeaderClicked(key, order) end)
@@ -582,7 +581,7 @@ function ArkadiusTradeToolsSortFilterList:SortScrollList()
 end
 
 function ArkadiusTradeToolsSortFilterList:SetupRow(row, data)
-    local index = GetControl(row, "Index")
+    local index = row:GetNamedChild("Index")
     index:SetText(data.sortIndex)
 
     ZO_SortFilterList.SetupRow(self, row, data)
@@ -693,10 +692,10 @@ end
 
 function ArkadiusTradeToolsSlider:Initialize(...)
     local control = self.control
-    local sliderControl = GetControl(control, "Slider")
-    local editControl = GetControl(control, "Edit")
-    local minControl = GetControl(control, "Min")
-    local maxControl = GetControl(control, "Max")
+    local sliderControl = control:GetNamedChild("Slider")
+    local editControl = control:GetNamedChild("Edit")
+    local minControl = control:GetNamedChild("Min")
+    local maxControl = control:GetNamedChild("Max")
 
     self.minValue = tonumber(minControl:GetText()) or 0
     self.maxValue = tonumber(maxControl:GetText()) or 1
@@ -716,16 +715,16 @@ end
 
 function ArkadiusTradeToolsSlider:GetText()
     local control = self.control
-    local textControl = GetControl(control, "Text")
+    local textControl = control:GetNamedChild("Text")
 
     return textControl:GetText()
 end
 
 function ArkadiusTradeToolsSlider:SetMinMax(minValue, maxValue)
     local control = self.control
-    local sliderControl = GetControl(control, "Slider")
-    local minControl = GetControl(control, "Min")
-    local maxControl = GetControl(control, "Max")
+    local sliderControl = control:GetNamedChild("Slider")
+    local minControl = control:GetNamedChild("Min")
+    local maxControl = control:GetNamedChild("Max")
 
     sliderControl:SetMinMax(minValue, maxValue)
     minControl:SetText(minValue)
@@ -748,8 +747,8 @@ function ArkadiusTradeToolsSlider:SetValue(value)
     end
 
     local control = self.control
-    local sliderControl = GetControl(control, "Slider")
-    local editControl = GetControl(control, "Edit")
+    local sliderControl = control:GetNamedChild("Slider")
+    local editControl = control:GetNamedChild("Edit")
 
     editControl:SetText(value)
     sliderControl:SetValue(value)
@@ -758,7 +757,7 @@ end
 
 function ArkadiusTradeToolsSlider:SetText(text)
     local control = self.control
-    local textControl = GetControl(control, "Text")
+    local textControl = control:GetNamedChild("Text")
 
     textControl:SetText(text)
 end
