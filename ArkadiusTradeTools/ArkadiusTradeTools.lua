@@ -31,6 +31,8 @@ function math.attRound(num, numDecimals)
   return tonumber(string.format('%.' .. (numDecimals or 0) .. 'f', num))
 end
 
+local attRound = math.attRound
+
 local function RequestMoreGuildHistoryCategoryEventsLocal(guildIndex, category, numGuilds)
   if (RequestMoreGuildHistoryCategoryEvents(GetGuildId(guildIndex), category)) then
     ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
@@ -739,7 +741,7 @@ function ArkadiusTradeTools.Utilities.EnsureUnitPrice(purchase)
   if (entry.quantity == 1) then
       entry.unitPrice = entry.price
   else
-      entry.unitPrice = math.attRound(entry.price/entry.quantity, 2)            
+      entry.unitPrice = attRound(entry.price/entry.quantity, 2)            
   end
   return entry
 end

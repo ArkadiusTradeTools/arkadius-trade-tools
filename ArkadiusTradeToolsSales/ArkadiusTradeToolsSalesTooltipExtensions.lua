@@ -1,6 +1,7 @@
 local ArkadiusTradeToolsSales = ArkadiusTradeTools.Modules.Sales
 local L = ArkadiusTradeToolsSales.Localization
 local Settings
+local attRound = math.attRound
 
 --------------------------------------------------------
 -------------------- List functions --------------------
@@ -381,7 +382,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
             if (Settings.graphEnabled) then
                 self.graphControl.object:SetRange(GetTimeStamp() - self.days * self.SECONDS_IN_DAY, GetTimeStamp(), minPrice, maxPrice)
                 self.graphControl.object:SetXLabels(-self.days .. " " .. L["ATT_STR_DAYS"], -self.days / 2 .. " " .. L["ATT_STR_DAYS"], L["ATT_STR_NOW"])
-                self.graphControl.object:SetYLabels(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(maxPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", "", ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(minPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
+                self.graphControl.object:SetYLabels(ArkadiusTradeTools:LocalizeDezimalNumber(attRound(maxPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", "", ArkadiusTradeTools:LocalizeDezimalNumber(attRound(minPrice, 2)) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
             end
         end
 
@@ -400,7 +401,7 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
         end
 
         if (quantity > 0) then
-            averagePrice = math.attRound(averagePrice / quantity, 2)
+            averagePrice = attRound(averagePrice / quantity, 2)
         else
             averagePrice = 0
         end

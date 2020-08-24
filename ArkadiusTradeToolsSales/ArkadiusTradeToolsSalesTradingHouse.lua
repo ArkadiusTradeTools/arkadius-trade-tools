@@ -2,6 +2,7 @@ local ArkadiusTradeToolsSales = ArkadiusTradeTools.Modules.Sales
 ArkadiusTradeToolsSales.TradingHouse = {}
 local L = ArkadiusTradeToolsSales.Localization
 local Settings
+local attRound = math.attRound
 
 local SECONDS_IN_DAY = 60 * 60 * 24
 local TRADING_HOUSE_OnPurchaseSuccess
@@ -96,17 +97,17 @@ local function SetUpSearchResultsWithoutAGS(rowControl)
     averagePricePerUnitControl:SetText('- |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
     averagePricePerUnitControl:SetColor(color:UnpackRGBA())
   else
-    local margin = math.attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
+    local margin = attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
     local color = ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
 
     profitMarginControl:SetText(margin .. '%')
     profitMarginControl:SetColor(color:UnpackRGBA())
-    --ZO_CurrencyControl_SetSimpleCurrency(averagePriceControl, currencyType, math.attRound(averagePrice), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
-    averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePrice) .. ' |t18:18:EsoUI/Art/currency/currency_gold.dds|t'))
+    --ZO_CurrencyControl_SetSimpleCurrency(averagePriceControl, currencyType, attRound(averagePrice), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
+    averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(attRound(averagePrice) .. ' |t18:18:EsoUI/Art/currency/currency_gold.dds|t'))
     averagePriceControl:SetColor(color:UnpackRGBA())
-    --ZO_CurrencyControl_SetSimpleCurrency(averagePricePerUnitControl, currencyType, math.attRound(averagePricePerUnit, 2), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
+    --ZO_CurrencyControl_SetSimpleCurrency(averagePricePerUnitControl, currencyType, attRound(averagePricePerUnit, 2), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
     averagePricePerUnitControl:SetText(
-      ArkadiusTradeTools:LocalizeDezimalNumber(math.attRound(averagePricePerUnit, 2) .. ' |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
+      ArkadiusTradeTools:LocalizeDezimalNumber(attRound(averagePricePerUnit, 2) .. ' |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
     )
     averagePricePerUnitControl:SetColor(color:UnpackRGBA())
   end
@@ -147,7 +148,7 @@ local function SetUpSearchResultsWithAGS(rowControl)
     profitMarginControl:SetText('------') --I would like to use 4 dashes and just change the alignment, but that seems to change all alignment
     profitMarginControl:SetColor(color:UnpackRGBA())
   else
-    local margin = math.attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
+    local margin = attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
     local color = ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
 
     -- If I could make this layout work, that'd be ideal
@@ -353,7 +354,7 @@ local function GetMarginData(cache, data, itemLink, days)
     data.ATT_INIT = days
   end
 
-  local margin = math.attRound((100 / data.averagePricePerUnit * data.purchasePricePerUnit - 100) * (-1))
+  local margin = attRound((100 / data.averagePricePerUnit * data.purchasePricePerUnit - 100) * (-1))
   local marginFormatted = (data.averagePricePerUnit == 0 and '----') or string.format('%d%%', margin)
   return margin, marginFormatted
 end

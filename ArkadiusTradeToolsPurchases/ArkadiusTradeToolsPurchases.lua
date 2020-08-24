@@ -2,6 +2,7 @@ ArkadiusTradeTools.Modules.Purchases = ArkadiusTradeTools.Templates.Module:New(A
 local ArkadiusTradeToolsPurchases = ArkadiusTradeTools.Modules.Purchases
 ArkadiusTradeToolsPurchases.Localization = {}
 
+local attRound = math.attRound
 local L = ArkadiusTradeToolsPurchases.Localization
 local Utilities = ArkadiusTradeTools.Utilities
 local Settings
@@ -161,7 +162,7 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
     if (data.quantity == 1) then
         data.unitPrice = data.price
     else
-        data.unitPrice = math.attRound(data.price/data.quantity, 2)            
+        data.unitPrice = attRound(data.price/data.quantity, 2)            
     end
 
 	unitPrice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.unitPrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")

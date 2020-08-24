@@ -9,6 +9,7 @@ local SalesTables = ArkadiusTradeToolsSales.SalesTables
 local DefaultSettings
 local Settings
 local TemporaryVariables
+local attRound = math.attRound
 
 local NUM_SALES_TABLES = 16
 local SECONDS_IN_DAY = 60*60*24
@@ -184,7 +185,7 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     if (data.quantity == 1) then
         data.unitPrice = data.price
     else
-        data.unitPrice = math.attRound(data.price/data.quantity, 2)            
+        data.unitPrice = attRound(data.price/data.quantity, 2)            
     end
 
     unitPrice:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(data.unitPrice) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t")
@@ -692,7 +693,7 @@ function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeS
     end
 
     if (quantity > 0) then
-        averagePrice = math.attRound(averagePrice / quantity, 2)
+        averagePrice = attRound(averagePrice / quantity, 2)
     else
         averagePrice = 0
     end
@@ -785,7 +786,7 @@ function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
         end
 
         if (quantity > 0) then
-            averagePrice = math.attRound(averagePrice / quantity, 2)
+            averagePrice = attRound(averagePrice / quantity, 2)
         else
             averagePrice = 0
         end
@@ -868,7 +869,7 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
                 data.salesCount = salesCountPerPlayer
                 data.itemCount = itemCountPerPlayer
                 data.taxes = taxesPerPlayer
-                data.internalSalesVolumePercentage = math.attRound(100 / salesVolumePerPlayer * internalSalesVolumePerPlayer, 2)
+                data.internalSalesVolumePercentage = attRound(100 / salesVolumePerPlayer * internalSalesVolumePerPlayer, 2)
 
                 table.insert(result, data)
             end
@@ -882,7 +883,7 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
             data.salesCount = salesCountPerGuild
             data.itemCount = itemCountPerGuild
             data.taxes = taxesPerGuild
-            data.internalSalesVolumePercentage = math.attRound(100 / salesVolumePerGuild * internalSalesVolumePerGuild, 2)
+            data.internalSalesVolumePercentage = attRound(100 / salesVolumePerGuild * internalSalesVolumePerGuild, 2)
 
             table.insert(result, data)
         end
