@@ -81,6 +81,7 @@ function ArkadiusTradeToolsSales.InventoryExtensions:IsEnabled()
 end
 
 function ArkadiusTradeToolsSales.InventoryExtensions:GetPrice(itemLink)
+    itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
     local days = ArkadiusTradeToolsSalesData.settings.tooltips.days
     local startingDate = GetTimeStamp() - (SECONDS_IN_DAY * days)
     local itemPrice = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, startingDate)
