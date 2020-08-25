@@ -10,6 +10,7 @@ local DefaultSettings
 local Settings
 local TemporaryVariables
 local attRound = math.attRound
+local floor = math.floor 
 
 local NUM_SALES_TABLES = 16
 local SECONDS_IN_DAY = 60*60*24
@@ -496,7 +497,7 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 
     local eventId = GetGuildEventId(guildId, category, eventIndex)
     local eventIdNum = tonumber(Id64ToString(eventId))
-    local dataIndex = math.floor((eventIdNum % (NUM_SALES_TABLES * 2)) / 2) + 1
+    local dataIndex = floor((eventIdNum % (NUM_SALES_TABLES * 2)) / 2) + 1
     local dataTable = SalesTables[dataIndex][self.serverName]
 
     if (eventIdNum ~= 0) then
@@ -671,8 +672,8 @@ end
 
 
 function ArkadiusTradeToolsSales:GetVoucherCount(itemLink)
-    local _,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_, vouchers = ZO_LinkHandler_ParseLink(itemLink)
-    return math.floor((tonumber(vouchers) / 10000) + .5)
+    local vouchers = select(24, ZO_LinkHandler_ParseLink(itemLink))
+    return floor((tonumber(vouchers) / 10000) + .5)
 end
 
 function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeStamp)
