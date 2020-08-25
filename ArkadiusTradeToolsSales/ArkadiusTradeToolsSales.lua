@@ -457,7 +457,7 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
     itemSales[itemName][itemType][itemLevel][itemCP][itemTrait] = itemSales[itemName][itemType][itemLevel][itemCP][itemTrait] or {}
     itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality] = itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality] or {}
 
-    table.insert(itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality], sale)
+    itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality][#itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality] + 1] = sale
 
     --- Store name strings in lower case to improve filter performance ---
     displayNamesLowered[sale.buyerName] = displayNamesLowered[sale.buyerName] or sale.buyerName:lower()
@@ -470,9 +470,9 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
     guildSales[sale.guildName].displayNames[sale.buyerName] = guildSales[sale.guildName].displayNames[sale.buyerName] or {sales = {}, purchases = {}}
     guildSales[sale.guildName].displayNames[sale.sellerName] = guildSales[sale.guildName].displayNames[sale.sellerName] or {sales = {}, purchases = {}}
 
-    table.insert(guildSales[sale.guildName].sales, sale)
-    table.insert(guildSales[sale.guildName].displayNames[sale.buyerName].purchases, #guildSales[sale.guildName].sales)
-    table.insert(guildSales[sale.guildName].displayNames[sale.sellerName].sales, #guildSales[sale.guildName].sales)
+    guildSales[sale.guildName].sales[#guildSales[sale.guildName].sales + 1] = sale
+    guildSales[sale.guildName].displayNames[sale.buyerName].purchases[#guildSales[sale.guildName].displayNames[sale.buyerName].purchases + 1] = #guildSales[sale.guildName].sales
+    guildSales[sale.guildName].displayNames[sale.sellerName].sales[#guildSales[sale.guildName].displayNames[sale.sellerName].sales + 1] = #guildSales[sale.guildName].sales
 end
 
 function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
@@ -631,7 +631,7 @@ function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp
                         end
 
                         if (res1) then
-                            table.insert(res1, data)
+                            res1[#res1 + 1] = data
                         end
                     end
                 end
@@ -709,9 +709,10 @@ end
 
 
 function ArkadiusTradeToolsSales:GetCrafingComponentPrices(itemLink, fromTimeStamp)
-    if (not self:IsItemLink(itemLink)) then
-        return {}
-    end
+    -- Currently only called by TooltipExtensions.UpdateStatistics, so not necessary
+    -- if (not self:IsItemLink(itemLink)) then
+    --     return {}
+    -- end
 
     local itemLinkInfos = TemporaryVariables.itemLinkInfos
     local itemLinkInfo = itemLinkInfos[itemLink]
@@ -873,7 +874,7 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
                 data.taxes = taxesPerPlayer
                 data.internalSalesVolumePercentage = attRound(100 / salesVolumePerPlayer * internalSalesVolumePerPlayer, 2)
 
-                table.insert(result, data)
+                result[#result + 1] = data
             end
         end
 
@@ -887,7 +888,7 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
             data.taxes = taxesPerGuild
             data.internalSalesVolumePercentage = attRound(100 / salesVolumePerGuild * internalSalesVolumePerGuild, 2)
 
-            table.insert(result, data)
+            result[#result + 1] = data
         end
     end
 

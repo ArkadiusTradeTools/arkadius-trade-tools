@@ -356,16 +356,6 @@ local function onAddOnLoaded(eventCode, addonName)
     Settings = ArkadiusTradeToolsPurchasesData.settings
     Purchases = ArkadiusTradeToolsPurchasesData.purchases[serverName]
 
-    --- Deprecated ---
-    --- Conversion from old format ---
-    for i, purchase in pairs(ArkadiusTradeToolsPurchasesData.purchases) do
-        if (type(i) == "number") then
-            table.insert(Purchases, purchase)
-            ArkadiusTradeToolsPurchasesData.purchases[i] = nil
-        end
-    end
-    ----------------------------------
-
     --- Create default settings ---
     Settings.keepDataDays = Settings.keepDataDays or 30
     Settings.filters = Settings.filters or {}

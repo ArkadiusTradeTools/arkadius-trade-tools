@@ -406,8 +406,8 @@ end
 
 function ArkadiusTradeToolsSortFilterList:UpdateMasterList(data)
     local entry = ZO_ScrollList_CreateDataEntry(1, {rawData = data})
-    table.insert(self.masterList, entry)
-    table.insert(self.updateFilterList, entry)
+    self.masterList[#self.masterList + 1] = entry
+    self.updateFilterList[#self.updateFilterList + 1] = entry
 end
 
 function ArkadiusTradeToolsSortFilterList:InitializeSortFilterList(control)

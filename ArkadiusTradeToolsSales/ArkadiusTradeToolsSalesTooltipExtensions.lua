@@ -469,18 +469,19 @@ function ArkadiusTradeToolsSales.TooltipExtension:UpdateStatistics(itemLink)
     end
 
     --- Rearrange tooltip elements based on their visibilities ---
-    local elements = {}
     local anchorTo = self.control
     local anchorTopLeft = TOPLEFT
     local anchorTopRight = TOPRIGHT
     height = 0
 
-    table.insert(elements, self.priceControl)
-    table.insert(elements, self.graphControl)
-    table.insert(elements, self.statsControl)
-    table.insert(elements, self.listControl)
-    table.insert(elements, self.craftingControl)
-    table.insert(elements, self.daysControl)
+    local elements = { 
+        self.priceControl,
+        self.graphControl,
+        self.statsControl,
+        self.listControl,
+        self.craftingControl,
+        self.daysControl
+    }
 
     for i = 1, #elements do
         if (elements[i]:IsHidden() == false) then

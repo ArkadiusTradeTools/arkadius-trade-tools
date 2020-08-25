@@ -334,27 +334,19 @@ function ArkadiusTradeToolsSales:GetMasterWritComponents(itemLink)
     if ((writType == MASTER_WRIT_TYPE_BLACKSMITHING) or (writType == MASTER_WRIT_TYPE_TAILORING) or (writType == MASTER_WRIT_TYPE_WOODWORKING) or (writType == MASTER_WRIT_TYPE_JEWELRY)) then
         --- writ1 = item type ---
         --- writ2 = item class ---
-        component = {}
-        component.itemLink = MASTER_WRIT_BASE_MATERIAL[writ2]
-        component.quantity = MASTER_WRIT_BASE_MATERIAL_QUANTITY[writ1]
+        component = { itemLink = MASTER_WRIT_BASE_MATERIAL[writ2], quantity = MASTER_WRIT_BASE_MATERIAL_QUANTITY[writ1] }
         table.insert(components, component)
 
         if (writType ~= MASTER_WRIT_TYPE_JEWELRY) then
-            component = {}
-            component.itemLink = MASTER_WRIT_STYLES[style]
-            component.quantity = 1
+            component = { itemLink = MASTER_WRIT_STYLES[style], quantity = 1 }
             table.insert(components, component)
         end
 
-        component = {}
-        component.itemLink = MASTER_WRIT_TRAITS[trait]
-        component.quantity = 1
+        component = { itemLink = MASTER_WRIT_TRAITS[trait], quantity = 1 }
         table.insert(components, component)
 
         for i = 2, quality do
-            component = {}
-            component.itemLink = MASTER_WRIT_TEMPERS[writType][i]
-            component.quantity = MASTER_WRIT_TEMPERS_QUANTITY[writType][i]
+            component = { itemLink = MASTER_WRIT_TEMPERS[writType][i], quantity = MASTER_WRIT_TEMPERS_QUANTITY[writType][i] }
             table.insert(components, component)
         end
     end

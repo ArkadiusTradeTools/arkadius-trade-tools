@@ -34,8 +34,8 @@ end
 
 function ArkadiusTradeToolsStatisticsList:BuildMasterList()
     local item = ArkadiusTradeToolsStatistics.frame.filterBar.Time:GetSelectedItem()
-    newerThanTimeStamp = item.NewerThanTimeStamp()
-    olderThanTimestamp = item.OlderThanTimeStamp()
+    local newerThanTimeStamp = item.NewerThanTimeStamp()
+    local olderThanTimestamp = item.OlderThanTimeStamp()
 
     if (ArkadiusTradeTools.Modules.Sales) then
         local statistics = ArkadiusTradeTools.Modules.Sales:GetStatistics(newerThanTimeStamp, olderThanTimestamp)
