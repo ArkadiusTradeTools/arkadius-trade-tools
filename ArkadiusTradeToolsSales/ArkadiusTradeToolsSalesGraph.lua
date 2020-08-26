@@ -18,7 +18,6 @@ function ArkadiusTradeToolsSalesGraph:New(control, ...)
     object.numSurfaces = 0
     object.numDots = 0
     control.object = object
-
     return object
 end
 
@@ -62,6 +61,7 @@ function ArkadiusTradeToolsSalesGraph:AddDot(x, y, color)
     local top = drawAreaHeight / rangeY * posY
     local bottom = -(drawAreaHeight - top - 2)
 
+    -- Serves as the index for our current surface
     self.numDots = self.numDots + 1
 
     if (self.numDots > self.numSurfaces) then
