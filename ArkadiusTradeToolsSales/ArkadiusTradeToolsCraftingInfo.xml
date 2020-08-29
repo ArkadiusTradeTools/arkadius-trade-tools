@@ -3,13 +3,13 @@
         <Control name="ArkadiusTradeToolsSalesCraftingInfoRow" virtual="true">
             <Dimensions y="16" />
             <Controls>
-                <Label name="$(parent)ItemQuantity" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)ItemQuantity" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
                    <Dimensions x="16" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                 </Label>
 
-                <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="true" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="true" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
                    <Dimensions x="192" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)ItemQuantity" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemQuantity" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
@@ -27,7 +27,7 @@
                    </OnMouseUp>
                 </Label>
 
-                <Label name="$(parent)ItemPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)ItemPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
                    <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>

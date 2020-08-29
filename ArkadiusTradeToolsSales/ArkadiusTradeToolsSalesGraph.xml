@@ -40,27 +40,27 @@
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                 </Line>
 
-                <Label name="$(parent)LabelYTop" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="/esoui/common/fonts/univers57.otf|16" text="9.9999.999">
+                <Label name="$(parent)LabelYTop" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="9.9999.999">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="TOPLEFT" offsetX="-20" offsetY="0"/>
                 </Label>
 
-                <Label name="$(parent)LabelYCenter" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="/esoui/common/fonts/univers57.otf|16" text="9.9999.999">
+                <Label name="$(parent)LabelYCenter" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="9.9999.999">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="LEFT" offsetX="-20" offsetY="0"/>
                 </Label>
 
-                <Label name="$(parent)LabelYBottom" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="/esoui/common/fonts/univers57.otf|16" text="9.9999.999">
+                <Label name="$(parent)LabelYBottom" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="9.9999.999">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMLEFT" offsetX="-20" offsetY="0"/>
                 </Label>
 
-                <Label name="$(parent)LabelXLeft" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="/esoui/common/fonts/univers57.otf|16" text="-xx days">
+                <Label name="$(parent)LabelXLeft" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="-xx days">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="8"/>
                 </Label>
 
-                <Label name="$(parent)LabelXCenter" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="/esoui/common/fonts/univers57.otf|16" text="-x days">
+                <Label name="$(parent)LabelXCenter" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="-x days">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="BOTTOM" offsetX="0" offsetY="8"/>
                 </Label>
 
-                <Label name="$(parent)LabelXRight" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="/esoui/common/fonts/univers57.otf|16" text="Today">
+                <Label name="$(parent)LabelXRight" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="Today">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="8"/>
                 </Label>
             </Controls>
