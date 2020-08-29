@@ -251,7 +251,7 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     self.profitMarginDaysLabel = CreateControl(controlName .. 'MarginDaysLabel', ZO_TradingHouseBrowseItemsLeftPane, CT_LABEL)
     self.profitMarginDaysLabel:SetAnchor(TOPLEFT, ZO_TradingHouseBrowseItemsLeftPane, BOTTOMLEFT, 0, 0)
     self.profitMarginDaysLabel:SetAnchor(BOTTOMRIGHT, ZO_TradingHouseBrowseItemsLeftPane, BOTTOMRIGHT, 0, 20)
-    self.profitMarginDaysLabel:SetFont('esoui/common/fonts/univers67.otf|18||soft-shadow-thick')
+    self.profitMarginDaysLabel:SetFont('$(BOLD_FONT)|18||soft-shadow-thick')
     self.profitMarginDaysLabel:SetText(L['ATT_STR_BASE_PROFIT_MARGIN_CALC_ON'])
 
     self.profitMarginDaysSelection =
@@ -337,7 +337,7 @@ local function GetMarginData(cache, data, itemLink, days)
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:InitializeListingMarginDisplay()
-  local LISTING_MARGIN_FONT = "/esoui/common/fonts/univers67.otf|18|soft-shadow-thin"
+  local LISTING_MARGIN_FONT = "$(BOLD_FONT)|18|soft-shadow-thin"
   local ITEM_LISTINGS_DATA_TYPE = 2
 
   local dataType = TRADING_HOUSE.postedItemsList.dataTypes[ITEM_LISTINGS_DATA_TYPE]

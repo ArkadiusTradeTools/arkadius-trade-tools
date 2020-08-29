@@ -243,11 +243,11 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="16"/>
                 </Slider>
-                <Label name="$(parent)Min" text="1" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)Min" text="1" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|16">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Slider" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)Max" text="30" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)Max" text="30" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|16">
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Slider" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
@@ -260,7 +260,7 @@
                         </Backdrop>
                     </Controls>
                 </EditBox>
-                <Label name="$(parent)Text" text="Days" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)Text" text="Days" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|16">
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Edit" relativePoint="TOPLEFT" offsetX="-5" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Edit" relativePoint="BOTTOMLEFT" offsetX="-5" offsetY="0"/>
                 </Label>

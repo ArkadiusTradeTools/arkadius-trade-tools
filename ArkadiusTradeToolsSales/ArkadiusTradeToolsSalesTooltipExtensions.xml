@@ -46,7 +46,7 @@
                                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                                     <OnInitialized>
                                         self:GetNamedChild("Name"):SetModifyTextType(MODIFY_TEXT_TYPE_NONE)
-                                        ZO_SortHeader_Initialize(self, ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_OTHER_QUALITIES"], "itemLink", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "/esoui/common/fonts/univers57.otf|16")
+                                        ZO_SortHeader_Initialize(self, ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_OTHER_QUALITIES"], "itemLink", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_LEFT, "$(MEDIUM_FONT)|16")
                                     </OnInitialized>
                                 </Control>
                                 <Control name="$(parent)AveragePrice" mouseEnabled="false" inherits="ZO_SortHeader">
@@ -55,7 +55,7 @@
                                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                                     <OnInitialized>
                                         self:GetNamedChild("Name"):SetModifyTextType(MODIFY_TEXT_TYPE_NONE)
-                                        ZO_SortHeader_Initialize(self, ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_AVERAGE_PRICE"], "averagePrice", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_RIGHT, "/esoui/common/fonts/univers57.otf|16")
+                                        ZO_SortHeader_Initialize(self, ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_AVERAGE_PRICE"], "averagePrice", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_RIGHT, "$(MEDIUM_FONT)|16")
                                     </OnInitialized>
                                 </Control>
                                 <Control name="$(parent)NumberSales" mouseEnabled="false" inherits="ZO_SortHeader">
@@ -64,7 +64,7 @@
                                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)AveragePrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                                     <OnInitialized>
                                         self:GetNamedChild("Name"):SetModifyTextType(MODIFY_TEXT_TYPE_NONE)
-                                        ZO_SortHeader_Initialize(self, ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_SALES"], "numberSales", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_RIGHT, "/esoui/common/fonts/univers57.otf|16")
+                                        ZO_SortHeader_Initialize(self, ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_SALES"], "numberSales", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_RIGHT, "$(MEDIUM_FONT)|16")
                                     </OnInitialized>
                                 </Control>
                             </Controls>
@@ -97,7 +97,7 @@
         <Control name="ArkadiusTradeToolsSalesTooltipExtensionItemListRow" virtual="true">
             <Dimensions y="16"/>
             <Controls>
-                <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="false" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
                    <Dimensions x="192" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
@@ -114,12 +114,12 @@
                        end
                    </OnMouseUp>
                 </Label>
-                <Label name="$(parent)AveragePrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)AveragePrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="$(MEDIUM_FONT)|16">
                    <Dimensions x="92" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)NumberSales" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)NumberSales" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="$(MEDIUM_FONT)|16">
                    <Dimensions x="65" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)AveragePrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)AveragePrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
@@ -130,7 +130,7 @@
         <Control name="ArkadiusTradeToolsSalesTooltipExtensionItemListEmptyRow" virtual="true">
             <Dimensions y="16"/>
             <Controls>
-                <Label name="$(parent)Text" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="CENTER" mouseEnabled="false" wrapMode="ELLIPSIS" font="/esoui/common/fonts/univers57.otf|16">
+                <Label name="$(parent)Text" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="CENTER" mouseEnabled="false" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
                    <Dimensions x="150" />
                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
