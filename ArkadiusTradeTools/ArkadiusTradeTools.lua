@@ -59,19 +59,7 @@ local function ScanGuildHistoryEvents()
 
     --- New events are pushed instead of pulled, so scan for older events ---
     for i = ArkadiusTradeTools.nextScanGuild, numGuilds do
-      if (RequestMoreGuildHistoryCategoryEventsLocal(i, GUILD_HISTORY_STORE, numGuilds)) then
-        zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
-
-        return
-      end
-    end
-
-    for i = 1, ArkadiusTradeTools.nextScanGuild - 1 do
-      if (RequestMoreGuildHistoryCategoryEventsLocal(i, GUILD_HISTORY_STORE, numGuilds)) then
-        zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
-
-        return
-      end
+      RequestMoreGuildHistoryCategoryEventsLocal(i, GUILD_HISTORY_STORE, numGuilds)
     end
 
     ArkadiusTradeTools.guildStatus:SetBusy(0)
@@ -334,7 +322,7 @@ function ArkadiusTradeTools:CreateSettingsMenu()
     {
       type = 'slider',
       name = L['ATT_STR_SCAN_LONG_INTERVAL'],
-      min = 5,
+      min = 60,
       max = 600,
       getFunc = function()
         return Settings.longScanInterval
@@ -838,7 +826,7 @@ local function OnAddOnLoaded(eventCode, addonName)
     Settings.scanDuringCombat = true
   end
   Settings.shortScanInterval = Settings.shortScanInterval or 2000
-  Settings.longScanInterval = Settings.longScanInterval or 10
+  Settings.longScanInterval = Settings.longScanInterval ~= nil and Settings.longScanInterval < 60 and 120 or Settings.longScanInterval or 11
   Settings.drawTier = Settings.drawTier or DT_HIGH
   Settings.forceTraditionalTraderWeek = Settings.forceTraditionalTraderWeek or false
 
