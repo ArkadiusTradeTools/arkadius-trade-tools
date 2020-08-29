@@ -894,6 +894,152 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
     return result
 end
 
+
+function ArkadiusTradeToolsSales:GetFullStatisticsForGuild(resultRef, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData, includeGuildRecord)
+    if includeGuildRecord == nil then includeGuildRecord = true end
+    guildNameData = guildNameData or TemporaryVariables.guildSales[guildName]
+    
+    for saleIndex = 1, #guildNameData.sales do
+        if ((guildNameData.sales[saleIndex].timeStamp >= newerThanTimeStamp) and ((guildNameData.sales[saleIndex].timeStamp < olderThanTimeStamp))) then
+            local sellerIndex = guildNameData.sales[saleIndex].sellerName:lower()
+            resultRef[sellerIndex] = resultRef[sellerIndex] or {
+                displayName = guildNameData.sales[saleIndex].sellerName,
+                stats = {
+                    salesVolume = 0,
+                    salesCount = 0,
+                    itemCount = 0,
+                    taxes = 0,
+                    purchaseVolume = 0,
+                    purchaseCount = 0,
+                    purchasedItemCount = 0,
+                    purchaseTaxes = 0,
+                    internalSalesVolume = 0
+                }
+            }
+            resultRef[sellerIndex].stats.salesVolume = resultRef[sellerIndex].stats.salesVolume + guildNameData.sales[saleIndex].price
+            resultRef[sellerIndex].stats.internalSalesVolume = resultRef[sellerIndex].stats.internalSalesVolume + guildNameData.sales[saleIndex].price * guildNameData.sales[saleIndex].internal
+            resultRef[sellerIndex].stats.itemCount = resultRef[sellerIndex].stats.itemCount + guildNameData.sales[saleIndex].quantity
+            resultRef[sellerIndex].stats.salesCount = resultRef[sellerIndex].stats.salesCount + 1
+            resultRef[sellerIndex].stats.taxes = resultRef[sellerIndex].stats.taxes + guildNameData.sales[saleIndex].taxes
+            
+            local buyerIndex = guildNameData.sales[saleIndex].buyerName:lower()
+            resultRef[buyerIndex] = resultRef[buyerIndex] or {
+                displayName = guildNameData.sales[saleIndex].buyerName,
+                stats = {
+                    salesVolume = 0,
+                    salesCount = 0,
+                    itemCount = 0,
+                    taxes = 0,
+                    purchaseVolume = 0,
+                    purchaseCount = 0,
+                    purchasedItemCount = 0,
+                    purchaseTaxes = 0,
+                    internalSalesVolume = 0
+                }
+            }
+            resultRef[buyerIndex].stats.purchaseVolume = resultRef[buyerIndex].stats.purchaseVolume + guildNameData.sales[saleIndex].price
+            resultRef[buyerIndex].stats.purchasedItemCount = resultRef[buyerIndex].stats.purchasedItemCount + guildNameData.sales[saleIndex].quantity
+            resultRef[buyerIndex].stats.purchaseCount = resultRef[buyerIndex].stats.purchaseCount + 1
+            resultRef[buyerIndex].stats.purchaseTaxes = resultRef[buyerIndex].stats.purchaseTaxes + guildNameData.sales[saleIndex].taxes
+        end
+    end
+end
+
+function ArkadiusTradeToolsSales:GetStatisticsForGuild(resultRef, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData, includeGuildRecord)
+    if includeGuildRecord == nil then includeGuildRecord = true end
+    guildNameData = guildNameData or TemporaryVariables.guildSales[guildName]
+    local salesVolumePerGuild = 0
+    local internalSalesVolumePerGuild = 0
+    local salesCountPerGuild = 0
+    local itemCountPerGuild = 0
+    local taxesPerGuild = 0
+
+    for displayName, displayNameData in pairs(guildNameData.displayNames) do
+        local salesVolumePerPlayer = 0
+        local internalSalesVolumePerPlayer = 0
+        local salesCountPerPlayer = 0
+        local taxesPerPlayer = 0
+        local itemCountPerPlayer = 0
+
+        for _, saleIndex in pairs(displayNameData.sales) do
+            if ((guildNameData.sales[saleIndex].timeStamp >= newerThanTimeStamp) and ((guildNameData.sales[saleIndex].timeStamp < olderThanTimeStamp))) then
+                salesVolumePerPlayer = salesVolumePerPlayer + guildNameData.sales[saleIndex].price
+                internalSalesVolumePerPlayer = internalSalesVolumePerPlayer + guildNameData.sales[saleIndex].price * guildNameData.sales[saleIndex].internal
+                itemCountPerPlayer = itemCountPerPlayer + guildNameData.sales[saleIndex].quantity
+                salesCountPerPlayer = salesCountPerPlayer + 1
+                taxesPerPlayer = taxesPerPlayer + guildNameData.sales[saleIndex].taxes
+                -- Also add data to purchaser so we don't have to iterate any sales more than once
+                -- guildNameData.displayNames[guildNameData.sales[saleIndex].buyerName]
+            end
+        end
+
+        local purchaseVolumePerPlayer = 0
+        local purchaseCountPerPlayer = 0
+        local purchasedItemCountPerPlayer = 0
+        for _, saleIndex in pairs(displayNameData.purchases) do
+            if ((guildNameData.sales[saleIndex].timeStamp >= newerThanTimeStamp) and ((guildNameData.sales[saleIndex].timeStamp < olderThanTimeStamp))) then
+                purchaseVolumePerPlayer = purchaseVolumePerPlayer + guildNameData.sales[saleIndex].price
+                purchasedItemCountPerPlayer = purchasedItemCountPerPlayer + guildNameData.sales[saleIndex].quantity
+                purchaseCountPerPlayer = purchaseCountPerPlayer + 1
+                -- Also add data to purchaser so we don't have to iterate any sales more than once
+                -- guildNameData.displayNames[guildNameData.sales[saleIndex].buyerName]
+            end
+        end
+
+        salesVolumePerGuild = salesVolumePerGuild + salesVolumePerPlayer
+        internalSalesVolumePerGuild = internalSalesVolumePerGuild + internalSalesVolumePerPlayer
+        itemCountPerGuild = itemCountPerGuild + itemCountPerPlayer
+        salesCountPerGuild = salesCountPerGuild + salesCountPerPlayer
+        taxesPerGuild = taxesPerGuild + taxesPerPlayer
+
+        if (salesVolumePerPlayer > 0) then
+            local data = {}
+            data.displayName = displayName
+            data.guildName = guildName
+            data.salesVolume = salesVolumePerPlayer
+            data.salesCount = salesCountPerPlayer
+            data.itemCount = itemCountPerPlayer
+            data.purchaseVolume = purchaseVolumePerPlayer
+            data.purchaseCount = purchaseCountPerPlayer
+            data.purchasedItemCount = purchasedItemCountPerPlayer
+            data.taxes = taxesPerPlayer
+            data.internalSalesVolumePercentage = attRound(100 / salesVolumePerPlayer * internalSalesVolumePerPlayer, 2)
+
+            table.insert(resultRef, data)
+        end
+    end
+
+    if (salesVolumePerGuild > 0 and includeGuildRecord) then
+        local data = {}
+        data.displayName = ""
+        data.guildName = guildName
+        data.salesVolume = salesVolumePerGuild
+        data.salesCount = salesCountPerGuild
+        data.itemCount = itemCountPerGuild
+        data.purchaseVolume = 0
+        data.purchaseCount = 0
+        data.purchasedItemCount = 0
+        data.taxes = taxesPerGuild
+        data.internalSalesVolumePercentage = attRound(100 / salesVolumePerGuild * internalSalesVolumePerGuild, 2)
+
+        table.insert(resultRef, data)
+    end
+end
+
+function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTimeStamp)
+    newerThanTimeStamp = newerThanTimeStamp or 0
+    olderThanTimeStamp = olderThanTimeStamp or GetTimeStamp()
+
+    local result = {}
+    local guildSales = TemporaryVariables.guildSales
+
+    for guildName, guildNameData in pairs(guildSales) do
+        self:GetStatisticsForGuild(result, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData)
+    end
+
+    return result
+end
+
 function ArkadiusTradeToolsSales:IsItemLink(itemLink)
     if (type(itemLink) == "string") then
         return (itemLink:match("|H%d:item:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+|h.*|h") ~= nil)

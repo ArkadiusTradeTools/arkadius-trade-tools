@@ -16,7 +16,7 @@ ArkadiusTradeTools.EVENTS = {
   ON_GUILDSTORE_ITEM_BOUGHT = 7,
   ON_GUILDHISTORY_STORE = 8
 }
-local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true }
+local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true, ['Exports'] = true }
 
 local L = ArkadiusTradeTools.Localization
 local EVENTS = ArkadiusTradeTools.EVENTS
