@@ -103,6 +103,12 @@ function ArkadiusTradeTools:Initialize()
       moduleObject:Initialize()
   end
 
+  for moduleName, moduleObject in pairs(self.Modules) do
+      if not internalModules[moduleName] then
+        moduleObject:Initialize()
+      end
+  end
+
   self:CreateSettingsMenu()
 
   local header = self.frame:GetNamedChild('Header')

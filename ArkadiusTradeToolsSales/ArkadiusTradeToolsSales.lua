@@ -421,8 +421,7 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
         
         local isArmorOrWeapon = (itemType == ITEMTYPE_ARMOR) or (itemType == ITEMTYPE_WEAPON)
         if (isArmorOrWeapon or (itemType == ITEMTYPE_ARMOR_TRAIT) or (itemType == ITEMTYPE_WEAPON_TRAIT) or (itemType == ITEMTYPE_JEWELRY_TRAIT)) then
-            --- This function is EXTREMELY time consuming ---
-            itemTrait = GetItemLinkTraitInfo(itemLink)
+            itemTrait = GetItemLinkTraitType(itemLink)
             
             -- Hack for EN issue with Nightmother's Embrace and Night Mother's Gaze set items having the same names
             if isArmorOrWeapon then
@@ -587,7 +586,7 @@ function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp
         itemName = GetItemLinkName(itemLink)
         itemLevel = GetItemLinkRequiredLevel(itemLink)
         itemCP = GetItemLinkRequiredChampionPoints(itemLink)
-        itemTrait = GetItemLinkTraitInfo(itemLink)
+        itemTrait = GetItemLinkTraitType(itemLink)
     end
 
     if ((itemSales[itemName]) and (itemSales[itemName][itemType]) and (itemSales[itemName][itemType][itemLevel]) and (itemSales[itemName][itemType][itemLevel][itemCP]) and (itemSales[itemName][itemType][itemLevel][itemCP][itemTrait])) then

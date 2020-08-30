@@ -80,7 +80,7 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
     self.currentSortKey = "timeStamp"
 end
 
-function ArkadiusTradeToolsSortFilterList:SetupFilters()
+function ArkadiusTradeToolsPurchasesList:SetupFilters()
     local useSubStrings = ArkadiusTradeToolsPurchases.frame.filterBar.SubStrings:IsPressed()
 
     local CompareStringsFuncs = {}
