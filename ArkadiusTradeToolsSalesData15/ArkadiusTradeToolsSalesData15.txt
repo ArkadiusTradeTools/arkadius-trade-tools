@@ -1,6 +1,6 @@
 ## Title: Arkadius' Trade Tools - Sales (Data15)
 ## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
-## APIVersion: 100031 100032
+## APIVersion: 100032
 ## Description: None
 ## Version: 1.8.0-alpha.2
 ## SavedVariables: ArkadiusTradeToolsSalesData15
