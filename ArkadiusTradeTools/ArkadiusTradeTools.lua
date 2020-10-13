@@ -98,11 +98,7 @@ function ArkadiusTradeTools:Initialize()
   if (self.Modules['Statistics']) then
     self.Modules['Statistics']:Initialize(serverName, displayName)
   end
-  for moduleName, moduleObject in pairs(self.Modules) do
-      if internalModules[moduleName] then break end
-      moduleObject:Initialize()
-  end
-
+  
   for moduleName, moduleObject in pairs(self.Modules) do
       if not internalModules[moduleName] then
         moduleObject:Initialize()
