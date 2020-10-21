@@ -17,6 +17,8 @@ local function WriteLine(args)
         .. ',' .. tostring(args.member)
         .. ',' .. args.salesVolume
         .. ',' .. args.purchaseVolume
+        .. ',' .. (args.rankIndex or "")
+        .. ',' .. (args.rankName or "")
         .. ',' .. args.taxes
         .. ',' .. args.purchaseTaxes
         .. ',' .. args.salesCount
@@ -28,11 +30,13 @@ local function WriteLine(args)
 end
 
 local headersMap = {
-    'Guild',
-    'Display Name',
-    'Member',
-    'Sales',
+    "Guild",
+    "Display Name",
+    "Member",
+    "Sales",
     "Purchases",
+    "Rank Index",
+    "Rank Name",
     "Taxes (Sales)",
     "Taxes (Purchases)",
     "Sales Count",
@@ -79,6 +83,8 @@ for key, data in ipairs(sortedExportsData) do
         displayName = displayName
         , member = member
         , stats = stats
+        , rankIndex = data.rankIndex
+        , rankName = data.rankName
         , purchaseTaxes = purchaseTaxes
         , purchaseVolume = purchaseVolume
         , purchasedItemCount = purchasedItemCount
