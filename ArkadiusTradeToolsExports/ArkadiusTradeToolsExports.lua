@@ -71,7 +71,7 @@ function ArkadiusTradeToolsExports:SaveGuildStats(guildId, startTimestamp, endTi
         local name, _, rankIndex = GetGuildMemberInfo(guildId, i)
         local rankName = GetGuildRankCustomName(guildId, rankIndex)
         _statsByUserName[name:lower()] = {
-            displayName = name,
+            displayName = ArkadiusTradeToolsSales:LookupDisplayName(name:lower()) or name,
             isMember = true,
             rankIndex = rankIndex,
             rankName = rankName,

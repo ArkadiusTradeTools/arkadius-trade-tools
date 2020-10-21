@@ -393,6 +393,7 @@ function ArkadiusTradeToolsSales:LoadSales()
 end
 
 function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
+    local displayNamesLookup = TemporaryVariables.displayNamesLookup
     local displayNamesLowered = TemporaryVariables.displayNamesLowered
     local guildNamesLowered = TemporaryVariables.guildNamesLowered
     local itemNamesLowered = TemporaryVariables.itemNamesLowered
@@ -458,9 +459,13 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
 
     itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality][#itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality] + 1] = sale
 
+    local lowerBuyerName = sale.buyerName:lower()
+    local lowerSellerName = sale.buyerName:lower()
     --- Store name strings in lower case to improve filter performance ---
-    displayNamesLowered[sale.buyerName] = displayNamesLowered[sale.buyerName] or sale.buyerName:lower()
-    displayNamesLowered[sale.sellerName] = displayNamesLowered[sale.sellerName] or sale.sellerName:lower()
+    displayNamesLowered[sale.buyerName] = displayNamesLowered[sale.buyerName] or lowerBuyerName
+    displayNamesLowered[sale.sellerName] = displayNamesLowered[sale.sellerName] or lowerSellerName
+    displayNamesLookup[lowerBuyerName] = displayNamesLookup[lowerBuyerName] or sale.buyerName
+    displayNamesLookup[lowerSellerName] = displayNamesLookup[lowerSellerName] or sale.sellerName
     guildNamesLowered[sale.guildName] = guildNamesLowered[sale.guildName] or sale.guildName:lower()
     itemNamesLowered[itemName] = itemNamesLowered[itemName] or itemName:lower()
 
@@ -1040,6 +1045,10 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
     return result
 end
 
+function ArkadiusTradeToolsSales:LookupDisplayName(loweredDisplayName)
+    return TemporaryVariables.displayNamesLookup[loweredDisplayName]
+end
+
 function ArkadiusTradeToolsSales:IsItemLink(itemLink)
     if (type(itemLink) == "string") then
         return (itemLink:match("|H%d:item:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+:%d+|h.*|h") ~= nil)
@@ -1223,6 +1232,9 @@ end
 --------------------------------------------------------
 local function PrepareTemporaryVariables()
     TemporaryVariables = {}
+    -- This is a inverse of displayNamesLowered because data that comes from the guild history API
+    -- can have different casing than the guild roster API
+    TemporaryVariables.displayNamesLookup = {}
     TemporaryVariables.displayNamesLowered = {}
     TemporaryVariables.guildNamesLowered = {}
     TemporaryVariables.itemNamesLowered = {}
