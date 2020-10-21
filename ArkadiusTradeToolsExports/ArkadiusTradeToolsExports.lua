@@ -101,6 +101,7 @@ function ArkadiusTradeToolsExports:SaveGuildStats(guildId, startTimestamp, endTi
         userRecord.isMember = userRecord.isMember or false
         _statsByUser[#_statsByUser + 1] = userRecord
     end
+    ArkadiusTradeToolsExportsData = ArkadiusTradeToolsExportsData or {}
     ArkadiusTradeToolsExportsData[guildName] = ArkadiusTradeToolsExportsData[guildName] or {}
     ArkadiusTradeToolsExportsData[guildName]['exports'] = ArkadiusTradeToolsExportsData[guildName]['exports'] or {}
     ArkadiusTradeToolsExportsData[guildName]['exports'][#ArkadiusTradeToolsExportsData[guildName]['exports'] + 1] = {
