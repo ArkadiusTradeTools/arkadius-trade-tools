@@ -32,6 +32,15 @@ function ArkadiusTradeToolsExports:Initialize(serverName, displayName)
         Settings.filters.timeSelection = self.frame.filterBar.Time:GetSelectedIndex()
     end
 
+    SLASH_COMMANDS['/attexport'] = function(args)
+        local guildIndex, week = zo_strsplit(' ', args)
+        guildIndex = tonumber(guildIndex) or 1
+        week = tonumber(week) or 0
+        local from = ArkadiusTradeTools:GetStartOfWeek(week, true)
+        local to = week < 0 and ArkadiusTradeTools:GetStartOfWeek(week + 1, true) or nil
+        self:SaveGuildStats(GetGuildId(guildIndex), from, to)
+    end
+
     -- self.frame.filterBar.Time:AddItem({name = L["ATT_STR_TODAY"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     -- self.frame.filterBar.Time:AddItem({name = L["ATT_STR_YESTERDAY"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) - 1 end})
     -- self.frame.filterBar.Time:AddItem({name = L["ATT_STR_TWO_DAYS_AGO"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-2) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) - 1 end})
@@ -56,20 +65,16 @@ function ArkadiusTradeToolsExports:SaveGuildStats(guildId, startTimestamp, endTi
     startTimestamp = startTimestamp or 0
     endTimestamp = endTimestamp or GetTimeStamp()
     local guildName = GetGuildName(guildId)
-    _statsByUserName = {}
-    -- Prefill the full set of guild members
-    -- local guildMembers = {}
-    -- local numGuildMembers = GetNumGuildMembers(guildId)
-    -- for i = 1, numGuildMembers do
-    --     local name, note, rankIndex = GetGuildMemberInfo(guildId, i)
-    --     guildMembers[name:lower()] = {}
-    -- end
+    local _statsByUserName = {}
     local numGuildMembers = GetNumGuildMembers(guildId)
     for i = 1, numGuildMembers do
-        local name = GetGuildMemberInfo(guildId, i)
+        local name, _, rankIndex = GetGuildMemberInfo(guildId, i)
+        local rankName = GetGuildRankCustomName(guildId, rankIndex)
         _statsByUserName[name:lower()] = {
             displayName = name,
             isMember = true,
+            rankIndex = rankIndex,
+            rankName = rankName,
             stats = {
                 salesVolume = 0,
                 salesCount = 0,
@@ -91,14 +96,18 @@ function ArkadiusTradeToolsExports:SaveGuildStats(guildId, startTimestamp, endTi
         nil,
         false
     )
-    _statsByUser = {}
+    local _statsByUser = {}
     for name, userRecord in pairs(_statsByUserName) do
-        -- local userRecord = _statsByUserName[i]
-        -- For case-insensitive lookup
+        userRecord.isMember = userRecord.isMember or false
         _statsByUser[#_statsByUser + 1] = userRecord
-        -- _statsByUser[#_statsByUser + 1].isMember = userRecord.isMember or false
     end
-    ArkadiusTradeToolsExportsData = _statsByUserName
+    ArkadiusTradeToolsExportsData[guildName] = ArkadiusTradeToolsExportsData[guildName] or {}
+    ArkadiusTradeToolsExportsData[guildName]['exports'] = ArkadiusTradeToolsExportsData[guildName]['exports'] or {}
+    ArkadiusTradeToolsExportsData[guildName]['exports'][#ArkadiusTradeToolsExportsData[guildName]['exports'] + 1] = {
+        startTimestamp = startTimestamp,
+        endTimestamp = endTimestamp,
+        data = _statsByUser
+    }
 end
 
 -- function ArkadiusTradeToolsExports:GetSettingsMenu()
