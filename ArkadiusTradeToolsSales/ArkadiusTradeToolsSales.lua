@@ -460,7 +460,7 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
     itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality][#itemSales[itemName][itemType][itemLevel][itemCP][itemTrait][itemQuality] + 1] = sale
 
     local lowerBuyerName = sale.buyerName:lower()
-    local lowerSellerName = sale.buyerName:lower()
+    local lowerSellerName = sale.sellerName:lower()
     --- Store name strings in lower case to improve filter performance ---
     displayNamesLowered[sale.buyerName] = displayNamesLowered[sale.buyerName] or lowerBuyerName
     displayNamesLowered[sale.sellerName] = displayNamesLowered[sale.sellerName] or lowerSellerName
