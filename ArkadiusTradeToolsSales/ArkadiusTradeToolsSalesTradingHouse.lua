@@ -454,6 +454,7 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
       for i = 1, #self.config.steps do
           local step = self.config.steps[i]
           local color = i == 1 and ZO_ColorDef:New(1, 0, 0) or GetItemQualityColor(step.id - 1)
+          step.color = color
           step.colorizedLabel = color:Colorize(step.label)
           qualityById[step.id] = step
       end
