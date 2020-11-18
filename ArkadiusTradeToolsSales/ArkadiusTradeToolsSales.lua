@@ -1061,16 +1061,8 @@ function ArkadiusTradeToolsSales:CreateInventoryKeybinds()
     INVENTORY_FRAGMENT:RegisterCallback("StateChange", OnStateChanged)
 end
 
-local MIN_ITEM_QUALITY
-local MAX_ITEM_QUALITY
-
-if (GetAPIVersion() < 100031) then
-    MIN_ITEM_QUALITY = ITEM_QUALITY_MIN_VALUE
-    MAX_ITEM_QUALITY = ITEM_QUALITY_MAX_VALUE
-else
-    MIN_ITEM_QUALITY = ITEM_FUNCTIONAL_QUALITY_ITERATION_BEGIN
-    MAX_ITEM_QUALITY = ITEM_FUNCTIONAL_QUALITY_ITERATION_END
-end
+local MIN_ITEM_QUALITY = ITEM_FUNCTIONAL_QUALITY_ITERATION_BEGIN
+local MAX_ITEM_QUALITY = ITEM_FUNCTIONAL_QUALITY_ITERATION_END
 
 --------------------------------------------------------
 ------------------- Local functions --------------------
