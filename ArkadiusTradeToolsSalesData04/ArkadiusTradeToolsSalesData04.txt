@@ -1,6 +1,6 @@
 ## Title: Arkadius' Trade Tools - Sales (Data04)
 ## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
-## APIVersion: 100032
+## APIVersion: 100033
 ## Description: None
 ## Version: 1.9.2
 ## SavedVariables: ArkadiusTradeToolsSalesData04
