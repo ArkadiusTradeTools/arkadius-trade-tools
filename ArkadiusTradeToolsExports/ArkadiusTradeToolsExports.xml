@@ -1,0 +1,118 @@
+<GuiXml>
+    <Controls>
+        <Control name="ArkadiusTradeToolsExportsFrame" inherits="ArkadiusTradeToolsTabFrame">
+            <Controls>
+                <Control name="$(parent)Headers" inherits="ArkadiusTradeToolsSortHeaderGroup">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="10"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-20" offsetY="42"/>
+                    <Controls>
+                        <Control name="$(parent)GuildName" inherits="ArkadiusTradeToolsSortHeader">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                            <OnInitialized>
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_GUILD, "guildName", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                                self.relativeWidth = 0.25
+                            </OnInitialized>
+                            <Controls>
+                                <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
+                                    <Dimensions x="16" y="16"/>
+                                    <Textures
+                                        normal="/esoui/art/buttons/pointsminus_up.dds"
+                                        pressed="/esoui/art/buttons/pointsplus_up.dds"
+                                    />
+                                </Button>
+                            </Controls>
+                        </Control>
+                        <Control name="$(parent)StartTimeStamp" inherits="ArkadiusTradeToolsSortHeader">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                            <OnInitialized>
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_TIME, "startTimeStamp", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                                self.relativeWidth = 0.20
+                            </OnInitialized>
+                            <Controls>
+                                <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
+                                    <Dimensions x="16" y="16"/>
+                                    <Textures
+                                        normal="/esoui/art/cadwell/cadwell_indexicon_gold_up.dds"
+                                        pressed="/esoui/art/cadwell/cadwell_indexicon_silver_up.dds"
+                                    />
+									<TextureCoords left="0.2" top="0.2" bottom="0.8" right="0.8" />
+                                </Button>
+                            </Controls>
+                        </Control>
+                        <Control name="$(parent)EndTimeStamp" inherits="ArkadiusTradeToolsSortHeader">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                            <OnInitialized>
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_TIME, "endTimeStamp", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                                self.relativeWidth = 0.20
+                            </OnInitialized>
+                            <Controls>
+                                <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
+                                    <Dimensions x="16" y="16"/>
+                                    <Textures
+                                        normal="/esoui/art/cadwell/cadwell_indexicon_gold_up.dds"
+                                        pressed="/esoui/art/cadwell/cadwell_indexicon_silver_up.dds"
+                                    />
+									<TextureCoords left="0.2" top="0.2" bottom="0.8" right="0.8" />
+                                </Button>
+                            </Controls>
+                        </Control>
+
+                        <Control name="$(parent)Settings" inherits="ArkadiusTradeToolsSortHeader">
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)Price" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Price" relativePoint="BOTTOMRIGHT" offsetX="20" offsetY="0"/>
+                            <OnInitialized>
+                                local nameControl = self:GetNamedChild("Name")
+
+                                nameControl:ClearAnchors()
+                                nameControl:SetAnchor(TOPLEFT, self, TOPLEFT, 0, 0)
+                                nameControl:SetAnchor(BOTTOMRIGHT, self, BOTTOMRIGHT, 0, 0)
+                                nameControl:SetVerticalAlignment(BOTTOM)
+
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, "*", "headerSettings", nil, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                            </OnInitialized>
+                        </Control>
+
+                    </Controls>
+                </Control>
+
+                <Control name="$(parent)List" inherits="ZO_ScrollList">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-50"/>
+                </Control>
+
+                <Texture name="$(parent)Divider" inherits="ArkadiusTradeToolsHorizontalDivider">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)List" relativePoint="BOTTOMLEFT" offsetY="5"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetY="5"/>
+                </Texture>
+
+                <Control name="$(parent)FilterBar" inherits="ArkadiusTradeToolsFilterBar">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Divider" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Divider" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="5"/>
+                </Control>
+            </Controls>
+        </Control>
+
+        <Control name="ArkadiusTradeToolsExportsRow" inherits="ArkadiusTradeToolsListRow" virtual="true">
+            <Controls>
+                <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
+                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                </Label>
+                <Label name="$(parent)StartTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                    <Dimensions x="125" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
+                </Label>
+                <Label name="$(parent)EndTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                    <Dimensions x="125" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
+                </Label>
+            </Controls>
+        </Control>
+    </Controls>
+</GuiXml>

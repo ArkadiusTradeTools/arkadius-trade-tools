@@ -673,8 +673,6 @@ function ArkadiusTradeToolsSales:GetPurchasesAndSalesVolumes(guildName, displayN
     return purchasesVolume, salesVolume
 end
 
-
-
 function ArkadiusTradeToolsSales:GetVoucherCount(itemLink)
     local vouchers = select(24, ZO_LinkHandler_ParseLink(itemLink))
     return floor((tonumber(vouchers) / 10000) + .5)
@@ -710,7 +708,6 @@ function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeS
 
     return averagePrice
 end
-
 
 function ArkadiusTradeToolsSales:GetCrafingComponentPrices(itemLink, fromTimeStamp)
     -- Currently only called by TooltipExtensions.UpdateStatistics, so not necessary
@@ -898,7 +895,6 @@ function ArkadiusTradeToolsSales:GetStatistics(newerThanTimeStamp, olderThanTime
 
     return result
 end
-
 
 function ArkadiusTradeToolsSales:GetFullStatisticsForGuild(resultRef, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData, includeGuildRecord)
     if includeGuildRecord == nil then includeGuildRecord = true end

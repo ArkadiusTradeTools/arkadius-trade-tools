@@ -438,7 +438,7 @@ function ArkadiusTradeToolsSortFilterList:FilterScrollList()
 
     if (not filters.needsRefilter) then
         dataList = self.updateFilterList
-    else
+    else        
         local scrollData = ZO_ScrollList_GetDataList(self.list)
         ZO_ClearNumericallyIndexedTable(scrollData)
         dataList = self.masterList
