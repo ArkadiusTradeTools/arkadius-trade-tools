@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = 'ArkadiusTradeTools'
 ArkadiusTradeTools.TITLE = 'Arkadius Trade Tools'
-ArkadiusTradeTools.VERSION = '1.10.0-exports.5'
+ArkadiusTradeTools.VERSION = '1.11.0-exports.6'
 ArkadiusTradeTools.AUTHOR = '@Aldanga, @Arkadius1'
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
@@ -443,33 +443,6 @@ local NEW_WEEK = {
   [6] = 0, -- Wednesday
 }
 
---------------------------------------------------------
------------------------ Temp Code ----------------------
---------------------------------------------------------
-local elongatedWeekTimes = {
-  ['EU Megaserver'] = {
-    -- 08-02-2020 19:00 UTC
-    startTime = 1596394800,
-    -- 08-11-2020 14:00 UTC
-    endTime = 1597154400,
-  },
-  ['NA Megaserver'] = {
-    -- 08-03-2020 01:00 UTC
-    startTime = 1596416400,
-    -- 08-11-2020 19:00 UTC
-    endTime = 1597172400,
-  },
-  ['PTS'] = {
-    -- 07-27-2020 01:00 UTC
-    startTime = 1595811600,
-    -- 08-4-2020 19:00 UTC
-    endTime = 1596567600,
-  }
-}
---------------------------------------------------------
-----------------------End Temp Code --------------------
---------------------------------------------------------
-
 --- Returns the UTC timestamp for the start of trading week ---
 function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   relativeWeek = relativeWeek or 0
@@ -484,55 +457,13 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   -- Shift to the desired week
   result = result + relativeWeek * SECONDS_IN_WEEK
   
-
-  --------------------------------------------------------
-  ----------------------- Temp Code ----------------------
-  --------------------------------------------------------
-  -- A better solution is definitely out there (with time shifts because of the hours left in the day but skipping the elongated week check)
-  -- but this is temp code and it's working, so I'm gonna stick with that
-  local elongatedWeek = elongatedWeekTimes[megaserver]
-  local compareTimeStamp = currentTimeStamp + relativeWeek * SECONDS_IN_WEEK
-  if compareTimeStamp >= elongatedWeek.endTime and compareTimeStamp < elongatedWeek.endTime + SECONDS_IN_WEEK then
-    return elongatedWeek.endTime
-  end
-
-  -- If we're in the bonus 2 days at the end of the elongated week, shift the date back 2 days
-  local TODAY_IS_ELONGATED = currentTimeStamp >= (elongatedWeek.startTime + 7 * SECONDS_IN_DAY) and currentTimeStamp < elongatedWeek.endTime
-  if TODAY_IS_ELONGATED and useTradeWeek and not Settings.forceTraditionalTraderWeek then
-    result = result - 2 * SECONDS_IN_DAY
-    today = (days - 2) % 7
-  end
-  --------------------------------------------------------
-  ----------------------End Temp Code --------------------
-  --------------------------------------------------------
-
   -- Before the trader flip day change, so use Sundays as start
   local USE_TRADITIONAL_WEEK_START = Settings.forceTraditionalTraderWeek
-    --------------------------------------------------------
-    ----------------------- Temp Code ----------------------
-    --------------------------------------------------------
-    or result < elongatedWeek.endTime
-    --------------------------------------------------------
-    ----------------------End Temp Code --------------------
-    --------------------------------------------------------
   local goBack = USE_TRADITIONAL_WEEK_START and TRADITIONAL_WEEK or NEW_WEEK
 
   result = result - goBack[today]
   
   if (useTradeWeek) then
-    --------------------------------------------------------
-    ----------------------- Temp Code ----------------------
-    --------------------------------------------------------
-    local isElongatedWeek = result >= elongatedWeek.startTime and result < elongatedWeek.endTime
-
-    if (result == 1596412800 and relativeWeek == -1) or isElongatedWeek and not Settings.forceTraditionalTraderWeek then
-      -- Elongated week, so let's use static dates
-      return elongatedWeek.startTime
-    end
-    --------------------------------------------------------
-    ----------------------End Temp Code --------------------
-    --------------------------------------------------------
-
     if (megaserver == 'EU Megaserver' and USE_TRADITIONAL_WEEK_START or (megaserver ~= 'EU Megaserver' and not USE_TRADITIONAL_WEEK_START)) then
       -- EU Traditional / NA Not Traditional
       local secondsLeftThisWeek = self:GetStartOfWeek(1) - currentTimeStamp

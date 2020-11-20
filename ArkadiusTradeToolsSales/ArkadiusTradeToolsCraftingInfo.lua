@@ -267,11 +267,18 @@ local MASTER_WRIT_STYLES =
     [98] = "|H0:item:158307:30:1:0:0:0:0:0:0:0:0:0:0:0:0:98:0:0:0:0:0|h|h", -- Pyre Watch, Consecrated Myrrh
 --    [99] = "Not craftable",                                               --
     [100] = "|H0:item:160509:30:1:0:0:0:0:0:0:0:0:0:0:0:0:100:0:0:0:0:0|h|h", -- Blackreach Vanguard, Gloomspore Chitin
---    [101] = "Not craftable",                                               --
---    [102] = "Not craftable",                                               --
+    [101] = "|H0:item:160558:30:1:0:0:0:0:0:0:0:0:0:0:0:0:101:0:0:0:0:0|h|h", -- Greymoor, Bat Oil
+    [102] = "|H0:item:160575:30:1:0:0:0:0:0:0:0:0:0:0:0:0:102:0:0:0:0:0|h|h", -- Sea Giant, Sea Snake Fang
     [103] = "|H0:item:160592:30:1:0:0:0:0:0:0:0:0:0:0:0:0:103:0:0:0:0:0|h|h", -- Ancestral Nord, Etched Corundum
     [104] = "|H0:item:160609:30:1:0:0:0:0:0:0:0:0:0:0:0:0:104:0:0:0:0:0|h|h", -- Ancestral High Elf, Etched Adamantite
     [105] = "|H0:item:160626:30:1:0:0:0:0:0:0:0:0:0:0:0:0:105:0:0:0:0:0|h|h", -- Ancestral Orc, Etched Manganese
+    [106] = "|H0:item:166988:30:1:0:0:0:0:0:0:0:0:0:0:0:0:106:0:0:0:0:0|h|h", -- Thorn Legion, Thorn Sigil
+    [107] = "|H0:item:167005:30:1:0:0:0:0:0:0:0:0:0:0:0:0:107:0:0:0:0:0|h|h", -- Hazardous Alchemy, Viridian Phial
+    -- [108] = "Not craftable",
+    -- [109] = "Not craftable",
+    [110] = "|H0:item:167286:30:1:0:0:0:0:0:0:0:0:0:0:0:0:110:0:0:0:0:0|h|h", -- Hazardous Alchemy, Viridian Phial
+    -- [111] = "Not craftable",
+    [112] = "|H0:item:167976:30:1:0:0:0:0:0:0:0:0:0:0:0:0:112:0:0:0:0:0|h|h", -- Arkthzand Armory, Arkthzand Sprocket
 }
 
 local MASTER_WRIT_TRAITS =
