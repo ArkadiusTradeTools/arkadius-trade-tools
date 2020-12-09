@@ -88,9 +88,32 @@
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetY="5"/>
                 </Texture>
 
-                <Control name="$(parent)FilterBar" inherits="ArkadiusTradeToolsFilterBar">
+                <Control name="$(parent)ToolBar" inherits="ArkadiusTradeToolsToolBar">
+                    <Dimensions x="500" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Divider" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Divider" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="5"/>
+                    <Controls>
+                        <Control name="$(parent)GuildSelector" inherits="ZO_ComboBox">
+                            <Dimensions x="150" />
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                        </Control>
+                        <Control name="$(parent)TimeSelector" inherits="ZO_ComboBox">
+                            <Dimensions x="150" />
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)GuildSelector" relativePoint="TOPRIGHT" offsetX="5" offsetY="0"/>
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildSelector" relativePoint="BOTTOMRIGHT" offsetX="5" offsetY="0"/>
+                        </Control>
+                        <Button name="$(parent)Export" text="Export" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" inherits="ZO_DefaultButton">
+                            <Dimensions x="75" y="24" />
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)TimeSelector" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
+                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeSelector" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
+                        </Button>
+                    </Controls>
+                </Control>
+
+                <Control name="$(parent)FilterBar" inherits="ArkadiusTradeToolsFilterBar">
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)Divider" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)ToolBar" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                 </Control>
             </Controls>
         </Control>

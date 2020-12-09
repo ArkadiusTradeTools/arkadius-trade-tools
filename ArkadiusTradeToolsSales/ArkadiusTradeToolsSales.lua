@@ -969,8 +969,6 @@ function ArkadiusTradeToolsSales:GetStatisticsForGuild(resultRef, newerThanTimeS
                 itemCountPerPlayer = itemCountPerPlayer + guildNameData.sales[saleIndex].quantity
                 salesCountPerPlayer = salesCountPerPlayer + 1
                 taxesPerPlayer = taxesPerPlayer + guildNameData.sales[saleIndex].taxes
-                -- Also add data to purchaser so we don't have to iterate any sales more than once
-                -- guildNameData.displayNames[guildNameData.sales[saleIndex].buyerName]
             end
         end
 
@@ -982,8 +980,6 @@ function ArkadiusTradeToolsSales:GetStatisticsForGuild(resultRef, newerThanTimeS
                 purchaseVolumePerPlayer = purchaseVolumePerPlayer + guildNameData.sales[saleIndex].price
                 purchasedItemCountPerPlayer = purchasedItemCountPerPlayer + guildNameData.sales[saleIndex].quantity
                 purchaseCountPerPlayer = purchaseCountPerPlayer + 1
-                -- Also add data to purchaser so we don't have to iterate any sales more than once
-                -- guildNameData.displayNames[guildNameData.sales[saleIndex].buyerName]
             end
         end
 

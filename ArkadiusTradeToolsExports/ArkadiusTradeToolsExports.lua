@@ -22,7 +22,7 @@ function ArkadiusTradeToolsExportsList:Initialize(control)
 
     self.SORT_KEYS = {["guildName"]  = {tiebreaker = "startTimeStamp"},
                       ["startTimeStamp"]  = {tiebreaker = "endTimeStamp"},
-                      ["endTimeStamp"]  = {}}
+                      ["endTimeStamp"]  = {tiebreaker = "guildName"}}
 
     ZO_ScrollList_AddDataType(self.list, 1, "ArkadiusTradeToolsExportsRow", 32,
         function(control, data)
@@ -72,7 +72,8 @@ function ArkadiusTradeToolsExportsList:SetupFilters()
     local olderThanTimestamp = item.OlderThanTimeStamp()
 
     local function CompareTimestamp(timeStamp)
-        return ((timeStamp >= newerThanTimeStamp) and (timeStamp < olderThanTimestamp))
+        return true
+        -- return ((timeStamp >= newerThanTimeStamp) and (timeStamp < olderThanTimestamp))
     end
 
     self.Filter:SetKeywords(ArkadiusTradeToolsExports.frame.filterBar.Text:GetStrings())
@@ -121,12 +122,88 @@ end
 
 ---------------------------------------------------------------------------------------
 
+local function GetSelectedIndex(combobox)
+    local selectedItem = combobox:GetSelectedItemData()
+
+    for i = 1, #combobox.m_sortedItems do
+        local item = combobox.m_sortedItems[i]
+        if (item == selectedItem) then
+            return i
+        end
+    end
+
+    return 0
+end
+
+local function SelectByIndex(combobox, index)
+    if ((index) and (index > 0) and (index <= combobox.m_comboBox:GetNumItems())) then
+        combobox.m_comboBox:SelectItemByIndex(index)
+    end
+end
+
+function ArkadiusTradeToolsExports:SetUpToolBar()
+    SLASH_COMMANDS['/attexport'] = function(args)
+        local guildIndex, week = zo_strsplit(' ', args)
+        guildIndex = tonumber(guildIndex) or 1
+        week = tonumber(week) or 0
+        local from = ArkadiusTradeTools:GetStartOfWeek(week, true)
+        local to = week < 0 and ArkadiusTradeTools:GetStartOfWeek(week + 1, true) or nil
+        self:GenerateExport(GetGuildId(guildIndex), from, to)
+    end
+
+    -- These two selectors should be extracted and implemented as a dropdown control template
+    self.frame.toolbar.GuildSelector = self.frame.toolbar:GetNamedChild('GuildSelector')
+    self.frame.toolbar.GuildSelector.m_comboBox:SetSortsItems(false)
+
+    --- Setup Toolbar ---
+    local function guildSelectorCallback(...)
+        Settings.toolbar.guildSelection = GetSelectedIndex(self.frame.toolbar.GuildSelector.m_comboBox)
+    end
+    
+    for i = 1, GetNumGuilds() do
+        local guildId = GetGuildId(i)
+        local guildName = GetGuildName(guildId)
+        self.frame.toolbar.GuildSelector.m_comboBox:AddItem({name = guildName, guildId = guildId, callback = guildSelectorCallback})
+    end
+    SelectByIndex(self.frame.toolbar.GuildSelector, Settings.toolbar.guildSelection)
+
+    local function timeSelectorCallback(...)
+        Settings.toolbar.timeSelection = GetSelectedIndex(self.frame.toolbar.TimeSelector.m_comboBox)
+    end
+
+    self.frame.toolbar.TimeSelector = self.frame.toolbar:GetNamedChild('TimeSelector')
+    self.frame.toolbar.TimeSelector.m_comboBox:SetSortsItems(false)
+    -- These date options don't use the timestamp minus 1 as the export function runs up to (but not including) the end time stamp
+    -- Subtracting 1 would result in missing sales in the last second of the export timeframe
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_TODAY"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_YESTERDAY"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_TWO_DAYS_AGO"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-2) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_THIS_WEEK"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_LAST_WEEK"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_PRIOR_WEEK"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-2, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_7_DAYS"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-7) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_10_DAYS"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-10) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_14_DAYS"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-14) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_30_DAYS"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return 0 end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    SelectByIndex(self.frame.toolbar.TimeSelector, Settings.toolbar.timeSelection)
+
+    self.frame.toolbar.Export = self.frame.toolbar:GetNamedChild('Export')
+    self.frame.toolbar.Export:SetHandler("OnClicked", function() 
+        local selectedGuildId = self.frame.toolbar.GuildSelector.m_comboBox:GetSelectedItemData().guildId
+        local timeData = self.frame.toolbar.TimeSelector.m_comboBox:GetSelectedItemData()
+        local startTime = timeData.NewerThanTimeStamp()
+        local stopTime = timeData.OlderThanTimeStamp()
+        self:GenerateExport(selectedGuildId, startTime, stopTime) 
+    end)
+end
+
 function ArkadiusTradeToolsExports:Initialize()
     self.frame = ArkadiusTradeToolsExportsFrame
     ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_EXPORTS"], "/esoui/art/vendor/vendor_tabicon_buy_up.dds", "/esoui/art/vendor/vendor_tabicon_buy_up.dds", {left = 0.15, top = 0.15, right = 0.85, bottom = 0.85})
 
     self.list = ArkadiusTradeToolsExportsList:New(self, self.frame)
     self.frame.list = self.frame:GetNamedChild("List")
+    self.frame.toolbar = self.frame:GetNamedChild("ToolBar")
     self.frame.filterBar = self.frame:GetNamedChild("FilterBar")
     self.frame.headers = self.frame:GetNamedChild("Headers")
 --    self.frame.headers.OnHeaderShow = function(header, hidden) self:OnHeaderVisibilityChanged(header, hidden) end
@@ -139,15 +216,7 @@ function ArkadiusTradeToolsExports:Initialize()
 
     self:LoadSettings()
     self:LoadExports()
-
-    SLASH_COMMANDS['/attexport'] = function(args)
-        local guildIndex, week = zo_strsplit(' ', args)
-        guildIndex = tonumber(guildIndex) or 1
-        week = tonumber(week) or 0
-        local from = ArkadiusTradeTools:GetStartOfWeek(week, true)
-        local to = week < 0 and ArkadiusTradeTools:GetStartOfWeek(week + 1, true) or nil
-        self:SaveGuildStats(GetGuildId(guildIndex), from, to)
-    end
+    self:SetUpToolBar()
 
     --- Setup FilterBar ---
     local function callback(...)
@@ -172,24 +241,25 @@ function ArkadiusTradeToolsExports:Initialize()
     self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed) self.list.Filter:SetNeedsRefilter() self.list:RefreshFilters() Settings.filters.useSubStrings = pressed end
     self.frame.filterBar.SubStrings:SetPressed(Settings.filters.useSubStrings)
     self.frame.filterBar.SubStrings.tooltip:SetContent(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
+    self.frame.filterBar:SetHidden(true)
     -----------------------
 end
 
 function ArkadiusTradeToolsExports:Finalize()
-    self:CleanupSavedVariables()
+    -- self:CleanupSavedVariables()
     self:SaveSettings()
 end
 
-function ArkadiusTradeToolsExports:SaveGuildStats(guildId, startTimestamp, endTimestamp)
+function ArkadiusTradeToolsExports:GenerateExport(guildId, startTimestamp, endTimestamp)
     startTimestamp = startTimestamp or 0
     endTimestamp = endTimestamp or GetTimeStamp()
     local guildName = GetGuildName(guildId)
-    local _statsByUserName = {}
+    local statsByUserName = {}
     local numGuildMembers = GetNumGuildMembers(guildId)
     for i = 1, numGuildMembers do
         local name, _, rankIndex = GetGuildMemberInfo(guildId, i)
         local rankName = GetGuildRankCustomName(guildId, rankIndex)
-        _statsByUserName[name:lower()] = {
+        statsByUserName[name:lower()] = {
             displayName = ArkadiusTradeToolsSales:LookupDisplayName(name:lower()) or name,
             isMember = true,
             rankIndex = rankIndex,
@@ -208,27 +278,19 @@ function ArkadiusTradeToolsExports:SaveGuildStats(guildId, startTimestamp, endTi
         }
     end
     ArkadiusTradeToolsSales:GetFullStatisticsForGuild(
-        _statsByUserName,
+        statsByUserName,
         startTimestamp,
         endTimestamp,
         guildName,
         nil,
         false
     )
-    local _statsByUser = {}
-    for name, userRecord in pairs(_statsByUserName) do
+    local statsByUser = {}
+    for name, userRecord in pairs(statsByUserName) do
         userRecord.isMember = userRecord.isMember or false
-        _statsByUser[#_statsByUser + 1] = userRecord
+        statsByUser[#statsByUser + 1] = userRecord
     end
-    self:OnExportCreated(guildName, startTimestamp, endTimestamp, _statsByUser)
-    -- ArkadiusTradeToolsExportsData = ArkadiusTradeToolsExportsData or {}
-    -- ArkadiusTradeToolsExportsData[guildName] = ArkadiusTradeToolsExportsData[guildName] or {}
-    -- ArkadiusTradeToolsExportsData[guildName]['exports'] = ArkadiusTradeToolsExportsData[guildName]['exports'] or {}
-    -- ArkadiusTradeToolsExportsData[guildName]['exports'][#ArkadiusTradeToolsExportsData[guildName]['exports'] + 1] = {
-    --     startTimestamp = startTimestamp,
-    --     endTimestamp = endTimestamp,
-    --     data = _statsByUser
-    -- }
+    self:OnExportCreated(guildName, startTimestamp, endTimestamp, statsByUser)
 end
 
 function ArkadiusTradeToolsExports:GetSettingsMenu()
@@ -336,7 +398,9 @@ local function onAddOnLoaded(eventCode, addonName)
     if (Settings.filters.startTimeStamp == nil) then Settings.filters.startTimeStamp = false end
     if (Settings.filters.endTimeStamp == nil) then Settings.filters.endTimeStamp = false end
     if (Settings.filters.useSubStrings == nil) then Settings.filters.useSubStrings = true end
-
+    Settings.toolbar = Settings.toolbar or {}
+    Settings.toolbar.guildSelection = Settings.toolbar.guildSelection or 1
+    Settings.toolbar.timeSelection = Settings.toolbar.timeSelection or 4
     EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsExports.NAME, EVENT_ADD_ON_LOADED)
 end
 
