@@ -13,15 +13,6 @@
                                 ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_GUILD, "guildName", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
                                 self.relativeWidth = 0.25
                             </OnInitialized>
-                            <Controls>
-                                <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
-                                    <Dimensions x="16" y="16"/>
-                                    <Textures
-                                        normal="/esoui/art/buttons/pointsminus_up.dds"
-                                        pressed="/esoui/art/buttons/pointsplus_up.dds"
-                                    />
-                                </Button>
-                            </Controls>
                         </Control>
                         <Control name="$(parent)StartTimeStamp" inherits="ArkadiusTradeToolsSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>

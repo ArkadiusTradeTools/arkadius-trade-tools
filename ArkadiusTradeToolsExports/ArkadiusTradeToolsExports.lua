@@ -49,9 +49,6 @@ function ArkadiusTradeToolsExportsList:Initialize(control)
     self.endTimeStampSwitch = Settings.filters.endTimeStamp
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
-    self.sortHeaderGroup:HeaderForKey("guildName").switch:SetPressed(self.guildNameSwitch)
-    self.sortHeaderGroup:HeaderForKey("guildName").switch.tooltip:SetContent(L["ATT_STR_FILTER_COLUMN_TOOLTIP"])
-    self.sortHeaderGroup:HeaderForKey("guildName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("startTimeStamp").switch:SetPressed(self.startTimeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("startTimeStamp").switch.OnToggle = OnHeaderToggle
     self.sortHeaderGroup:HeaderForKey("endTimeStamp").switch:SetPressed(self.endTimeStampSwitch)
