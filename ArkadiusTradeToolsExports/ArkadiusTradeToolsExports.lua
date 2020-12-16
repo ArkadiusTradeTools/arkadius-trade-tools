@@ -197,7 +197,7 @@ end
 
 function ArkadiusTradeToolsExports:Initialize()
     self.frame = ArkadiusTradeToolsExportsFrame
-    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_EXPORTS"], "/esoui/art/vendor/vendor_tabicon_buy_up.dds", "/esoui/art/vendor/vendor_tabicon_buy_up.dds", {left = 0.15, top = 0.15, right = 0.85, bottom = 0.85})
+    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_EXPORTS"], "/esoui/art/guildfinder/keyboard/guildrecruitment_applications_up.dds", "/esoui/art/guildfinder/keyboard/guildrecruitment_applications_up.dds", {left = 0.15, top = 0.10, right = 0.95, bottom = 0.85})
 
     self.list = ArkadiusTradeToolsExportsList:New(self, self.frame)
     self.frame.list = self.frame:GetNamedChild("List")
