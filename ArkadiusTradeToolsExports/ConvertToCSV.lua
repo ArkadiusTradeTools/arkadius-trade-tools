@@ -1,7 +1,7 @@
 IN_FILE_PATH  = "../../SavedVariables/ArkadiusTradeToolsExports.lua"
-OUT_FILE_PATH = "../../SavedVariables/ArkadiusTradeToolsExports.csv"
 dofile(IN_FILE_PATH)
-OUT_FILE = assert(io.open(OUT_FILE_PATH, "w"))
+
+local useLatest = arg[1] and arg[1] == '--latest'
 
 local function escapeQuotes(s)
     local value = s:gsub("\"", "\"\"")
@@ -28,27 +28,6 @@ local function WriteLine(args)
         .. '\n'
     )
 end
-
-local headersMap = {
-    "Guild",
-    "Start Timestamp",
-    "End Timestamp",
-    "Display Name",
-    "Member",
-    "Sales",
-    "Purchases",
-    "Rank Index",
-    "Rank Name",
-    "Taxes (Sales)",
-    "Taxes (Purchases)",
-    "Sales Count",
-    "Purchase Count",
-    "Internal Sales Volume",
-    "Sold Items",
-}
-local headers = table.concat(headersMap, ',') .. '\n'
-
-OUT_FILE:write(headers)
 
 local servers = {}
 for k in pairs(ArkadiusTradeToolsExportsData.exports) do 
@@ -99,17 +78,20 @@ table.sort(exports, function(a, b)
 end)
 
 local selectedExport
-io.write('Available Exports:\n')
-for idx, value in ipairs(exports) do
-    io.write(idx .. ". " .. value.guildName .. "\n")
-    io.write("   End Date:   ".. os.date('%Y-%m-%dT%H:%M:%S', value.endTimeStamp) .. '\n')
-    io.write("   Start Date: ".. os.date('%Y-%m-%dT%H:%M:%S', value.startTimeStamp) .. '\n\n')
+if not useLatest then
+    io.write('Available Exports:\n')
+    for idx, value in ipairs(exports) do
+        io.write(idx .. ". " .. value.guildName .. "\n")
+        io.write("   End Date:   ".. os.date('%Y-%m-%dT%H:%M:%S', value.endTimeStamp) .. '\n')
+        io.write("   Start Date: ".. os.date('%Y-%m-%dT%H:%M:%S', value.startTimeStamp) .. '\n\n')
+    end
+
+    io.write("Which export would you like to use? ")
+    io.flush()
+    selectedExport = tonumber(io.read())
+else
+    selectedExport = 1
 end
-
-io.write("Which export would you like to use? ")
-io.flush()
-selectedExport = tonumber(io.read())
-
 local sortedExportsData = exports[selectedExport]
 
 table.sort(
@@ -128,6 +110,35 @@ table.sort(
     end
 )
 
+local headersMap = {
+    "Guild",
+    "Start Timestamp",
+    "End Timestamp",
+    "Display Name",
+    "Member",
+    "Sales",
+    "Purchases",
+    "Rank Index",
+    "Rank Name",
+    "Taxes (Sales)",
+    "Taxes (Purchases)",
+    "Sales Count",
+    "Purchase Count",
+    "Internal Sales Volume",
+    "Sold Items",
+}
+local headers = table.concat(headersMap, ',') .. '\n'
+
+local startTimeStamp = os.date('%Y-%m-%dT%H.%M.%S', sortedExportsData.startTimeStamp)
+local endTimeStamp = os.date('%Y-%m-%dT%H.%M.%S', sortedExportsData.endTimeStamp)
+local newPath = string.format("../../SavedVariables/ArkadiusTradeToolsExports-%s_%s-%s.csv", sortedExportsData.guildName, startTimeStamp, endTimeStamp)
+
+OUT_FILE_PATH = "../../SavedVariables/ArkadiusTradeToolsExports.csv"
+OUT_FILE = assert(io.open(newPath, "w"))
+OUT_FILE:write(headers)
+
+startTimeStamp = os.date('%Y-%m-%dT%H:%M:%S', sortedExportsData.startTimeStamp)
+endTimeStamp = os.date('%Y-%m-%dT%H:%M:%S', sortedExportsData.endTimeStamp)
 for key, data in ipairs(sortedExportsData.data) do
     local displayName = data.displayName
     local member = data.isMember
@@ -143,8 +154,8 @@ for key, data in ipairs(sortedExportsData.data) do
     local salesVolume   = stats["salesVolume"]
     WriteLine({
         guildName = sortedExportsData.guildName
-        , startTimeStamp = os.date('%Y-%m-%dT%H:%M:%S', sortedExportsData.startTimeStamp)
-        , endTimeStamp = os.date('%Y-%m-%dT%H:%M:%S', sortedExportsData.endTimeStamp)
+        , startTimeStamp = startTimeStamp
+        , endTimeStamp = endTimeStamp
         , displayName = displayName
         , member = member
         , stats = stats
@@ -163,3 +174,5 @@ for key, data in ipairs(sortedExportsData.data) do
 end
 
 OUT_FILE:close()
+os.rename(OUT_FILE_PATH, newPath)
+print(string.format("Saved to %s", newPath))
