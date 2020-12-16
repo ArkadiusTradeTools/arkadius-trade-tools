@@ -185,6 +185,7 @@ function ArkadiusTradeToolsExports:SetUpToolBar()
     SelectByIndex(self.frame.toolbar.TimeSelector, Settings.toolbar.timeSelection)
 
     self.frame.toolbar.Export = self.frame.toolbar:GetNamedChild('Export')
+    self.frame.toolbar.Export:SetText(L["ATT_STR_EXPORT"])
     self.frame.toolbar.Export:SetHandler("OnClicked", function() 
         local selectedGuildId = self.frame.toolbar.GuildSelector.m_comboBox:GetSelectedItemData().guildId
         local timeData = self.frame.toolbar.TimeSelector.m_comboBox:GetSelectedItemData()

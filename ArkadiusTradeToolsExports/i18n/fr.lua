@@ -6,9 +6,11 @@ local localization =
     ATT_STR_ITEM                     = "Article",
 	ATT_STR_EAPRICE                  = "Prix unitaire",
     ATT_STR_PRICE                    = "Prix",
-    ATT_STR_TIME                     = "Temps",
+    ATT_STR_START_TIME               = "Heure de début",
+    ATT_STR_END_TIME                 = "Heure de fin",
 
-    ATT_STR_PURCHASES = "Achats",
+    ATT_STR_EXPORTS                  = "Exportations",
+    ATT_STR_EXPORT                   = "Exporter",
 
     ATT_STR_TODAY                    = "Aujourd'hui",
     ATT_STR_YESTERDAY                = "Hier",
@@ -21,7 +23,7 @@ local localization =
     ATT_STR_14_DAYS                  = "14 jours",
     ATT_STR_30_DAYS                  = "30 jours",
 
-    ATT_STR_KEEP_PURCHASES_FOR_DAYS  = "Garder l'achat pour x jours",
+    ATT_STR_KEEP_EXPORTS_FOR_DAYS    = "Garder l'exportation pour x jours",
 
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Filtre textuel pour l'utilisiteur-, la guilde- ou par nom d'articles",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Bascule la recherche de l'onglet actuel à l'onglet secondaire ou inversement. Remplace les caractères en lettre capital en minuscule.",

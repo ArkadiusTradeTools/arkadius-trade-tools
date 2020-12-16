@@ -18,7 +18,7 @@
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
-                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_TIME, "startTimeStamp", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_START_TIME, "startTimeStamp", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
                                 self.relativeWidth = 0.20
                             </OnInitialized>
                             <Controls>
@@ -36,7 +36,7 @@
                             <Anchor point="TOPLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
-                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_TIME, "endTimeStamp", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
+                                ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Exports.Localization.ATT_STR_END_TIME, "endTimeStamp", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
                                 self.relativeWidth = 0.20
                             </OnInitialized>
                             <Controls>
@@ -52,8 +52,8 @@
                         </Control>
 
                         <Control name="$(parent)Settings" inherits="ArkadiusTradeToolsSortHeader">
-                            <Anchor point="TOPLEFT" relativeTo="$(parent)Price" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
-                            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Price" relativePoint="BOTTOMRIGHT" offsetX="20" offsetY="0"/>
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                            <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="20" offsetY="0"/>
                             <OnInitialized>
                                 local nameControl = self:GetNamedChild("Name")
 

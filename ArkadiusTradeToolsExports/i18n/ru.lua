@@ -6,9 +6,11 @@ local localization =
     ATT_STR_ITEM                     = "Предмет",
 	ATT_STR_EAPRICE                  = "шт.",
     ATT_STR_PRICE                    = "Цена",
-    ATT_STR_TIME                     = "Время",
+    ATT_STR_START_TIME               = "Время начала",
+    ATT_STR_END_TIME                 = "Время окончания",
 
-    ATT_STR_PURCHASES = "Покупки",
+    ATT_STR_EXPORTS                  = "экспорт",
+    ATT_STR_EXPORT                   = "экспорт",
 
     ATT_STR_TODAY                    = "Сегодня",
     ATT_STR_YESTERDAY                = "Вчера",
@@ -21,7 +23,7 @@ local localization =
     ATT_STR_14_DAYS                  = "14 дней",
     ATT_STR_30_DAYS                  = "30 дней",
 
-    ATT_STR_KEEP_PURCHASES_FOR_DAYS  = "Хранить историю покупок x дней",
+    ATT_STR_KEEP_EXPORTS_FOR_DAYS    = "Хранить историю экспорт x дней",
 
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Поиск по игроку-, гильдии- или предмету",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Переключение между поиском по слову целиком или по части слова. Заглавные буквы игнорируются в обоих случаях.",
