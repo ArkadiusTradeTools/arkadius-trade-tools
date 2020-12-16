@@ -868,8 +868,9 @@ function ArkadiusTradeToolsSales:GetFullStatisticsForGuild(resultRef, newerThanT
     end
 end
 
-function ArkadiusTradeToolsSales:GetStatisticsForGuild(resultRef, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData, includeGuildRecord)
+function ArkadiusTradeToolsSales:GetStatisticsForGuild(resultRef, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData, includeGuildRecord, includeUserRecords)
     if includeGuildRecord == nil then includeGuildRecord = true end
+    if includeUserRecords == nil then includeUserRecords = true end
     guildNameData = guildNameData or TemporaryVariables.guildSales[guildName]
     local salesVolumePerGuild = 0
     local internalSalesVolumePerGuild = 0
@@ -911,7 +912,7 @@ function ArkadiusTradeToolsSales:GetStatisticsForGuild(resultRef, newerThanTimeS
         salesCountPerGuild = salesCountPerGuild + salesCountPerPlayer
         taxesPerGuild = taxesPerGuild + taxesPerPlayer
 
-        if (salesVolumePerPlayer > 0) then
+        if (salesVolumePerPlayer > 0 and includeUserRecords) then
             local data = {}
             data.displayName = displayName
             data.guildName = guildName
