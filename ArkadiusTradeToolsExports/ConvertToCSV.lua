@@ -1,6 +1,21 @@
 IN_FILE_PATH  = "../../SavedVariables/ArkadiusTradeToolsExports.lua"
 dofile(IN_FILE_PATH)
 
+local args = {
+    ['--latest'] = 'useLatest',
+    ['--members'] = 'useOnlyMembers'
+}
+
+-- Defining these as globals so setting them by name is easier
+useLatest = false
+useOnlyMembers = false
+
+for idx, _arg in pairs(arg) do
+    if args[_arg] then
+        _G[args[_arg]] = true
+    end
+end
+
 local useLatest = arg[1] and arg[1] == '--latest'
 
 local function escapeQuotes(s)
@@ -131,7 +146,8 @@ local headers = table.concat(headersMap, ',') .. '\n'
 
 local startTimeStamp = os.date('%Y-%m-%dT%H.%M.%S', sortedExportsData.startTimeStamp)
 local endTimeStamp = os.date('%Y-%m-%dT%H.%M.%S', sortedExportsData.endTimeStamp)
-local newPath = string.format("../../SavedVariables/ArkadiusTradeToolsExports-%s_%s-%s.csv", sortedExportsData.guildName, startTimeStamp, endTimeStamp)
+local isMembers = useOnlyMembers and "Members" or "All"
+local newPath = string.format("../../SavedVariables/ArkadiusTradeToolsExports-%s %s %s-%s.csv", sortedExportsData.guildName, isMembers, startTimeStamp, endTimeStamp)
 
 OUT_FILE_PATH = "../../SavedVariables/ArkadiusTradeToolsExports.csv"
 OUT_FILE = assert(io.open(newPath, "w"))
@@ -152,25 +168,27 @@ for key, data in ipairs(sortedExportsData.data) do
     local salesCount   = stats["salesCount"]
     local internalSalesVolume   = stats["internalSalesVolume"]
     local salesVolume   = stats["salesVolume"]
-    WriteLine({
-        guildName = sortedExportsData.guildName
-        , startTimeStamp = startTimeStamp
-        , endTimeStamp = endTimeStamp
-        , displayName = displayName
-        , member = member
-        , stats = stats
-        , rankIndex = data.rankIndex
-        , rankName = data.rankName
-        , purchaseTaxes = purchaseTaxes
-        , purchaseVolume = purchaseVolume
-        , purchasedItemCount = purchasedItemCount
-        , purchaseCount = purchaseCount
-        , itemCount = itemCount
-        , taxes = taxes
-        , salesCount = salesCount
-        , internalSalesVolume = internalSalesVolume
-        , salesVolume = salesVolume
-    })
+    if data.isMember or not useOnlyMembers then
+        WriteLine({
+            guildName = sortedExportsData.guildName
+            , startTimeStamp = startTimeStamp
+            , endTimeStamp = endTimeStamp
+            , displayName = displayName
+            , member = member
+            , stats = stats
+            , rankIndex = data.rankIndex
+            , rankName = data.rankName
+            , purchaseTaxes = purchaseTaxes
+            , purchaseVolume = purchaseVolume
+            , purchasedItemCount = purchasedItemCount
+            , purchaseCount = purchaseCount
+            , itemCount = itemCount
+            , taxes = taxes
+            , salesCount = salesCount
+            , internalSalesVolume = internalSalesVolume
+            , salesVolume = salesVolume
+        })
+    end
 end
 
 OUT_FILE:close()
