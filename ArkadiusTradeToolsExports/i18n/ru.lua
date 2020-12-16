@@ -28,6 +28,8 @@ local localization =
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Поиск по игроку-, гильдии- или предмету",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Переключение между поиском по слову целиком или по части слова. Заглавные буквы игнорируются в обоих случаях.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Включить/Исключить эту колонку в/из поиск(а)",
+
+    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk."
 }
 
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Exports.Localization)

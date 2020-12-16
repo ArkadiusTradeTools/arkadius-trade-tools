@@ -28,6 +28,8 @@ local localization =
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Filtre textuel pour l'utilisiteur-, la guilde- ou par nom d'articles",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Bascule la recherche de l'onglet actuel à l'onglet secondaire ou inversement. Remplace les caractères en lettre capital en minuscule.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Exclure/inclure cette colonne de/au Filtre textuel",
+
+    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk."
 }
 
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Exports.Localization)

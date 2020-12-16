@@ -362,6 +362,8 @@ function ArkadiusTradeToolsExports:OnExportCreated(guildName, startTimeStamp, en
     --- Update list ---
     self.list:UpdateMasterList(export)
     self.list:RefreshData()
+    d(L['ATT_STR_EXPORT_RELOAD_WARNING'])
+
 end
 
 function ArkadiusTradeToolsExports.OnResize(frame, width, height)

@@ -28,6 +28,8 @@ local localization =
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Text search for user-, guild- or item names",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Toggle between search for exact strings or substrings. Case sensitivity is ignored in both cases.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Exclude/include this column from/to the text search",
+
+    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk."
 }
 
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Exports.Localization)
