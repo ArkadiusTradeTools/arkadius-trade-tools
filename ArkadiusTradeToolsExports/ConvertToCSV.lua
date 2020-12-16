@@ -3,8 +3,6 @@ OUT_FILE_PATH = "../../SavedVariables/ArkadiusTradeToolsExports.csv"
 dofile(IN_FILE_PATH)
 OUT_FILE = assert(io.open(OUT_FILE_PATH, "w"))
 
-local guildName = arg[1]
-
 local function escapeQuotes(s)
     local value = s:gsub("\"", "\"\"")
     return value
