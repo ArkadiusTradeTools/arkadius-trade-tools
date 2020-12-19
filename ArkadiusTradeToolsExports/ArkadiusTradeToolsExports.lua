@@ -154,15 +154,6 @@ local function SelectByIndex(combobox, index)
 end
 
 function ArkadiusTradeToolsExports:SetUpToolBar()
-    SLASH_COMMANDS['/attexport'] = function(args)
-        local guildIndex, week = zo_strsplit(' ', args)
-        guildIndex = tonumber(guildIndex) or 1
-        week = tonumber(week) or 0
-        local from = ArkadiusTradeTools:GetStartOfWeek(week, true)
-        local to = week < 0 and ArkadiusTradeTools:GetStartOfWeek(week + 1, true) or nil
-        self:GenerateExport(GetGuildId(guildIndex), from, to)
-    end
-
     -- These two selectors should be extracted and implemented as a dropdown control template
     self.frame.toolbar.GuildSelector = self.frame.toolbar:GetNamedChild('GuildSelector')
     self.frame.toolbar.GuildSelector.m_comboBox:SetSortsItems(false)
