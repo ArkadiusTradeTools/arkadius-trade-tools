@@ -76,7 +76,6 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
 	--self.sortHeaderGroup:HeaderForKey("price").switch:SetPressed(self.priceSwitch)
     --self.sortHeaderGroup:HeaderForKey("price").switch.OnToggle = OnHeaderToggle	
     self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
-    self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
     self.currentSortKey = "timeStamp"
 end
 

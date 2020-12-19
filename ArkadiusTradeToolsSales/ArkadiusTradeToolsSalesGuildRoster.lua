@@ -306,6 +306,7 @@ function ArkadiusTradeToolsSales.GuildRoster:GetNumbers(guildName, displayName, 
     if (self.timeSelect == nil) then
         return
     end
+    displayName = ArkadiusTradeToolsSales:LookupDisplayName(displayName:lower()) or displayName
 
     local item = self.timeSelect:GetSelectedItemData()
     newerThanTimeStamp = newerThanTimeStamp or item.NewerThanTimeStamp()

@@ -302,6 +302,7 @@
         </Control>
 
         <Control name="ArkadiusTradeToolsToolBar" virtual="true">
+            <Dimensions y="24" />
             <OnInitialized>
                 ArkadiusTradeTools.Templates.ToolBar:Initialize(self)
             </OnInitialized>

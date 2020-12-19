@@ -1,0 +1,12 @@
+## Title: Arkadius' Trade Tools - Exports
+## Author: Aldanga (@Aldanga NA)
+## APIVersion: 100031
+## Description: Adds export functionality for saved data
+## Version: 1.10.0
+## SavedVariables: ArkadiusTradeToolsExportsData
+## DependsOn: ArkadiusTradeTools ArkadiusTradeToolsSales
+
+ArkadiusTradeToolsExports.lua
+i18n/en.lua
+i18n/$(language).lua
+ArkadiusTradeToolsExports.xml
