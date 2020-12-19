@@ -8,6 +8,7 @@ local localization =
     ATT_STR_PRICE                    = "Цена",
     ATT_STR_START_TIME               = "Время начала",
     ATT_STR_END_TIME                 = "Время окончания",
+    ATT_STR_GENERATED_TIME           = "Создано",
 
     ATT_STR_EXPORTS                  = "экспорт",
     ATT_STR_EXPORT                   = "экспорт",

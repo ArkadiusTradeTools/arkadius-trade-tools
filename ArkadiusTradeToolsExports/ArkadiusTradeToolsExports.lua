@@ -1,4 +1,4 @@
-ArkadiusTradeTools.Modules.Exports = ArkadiusTradeTools.Templates.Module:New(ArkadiusTradeTools.NAME .. "Exports", ArkadiusTradeTools.TITLE .. " - Exports", ArkadiusTradeTools.VERSION, ArkadiusTradeTools.AUTHOR)
+ArkadiusTradeTools.Modules.Exports = ArkadiusTradeTools.Templates.Module:New(ArkadiusTradeTools.NAME .. "Exports", ArkadiusTradeTools.TITLE .. " - Exports", ArkadiusTradeTools.VERSION, '@Aldanga')
 local ArkadiusTradeToolsExports = ArkadiusTradeTools.Modules.Exports
 local ArkadiusTradeToolsSales = ArkadiusTradeTools.Modules.Sales
 ArkadiusTradeToolsExports.Localization = {}
@@ -22,7 +22,8 @@ function ArkadiusTradeToolsExportsList:Initialize(control)
 
     self.SORT_KEYS = {["guildName"]  = {tiebreaker = "startTimeStamp"},
                       ["startTimeStamp"]  = {tiebreaker = "endTimeStamp"},
-                      ["endTimeStamp"]  = {tiebreaker = "guildName"}}
+                      ["endTimeStamp"]  = {tiebreaker = "guildName"},
+                      ["createdTimeStamp"]  = {tiebreaker = "guildName"}}
 
     ZO_ScrollList_AddDataType(self.list, 1, "ArkadiusTradeToolsExportsRow", 32,
         function(control, data)
@@ -47,12 +48,15 @@ function ArkadiusTradeToolsExportsList:Initialize(control)
     self.guildNameSwitch = Settings.filters.guildName
     self.startTimeStampSwitch = Settings.filters.startTimeStamp
     self.endTimeStampSwitch = Settings.filters.endTimeStamp
+    self.createdTimeStampSwitch = Settings.filters.createdTimeStamp
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
     self.sortHeaderGroup:HeaderForKey("startTimeStamp").switch:SetPressed(self.startTimeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("startTimeStamp").switch.OnToggle = OnHeaderToggle
     self.sortHeaderGroup:HeaderForKey("endTimeStamp").switch:SetPressed(self.endTimeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("endTimeStamp").switch.OnToggle = OnHeaderToggle
+    self.sortHeaderGroup:HeaderForKey("createdTimeStamp").switch:SetPressed(self.createdTimeStampSwitch)
+    self.sortHeaderGroup:HeaderForKey("createdTimeStamp").switch.OnToggle = OnHeaderToggle
     self.sortHeaderGroup:SelectHeaderByKey("startTimeStamp", true)
     self.currentSortKey = "startTimeStamp"
 end
@@ -76,6 +80,7 @@ function ArkadiusTradeToolsExportsList:SetupFilters()
     self.Filter:SetKeywords(ArkadiusTradeToolsExports.frame.filterBar.Text:GetStrings())
     self.Filter:SetKeyFunc(1, "startTimeStamp", CompareTimestamp)
     self.Filter:SetKeyFunc(1, "endTimeStamp", CompareTimestamp)
+    self.Filter:SetKeyFunc(1, "createdTimeStamp", CompareTimestamp)
 
     if (self["guildNameSwitch"])
         then self.Filter:SetKeyFunc(2, "guildName", CompareStringsFuncs[useSubStrings])
@@ -90,6 +95,7 @@ function ArkadiusTradeToolsExportsList:SetupExportRow(rowControl, rowData)
     local guildName = rowControl:GetNamedChild("GuildName")
     local startTimeStamp = rowControl:GetNamedChild("StartTimeStamp")
     local endTimeStamp = rowControl:GetNamedChild("EndTimeStamp")
+    local createdTimeStamp = rowControl:GetNamedChild("CreatedTimeStamp")
 
     guildName:SetText(data.guildName)
     guildName:SetWidth(guildName.header:GetWidth() - 10)
@@ -113,6 +119,15 @@ function ArkadiusTradeToolsExportsList:SetupExportRow(rowControl, rowData)
 
     endTimeStamp:SetWidth(endTimeStamp.header:GetWidth() - 10)
     endTimeStamp:SetHidden(endTimeStamp.header:IsHidden())
+
+    if (self.createdTimeStampSwitch) then
+        createdTimeStamp:SetText(ArkadiusTradeTools:TimeStampToDateTimeString(data.createdTimeStamp + ArkadiusTradeTools:GetLocalTimeShift()))
+    else
+        createdTimeStamp:SetText(ArkadiusTradeTools:TimeStampToAgoString(data.createdTimeStamp))
+    end
+
+    createdTimeStamp:SetWidth(createdTimeStamp.header:GetWidth() - 10)
+    createdTimeStamp:SetHidden(createdTimeStamp.header:IsHidden())
 	
 	ArkadiusTradeToolsSortFilterList.SetupRow(self, rowControl, rowData)
 end
@@ -288,7 +303,8 @@ function ArkadiusTradeToolsExports:GenerateExport(guildId, startTimestamp, endTi
         userRecord.isMember = userRecord.isMember or false
         statsByUser[#statsByUser + 1] = userRecord
     end
-    self:OnExportCreated(guildName, startTimestamp, endTimestamp, statsByUser)
+    local currentTimeStamp = GetTimeStamp()
+    self:OnExportCreated(guildName, startTimestamp, endTimestamp, statsByUser, currentTimeStamp)
 end
 
 function ArkadiusTradeToolsExports:GetSettingsMenu()
@@ -354,8 +370,8 @@ function ArkadiusTradeToolsExports:LoadExports()
     end
 end
 
-function ArkadiusTradeToolsExports:OnExportCreated(guildName, startTimeStamp, endTimeStamp, data)
-    local export = {guildName = guildName, startTimeStamp = startTimeStamp, endTimeStamp = endTimeStamp, data = data}
+function ArkadiusTradeToolsExports:OnExportCreated(guildName, startTimeStamp, endTimeStamp, data, currentTimeStamp)
+    local export = {guildName = guildName, startTimeStamp = startTimeStamp, endTimeStamp = endTimeStamp, data = data, createdTimeStamp = currentTimeStamp}
 
     table.insert(Exports, export)
 
@@ -363,7 +379,6 @@ function ArkadiusTradeToolsExports:OnExportCreated(guildName, startTimeStamp, en
     self.list:UpdateMasterList(export)
     self.list:RefreshData()
     d(L['ATT_STR_EXPORT_RELOAD_WARNING'])
-
 end
 
 function ArkadiusTradeToolsExports.OnResize(frame, width, height)

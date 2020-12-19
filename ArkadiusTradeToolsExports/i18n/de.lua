@@ -8,6 +8,7 @@ local localization =
     ATT_STR_PRICE                    = "Preis",
     ATT_STR_START_TIME               = "Startzeit",
     ATT_STR_END_TIME                 = "Endzeit",
+    ATT_STR_GENERATED_TIME           = "Erstellt",
 
     ATT_STR_EXPORTS                  = "Exporte",
     ATT_STR_EXPORT                   = "Export",
