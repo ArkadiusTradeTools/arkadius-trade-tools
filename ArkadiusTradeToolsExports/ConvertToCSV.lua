@@ -83,13 +83,16 @@ end
 
 local exports = ArkadiusTradeToolsExportsData.exports[servers[input]]
 table.sort(exports, function(a, b)
-    if (a.startTimeStamp == b.startTimeStamp) then
-        if a.endTimeStamp == b.endTimeStamp then
-            return a.guildName < b.guildName
+    if (a.createdTimeStamp == b.createdTimeStamp) then
+        if (a.startTimeStamp == b.startTimeStamp) then
+            if a.endTimeStamp == b.endTimeStamp then
+                return a.guildName < b.guildName
+            end
+            return a.endTimeStamp > b.endTimeStamp
         end
-        return a.endTimeStamp > b.endTimeStamp
+        return a.startTimeStamp > b.startTimeStamp
     end
-    return a.startTimeStamp > b.startTimeStamp
+    return a.createdTimeStamp > b.createdTimeStamp
 end)
 
 local selectedExport
