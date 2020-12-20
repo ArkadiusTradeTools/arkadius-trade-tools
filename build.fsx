@@ -26,6 +26,8 @@ Target.create "Copy" (fun _ ->
   -- "**/*.test.lua"
   ++ "LICENSE"
   ++ "**/*.md"
+  ++ "**/*.bat"
+  ++ "**/*.ps1"
   ++ "**Exports/lua53.exe"
   ++ "**/*.txt"
   ++ "**/*.xml"
