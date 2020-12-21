@@ -405,12 +405,12 @@ function ArkadiusTradeToolsSales.TradingHouse.GetMarginColor(margin)
 end
 
 local STEPS = {
-  {id=1, value=-math.huge, icon="ArkadiusTradeToolsSales/img/baddeal_%s.dds"},
-  {id=2, value=-1.5, icon="AwesomeGuildStore/images/qualitybuttons/normal_%s.dds"},
-  {id=3, value=20, icon="AwesomeGuildStore/images/qualitybuttons/magic_%s.dds"},
-  {id=4, value=35, icon="AwesomeGuildStore/images/qualitybuttons/arcane_%s.dds"},
-  {id=5, value=50, icon="AwesomeGuildStore/images/qualitybuttons/artifact_%s.dds"},
-  {id=6, value=65, icon="AwesomeGuildStore/images/qualitybuttons/legendary_%s.dds"}
+  {id=1, value=-math.huge},
+  {id=2, value=-1.5},
+  {id=3, value=20},
+  {id=4, value=35},
+  {id=5, value=50},
+  {id=6, value=65}
 }
 
 function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWrapper)
