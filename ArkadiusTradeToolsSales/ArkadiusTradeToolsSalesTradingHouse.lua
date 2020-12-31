@@ -255,8 +255,11 @@ function ArkadiusTradeToolsSales.TradingHouse:AddAGSPriceButton()
   averagePriceButton.control:SetAnchor(RIGHT, lastSellPriceButton, LEFT, 2, 0)
   averagePriceButton.HandlePress = function(button)
     local itemLink = AwesomeGuildStore.internal.tradingHouse.sellTab.pendingItemLink
+    -- We could use the isMasterWrit internal method of the SellTabWrapper, but I want to use as few internal AGS APIs as possible
+    local itemType = GetItemLinkItemType(itemLink)
+    local denominator = itemType == ITEMTYPE_MASTER_WRIT and ArkadiusTradeToolsSales:GetVoucherCount(itemLink) or 1
     local days = ArkadiusTradeToolsSalesData.settings.tooltips.days
-    local price = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+    local price = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days) / denominator
     if (price) then
       AwesomeGuildStore.internal.tradingHouse.sellTab:SetUnitPrice(math.floor(price + 0.5))
     end
