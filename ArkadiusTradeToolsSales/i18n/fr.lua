@@ -52,15 +52,18 @@ local localization =
 
     ATT_STR_BASE_PROFIT_MARGIN_CALC_ON      = "Marge bénéficiaire basée sur",
     
-    ATT_STR_DEFAULT_DEAL_LEVEL                 = "Default deal level",
-    ATT_STR_DEFAULT_DEAL_LEVEL_TOOLTIP         = "Sets the default deal level when there is no sales data for an item",
+    ATT_STR_DEFAULT_DEAL_LEVEL              = "Default deal level",
+    ATT_STR_DEFAULT_DEAL_LEVEL_TOOLTIP      = "Sets the default deal level when there is no sales data for an item",
 
-    ATT_STR_DEAL_LEVEL_1                       = "Bad",
-    ATT_STR_DEAL_LEVEL_2                       = "OK",
-    ATT_STR_DEAL_LEVEL_3                       = "Good",
-    ATT_STR_DEAL_LEVEL_4                       = "Great",
-    ATT_STR_DEAL_LEVEL_5                       = "Fantastic",
-    ATT_STR_DEAL_LEVEL_6                       = "Mind-blowing!",
+    ATT_STR_DEAL_LEVEL_1                    = "Bad",
+    ATT_STR_DEAL_LEVEL_2                    = "OK",
+    ATT_STR_DEAL_LEVEL_3                    = "Good",
+    ATT_STR_DEAL_LEVEL_4                    = "Great",
+    ATT_STR_DEAL_LEVEL_5                    = "Fantastic",
+    ATT_STR_DEAL_LEVEL_6                    = "Mind-blowing!",
+
+    ATT_STR_ENABLE_TRADING_HOUSE_AUTO_PRICING = 'Enable auto pricing for guild trader listings',
+    ATT_STR_ENABLE_TRADING_HOUSE_AUTO_PRICING_TOOLTIP  = 'Default UI only',
 
     ATT_STR_FILTER_TEXT_TOOLTIP             = "Filtre textuel pour utilisteur-, guilde- or par noms des articles, traits des articles (ex: precis) ou par la qualité des articles (ex: legendaire)",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP        = "Bascule la recherche de l'onglet actuel à l'onglet secondaire ou inversement. Remplace les caractères en lettre capital en minuscule.",

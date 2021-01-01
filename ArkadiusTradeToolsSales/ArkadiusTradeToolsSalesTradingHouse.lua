@@ -231,6 +231,7 @@ function ArkadiusTradeToolsSales.TradingHouse:Initialize(settings)
   end
   Settings.calcDays = Settings.calcDays or 10
   Settings.defaultDealLevel = Settings.defaultDealLevel or 2
+  Settings.enableAutoPricing = Settings.enableAutoPricing or false
   self:Enable(Settings.enabled)
 end
 
@@ -240,6 +241,14 @@ end
 
 function ArkadiusTradeToolsSales.TradingHouse:SetDefaultDealLevel(level)
   Settings.defaultDealLevel = level
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:EnableAutoPricing(enable)
+  Settings.enableAutoPricing = enable
+end
+
+function ArkadiusTradeToolsSales.TradingHouse:IsAutoPricingEnabled()
+  return Settings.enableAutoPricing
 end
 
 --Copying a lot of stuff from AGS SellTabWrapper to duplicate functionality until AGS adds price providers
@@ -265,6 +274,18 @@ function ArkadiusTradeToolsSales.TradingHouse:AddAGSPriceButton()
       AwesomeGuildStore.internal.tradingHouse.sellTab:SetUnitPrice(math.floor(price + 0.5))
     end
   end
+end
+
+function ArkadiusTradeToolsSales.TradingHouse.SetPendingItemPrice(slotId, isPending)
+  if not Settings.enableAutoPricing then return end
+  local _, stackCount = GetItemInfo(BAG_BACKPACK, slotId)
+  local itemLink = GetItemLink(BAG_BACKPACK, slotId)
+  itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
+  local days = ArkadiusTradeToolsSalesData.settings.tooltips.days
+  -- Vanilla UI doesn't do unit pricing, so we don't have to worry about the item type
+  local price = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
+  price = math.floor(price * stackCount + 0.5)
+  TRADING_HOUSE:SetPendingPostPrice(price)
 end
 
 function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
@@ -301,6 +322,8 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
     if AwesomeGuildStore then
       self:RegisterAGSInitCallback()
       ZO_PostHook(AwesomeGuildStore.class.SellTabWrapper, 'InitializeListingInput', function() self:AddAGSPriceButton() end)
+    else
+      ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDSTORE_PENDING_ITEM_UPDATE, self.SetPendingItemPrice)
     end
 
     -- Trying to hook in after AGS to avoid any conflicts

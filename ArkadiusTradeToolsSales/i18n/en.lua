@@ -65,6 +65,9 @@ local localization =
     ATT_STR_DEAL_LEVEL_5                       = "Fantastic",
     ATT_STR_DEAL_LEVEL_6                       = "Mind-blowing!",
 
+    ATT_STR_ENABLE_TRADING_HOUSE_AUTO_PRICING  = 'Enable auto pricing for guild trader listings',
+    ATT_STR_ENABLE_TRADING_HOUSE_AUTO_PRICING_TOOLTIP  = 'Default UI only',
+
     ATT_STR_FILTER_TEXT_TOOLTIP                = "Text search for user-, guild- or item names, item traits (e. g. precise) or item quality (e. g. legendary)",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP           = "Toggle between search for exact strings or substrings. Case sensitivity is ignored in both cases.",
     ATT_STR_FILTER_COLUMN_TOOLTIP              = "Exclude/include this column from/to the text search",

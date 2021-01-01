@@ -14,7 +14,8 @@ ArkadiusTradeTools.EVENTS = {
   ON_CRAFTING_STATION_OPEN = 5,
   ON_CRAFTING_STATION_CLOSE = 6,
   ON_GUILDSTORE_ITEM_BOUGHT = 7,
-  ON_GUILDHISTORY_STORE = 8
+  ON_GUILDHISTORY_STORE = 8,
+  ON_GUILDSTORE_PENDING_ITEM_UPDATE = 9,
 }
 local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true, ['Exports'] = true }
 
@@ -653,6 +654,12 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
         GetTimeStamp()
       )
     end
+  elseif (eventCode == EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE) then
+    self:FireCallbacks(
+        EVENTS.ON_GUILDSTORE_PENDING_ITEM_UPDATE,
+        arg1,
+        arg2
+      )
   elseif (eventCode == EVENT_PLAYER_COMBAT_STATE) then
     self.isInCombat = arg1
   end
@@ -718,6 +725,7 @@ local function OnPlayerActivated(eventCode)
   else
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE, OnEvent)
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED, OnEvent)
+    EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, OnEvent)
   end
 
   ScanGuildHistoryEvents()
