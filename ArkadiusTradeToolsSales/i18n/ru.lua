@@ -48,6 +48,10 @@ local localization =
     ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS = "Включить Расширения для магазина",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS       = "Включить Расширения для всплывающих подсказок",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH = "Показывать график",
+    ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING = "Show crafting costs",
+    ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING_TOOLTIP = "Only supported for a subset of master writs",
+    ATT_STR_ENABLE_INVENTORY_PRICES            = "Enable prices in inventories",
+    ATT_STR_ENABLE_INVENTORY_PRICES_WARNING    = "Can cause frame skips upon first open",
     ATT_STR_KEEP_SALES_FOR_DAYS             = "Хранить историю продаж x дней",
 
     ATT_STR_BASE_PROFIT_MARGIN_CALC_ON      = "Расчёт прибыли основан на",

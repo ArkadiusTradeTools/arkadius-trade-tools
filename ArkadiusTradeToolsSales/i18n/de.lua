@@ -49,6 +49,9 @@ local localization =
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS          = "Erweiterte Tooltips aktivieren",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH    = "Zeige Graphen",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING = "Zeige Handwerkskosten",
+    ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING_TOOLTIP = "Only supported for a subset of master writs",
+    ATT_STR_ENABLE_INVENTORY_PRICES            = "Enable prices in inventories",
+    ATT_STR_ENABLE_INVENTORY_PRICES_WARNING    = "Can cause frame skips upon first open",
     ATT_STR_KEEP_SALES_FOR_DAYS                = "Behalte Verkäufe für x Tage",
 
     ATT_STR_BASE_PROFIT_MARGIN_CALC_ON         = "Gewinnspanne auf Basis von",
