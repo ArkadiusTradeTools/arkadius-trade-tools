@@ -30,7 +30,8 @@ local localization =
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Schalte zwischen Suche nach exaktem String oder Teilstring um. Groß- und Kleinschreibung wird in beiden Fällen ignoriert.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Schließe diese Spalte in die/von der Textsuche ein/aus",
 
-    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk."
+    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk.",
+    ATT_STR_INCLUDE_ONLY_MEMBERS     = "Only include members"
 }
 
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Exports.Localization)

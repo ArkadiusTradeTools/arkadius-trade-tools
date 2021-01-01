@@ -190,6 +190,17 @@ function ArkadiusTradeToolsExports:SetUpToolBar()
     self.frame.toolbar.TimeSelector.m_comboBox:AddItem({name = L["ATT_STR_30_DAYS"], callback = timeSelectorCallback, NewerThanTimeStamp = function() return 0 end, OlderThanTimeStamp = function() return GetTimeStamp() end})
     SelectByIndex(self.frame.toolbar.TimeSelector, Settings.toolbar.timeSelection)
 
+    self.frame.toolbar.MembersOnly = self.frame.toolbar:GetNamedChild('MembersOnly')
+    self.frame.toolbar.MembersOnly:SetText(L["ATT_STR_EXPORT"])
+    self.frame.toolbar.MembersOnly.tooltip:SetContent(L["ATT_STR_INCLUDE_ONLY_MEMBERS"])
+    self.frame.toolbar.MembersOnly.toggleFunction = function(control, checked) Settings.toolbar.includeOnlyMembers = checked end
+    if Settings.toolbar.includeOnlyMembers then
+        ZO_CheckButton_SetChecked(self.frame.toolbar.MembersOnly)
+    else
+        ZO_CheckButton_SetUnchecked(self.frame.toolbar.MembersOnly)
+    end
+
+
     self.frame.toolbar.Export = self.frame.toolbar:GetNamedChild('Export')
     self.frame.toolbar.Export:SetText(L["ATT_STR_EXPORT"])
     self.frame.toolbar.Export:SetHandler("OnClicked", function() 
@@ -197,7 +208,8 @@ function ArkadiusTradeToolsExports:SetUpToolBar()
         local timeData = self.frame.toolbar.TimeSelector.m_comboBox:GetSelectedItemData()
         local startTime = timeData.NewerThanTimeStamp()
         local stopTime = timeData.OlderThanTimeStamp()
-        self:GenerateExport(selectedGuildId, startTime, stopTime) 
+        local membersOnly = ZO_CheckButton_IsChecked(self.frame.toolbar.MembersOnly)
+        self:GenerateExport(selectedGuildId, startTime, stopTime, membersOnly) 
     end)
 end
 
@@ -254,7 +266,7 @@ function ArkadiusTradeToolsExports:Finalize()
     self:SaveSettings()
 end
 
-function ArkadiusTradeToolsExports:GenerateExport(guildId, startTimestamp, endTimestamp)
+function ArkadiusTradeToolsExports:GenerateExport(guildId, startTimestamp, endTimestamp, onlyMembers)
     startTimestamp = startTimestamp or 0
     endTimestamp = endTimestamp or GetTimeStamp()
     local guildName = GetGuildName(guildId)
@@ -292,10 +304,12 @@ function ArkadiusTradeToolsExports:GenerateExport(guildId, startTimestamp, endTi
     local statsByUser = {}
     for name, userRecord in pairs(statsByUserName) do
         userRecord.isMember = userRecord.isMember or false
-        statsByUser[#statsByUser + 1] = userRecord
+        if userRecord.isMember or not onlyMembers then
+            statsByUser[#statsByUser + 1] = userRecord
+        end
     end
     local currentTimeStamp = GetTimeStamp()
-    self:OnExportCreated(guildName, startTimestamp, endTimestamp, statsByUser, currentTimeStamp)
+    self:OnExportCreated(guildName, startTimestamp, endTimestamp, statsByUser, currentTimeStamp, onlyMembers)
 end
 
 function ArkadiusTradeToolsExports:GetSettingsMenu()
@@ -361,8 +375,8 @@ function ArkadiusTradeToolsExports:LoadExports()
     end
 end
 
-function ArkadiusTradeToolsExports:OnExportCreated(guildName, startTimeStamp, endTimeStamp, data, currentTimeStamp)
-    local export = {guildName = guildName, startTimeStamp = startTimeStamp, endTimeStamp = endTimeStamp, data = data, createdTimeStamp = currentTimeStamp}
+function ArkadiusTradeToolsExports:OnExportCreated(guildName, startTimeStamp, endTimeStamp, data, currentTimeStamp, onlyMembers)
+    local export = {guildName = guildName, startTimeStamp = startTimeStamp, endTimeStamp = endTimeStamp, data = data, createdTimeStamp = currentTimeStamp, onlyMembers = onlyMembers}
 
     table.insert(Exports, export)
 
@@ -407,6 +421,7 @@ local function onAddOnLoaded(eventCode, addonName)
     Settings.toolbar = Settings.toolbar or {}
     Settings.toolbar.guildSelection = Settings.toolbar.guildSelection or 1
     Settings.toolbar.timeSelection = Settings.toolbar.timeSelection or 4
+    Settings.toolbar.includeOnlyMembers = Settings.toolbar.includeOnlyMembers or false
     EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsExports.NAME, EVENT_ADD_ON_LOADED)
 end
 

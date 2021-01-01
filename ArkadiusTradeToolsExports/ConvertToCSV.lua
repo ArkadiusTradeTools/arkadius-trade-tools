@@ -137,7 +137,7 @@ local headersMap = {
 local headers = table.concat(headersMap, ',') .. '\n'
 local startTimeStamp = os.date(dateFormat, sortedExportsData.startTimeStamp)
 local endTimeStamp = os.date(dateFormat, sortedExportsData.endTimeStamp)
-local isMembers = useOnlyMembers and "Members" or "All"
+local isMembers = useOnlyMembers or sortedExportsData.onlyMembers and "Members" or "All"
 local outFileName = outFile:gsub('guildName', sortedExportsData.guildName):gsub('isMembers', isMembers):gsub('startTimeStamp', startTimeStamp):gsub('endTimeStamp', endTimeStamp)
 local newPath = string.format("%s\\%s.csv", directory, outFileName)
 

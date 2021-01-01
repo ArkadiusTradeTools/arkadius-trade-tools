@@ -30,7 +30,8 @@ local localization =
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Bascule la recherche de l'onglet actuel à l'onglet secondaire ou inversement. Remplace les caractères en lettre capital en minuscule.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Exclure/inclure cette colonne de/au Filtre textuel",
 
-    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk."
+    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk.",
+    ATT_STR_INCLUDE_ONLY_MEMBERS     = "Only include members"
 }
 
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Exports.Localization)

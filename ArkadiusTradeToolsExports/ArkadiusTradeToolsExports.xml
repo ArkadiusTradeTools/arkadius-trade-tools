@@ -112,10 +112,17 @@
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GuildSelector" relativePoint="TOPRIGHT" offsetX="5" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildSelector" relativePoint="BOTTOMRIGHT" offsetX="5" offsetY="0"/>
                         </Control>
+                        <Button name="$(parent)MembersOnly" inherits="ZO_CheckButton">
+                            <Dimensions x="20" y="20" />
+                            <OnInitialized>
+                                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
+                            </OnInitialized>
+                            <Anchor point="TOPLEFT" relativeTo="$(parent)TimeSelector" relativePoint="TOPRIGHT" offsetX="6" offsetY="0"/>
+                        </Button>
+                        <!-- The check button and ZO_DefaultButton have some weird dimensions, so we're anchoring to the time selector -->
                         <Button name="$(parent)Export" text="Export" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" inherits="ZO_DefaultButton">
-                            <Dimensions x="75" y="24" />
-                            <Anchor point="TOPLEFT" relativeTo="$(parent)TimeSelector" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
-                            <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeSelector" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
+                            <Dimensions x="90" y="30" />
+                            <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                         </Button>
                     </Controls>
                 </Control>
