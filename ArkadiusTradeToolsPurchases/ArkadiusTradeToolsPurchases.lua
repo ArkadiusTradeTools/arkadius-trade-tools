@@ -328,7 +328,10 @@ function ArkadiusTradeToolsPurchases:OnItemBought(guildName, sellerName, itemLin
     --- Update list ---
     -- local entry = Utilities.EnsureUnitPrice(purchase)
     self.list:UpdateMasterList(purchase)
-    self.list:RefreshData()
+    zo_callLater(function()
+        self.list.Filter:SetNeedsRefilter()
+        self.list:RefreshData()
+    end, 500)
 end
 
 function ArkadiusTradeToolsPurchases.OnResize(frame, width, height)
