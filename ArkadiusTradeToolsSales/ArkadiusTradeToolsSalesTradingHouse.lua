@@ -187,6 +187,10 @@ local function OnEvent(eventCode, responseType, result)
   end
 end
 
+local function GetNormalizedTradingHouseSearchResultItemLink(slotIndex)
+  return ArkadiusTradeToolsSales:NormalizeItemLink(GetTradingHouseSearchResultItemLink(slotIndex))
+end
+
 local function ZO_ScrollList_Commit_Hook(list)
   if (list == ZO_TradingHouseBrowseItemsRightPaneSearchResults) then
     local scrollData = ZO_ScrollList_GetDataList(list)
@@ -195,7 +199,7 @@ local function ZO_ScrollList_Commit_Hook(list)
     local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
 
     for i = 1, #scrollData do
-      itemLink = GetTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
+      itemLink = GetNormalizedTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
       -- AGS appears to add an extra row at the bottom of the list (or override one)
       -- to render the Show More Results button, which causes parsing issues.
       -- We're gonna conditionally skip the last item if AGS is enabled so these errors aren't thrown.
@@ -263,8 +267,7 @@ function ArkadiusTradeToolsSales.TradingHouse:AddAGSPriceButton()
   averagePriceButton.control:ClearAnchors()
   averagePriceButton.control:SetAnchor(RIGHT, lastSellPriceButton, LEFT, 2, 0)
   averagePriceButton.HandlePress = function(button)
-    local itemLink = AwesomeGuildStore.internal.tradingHouse.sellTab.pendingItemLink
-    itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
+    local itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(AwesomeGuildStore.internal.tradingHouse.sellTab.pendingItemLink)
     -- We could use the isMasterWrit internal method of the SellTabWrapper, but I want to use as few internal AGS APIs as possible
     local itemType = GetItemLinkItemType(itemLink)
     local denominator = itemType == ITEMTYPE_MASTER_WRIT and ArkadiusTradeToolsSales:GetVoucherCount(itemLink) or 1
@@ -279,8 +282,7 @@ end
 function ArkadiusTradeToolsSales.TradingHouse.SetPendingItemPrice(slotId, isPending)
   if not Settings.enableAutoPricing then return end
   local _, stackCount = GetItemInfo(BAG_BACKPACK, slotId)
-  local itemLink = GetItemLink(BAG_BACKPACK, slotId)
-  itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(itemLink)
+  local itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(GetItemLink(BAG_BACKPACK, slotId))
   local days = ArkadiusTradeToolsSalesData.settings.tooltips.days
   -- Vanilla UI doesn't do unit pricing, so we don't have to worry about the item type
   local price = ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, GetTimeStamp() - SECONDS_IN_DAY * days)
@@ -505,7 +507,7 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
     end
 
     function AGSFilter:FilterLocalResult(data)
-      local itemLink = GetTradingHouseSearchResultItemLink(data.slotIndex)
+      local itemLink = GetNormalizedTradingHouseSearchResultItemLink(data.slotIndex)
       local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
       local margin = GetMarginData(self.averagePrices, data, itemLink, days)
       return self:IsWithinDealRange(margin) or self:IsDefaultDealLevel(margin)
