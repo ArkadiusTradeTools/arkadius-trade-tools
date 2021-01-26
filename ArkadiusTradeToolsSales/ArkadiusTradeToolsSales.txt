@@ -3,6 +3,7 @@
 ## APIVersion: 100033
 ## Description: None
 ## Version: 1.11.2
+## AddOnVersion: 11102
 ## SavedVariables: ArkadiusTradeToolsSalesData
 ## DependsOn: ArkadiusTradeTools
 ## OptionalDependsOn: AwesomeGuildStore LibGuildRoster

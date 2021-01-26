@@ -3,6 +3,8 @@
 ## APIVersion: 100033
 ## Description: None
 ## Version: 1.11.2
+## AddOnVersion: 11102
+## IsLibrary: true
 ## SavedVariables: ArkadiusTradeToolsSalesData02
 ## DependsOn: ArkadiusTradeToolsSales
 
