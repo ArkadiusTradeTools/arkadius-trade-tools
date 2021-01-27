@@ -226,7 +226,7 @@ end
 function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     for i = 1, NUM_SALES_TABLES do
         if (SalesTables[i] == nil) then
-            d("ArkadiusTradeToolsSales: Error! Number of data tables is not correct. Maybe you forgot to activate them in the addons menu?")
+            CHAT_ROUTER:AddSystemMessage("ArkadiusTradeToolsSales: Error! Number of data tables is not correct. Maybe you forgot to activate them in the addons menu?")
 
             return
         end

@@ -330,7 +330,7 @@ function ArkadiusTradeToolsSales:GetMasterWritComponents(itemLink)
     local writType = MASTER_WRIT_TYPES[itemId]
 
     if (writType == nil) then
-        -- d("ATT: Unknown master writ item id " .. itemId)
+        -- CHAT_ROUTER:AddSystemMessage("ATT: Unknown master writ item id " .. itemId)
 
         return {}
     end

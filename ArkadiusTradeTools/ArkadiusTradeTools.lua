@@ -558,7 +558,7 @@ function ArkadiusTradeTools:ShowNotification(notification)
     return
   end
 
-  d(notification)
+  CHAT_ROUTER:AddSystemMessage(notification)
   CENTER_SCREEN_ANNOUNCE:AddMessage(
     nil,
     CSA_CATEGORY_SMALL_TEXT,
