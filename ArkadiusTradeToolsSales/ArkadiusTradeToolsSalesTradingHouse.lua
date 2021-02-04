@@ -199,11 +199,12 @@ local function ZO_ScrollList_Commit_Hook(list)
     local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
 
     for i = 1, #scrollData do
-      itemLink = GetNormalizedTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
       -- AGS appears to add an extra row at the bottom of the list (or override one)
       -- to render the Show More Results button, which causes parsing issues.
       -- We're gonna conditionally skip the last item if AGS is enabled so these errors aren't thrown.
-      if scrollData[i].data.stackCount ~= nil then
+      itemLink = GetNormalizedTradingHouseSearchResultItemLink(scrollData[i].data.slotIndex)
+      -- Guild Tabard listings don't have item links in vanilla, so we need to check for nil
+      if scrollData[i].data.stackCount ~= nil and itemLink then
         if (averagePrices[itemLink] == nil) then
           local itemType = GetItemLinkItemType(itemLink)
           averagePrices[itemLink] = {}
