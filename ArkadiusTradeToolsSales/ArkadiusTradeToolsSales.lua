@@ -753,14 +753,18 @@ function ArkadiusTradeToolsSales:DeleteSales()
     --- Delete old sales ---
     for _, salesTable in pairs(SalesTables) do
         for serverName, data in pairs(salesTable) do
-            local sales = data.sales
+            if serverName ~= '_directory' then
+                local sales = data.sales
 
-            for id, sale in pairs(sales) do
-                timeStamp = olderThanTimeStamps[sale.guildName] or DefaultSettings.keepSalesForDays * SECONDS_IN_DAY
+                for id, sale in pairs(sales) do
+                    timeStamp = olderThanTimeStamps[sale.guildName] or DefaultSettings.keepSalesForDays * SECONDS_IN_DAY
 
-                if (sale.timeStamp <= timeStamp) then
-                    sales[id] = nil
+                    if (sale.timeStamp <= timeStamp) then
+                        sales[id] = nil
+                    end
                 end
+            else
+                salesTable[serverName] = nil
             end
         end
     end
