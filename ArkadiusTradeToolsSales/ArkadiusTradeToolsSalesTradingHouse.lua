@@ -280,7 +280,7 @@ function ArkadiusTradeToolsSales.TradingHouse:AddAGSPriceButton()
   end
 end
 
-function ArkadiusTradeToolsSales.TradingHouse.SetPendingItemPrice(slotId, isPending)
+function ArkadiusTradeToolsSales.TradingHouse.SetPendingItemPrice(_tradingHouse, slotId, isPending)
   if not Settings.enableAutoPricing then return end
   local _, stackCount = GetItemInfo(BAG_BACKPACK, slotId)
   local itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(GetItemLink(BAG_BACKPACK, slotId))
@@ -326,7 +326,8 @@ function ArkadiusTradeToolsSales.TradingHouse:Enable(enable)
       self:RegisterAGSInitCallback()
       ZO_PostHook(AwesomeGuildStore.class.SellTabWrapper, 'InitializeListingInput', function() self:AddAGSPriceButton() end)
     else
-      ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDSTORE_PENDING_ITEM_UPDATE, self.SetPendingItemPrice)
+      -- I tried to do this with the pending item update event, but got a race condition under certain circumstances
+      ZO_PostHook(TRADING_HOUSE, 'OnPendingPostItemUpdated', self.SetPendingItemPrice)
     end
 
     -- Trying to hook in after AGS to avoid any conflicts

@@ -654,6 +654,7 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
         GetTimeStamp()
       )
     end
+  -- Could probably nix this as we removed it from the auto pricing, but it's not hurting anything right now
   elseif (eventCode == EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE) then
     self:FireCallbacks(
         EVENTS.ON_GUILDSTORE_PENDING_ITEM_UPDATE,
