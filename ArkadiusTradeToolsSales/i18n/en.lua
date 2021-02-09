@@ -48,6 +48,7 @@ local localization =
     ATT_STR_ENABLE_TRADING_HOUSE_EXTENSIONS    = "Enable guild store extensions",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS          = "Enable tooltip extensions",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_GRAPH    = "Show graph",
+    ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING = "Show crafting costs",
     ATT_STR_ENABLE_TOOLTIP_EXTENSIONS_CRAFTING_TOOLTIP = "Only supported for a subset of master writs",
     ATT_STR_ENABLE_INVENTORY_PRICES            = "Enable prices in inventories",
     ATT_STR_ENABLE_INVENTORY_PRICES_WARNING    = "Can cause frame skips upon first open",
