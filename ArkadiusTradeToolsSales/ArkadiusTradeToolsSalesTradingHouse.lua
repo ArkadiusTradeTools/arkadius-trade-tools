@@ -126,20 +126,16 @@ local function SetUpSearchResultsWithAGS(rowControl)
     averagePricePerUnit = GetControlsForSearchResults(rowControl)
 
   if (not profitMarginControl) then
-    local h = nameControl:GetHeight()
-
-    timeRemainingControl:SetWidth(45) -- original 60
-
-    timeRemainingControl:ClearAnchors()
-    timeRemainingControl:SetAnchor(LEFT, nameControl, RIGHT, 15)
+    local h = timeRemainingControl:GetHeight()
+    local fontSize = timeRemainingControl:GetFontHeight()
 
     profitMarginControl = CreateControlFromVirtual(rowControl:GetName() .. 'ProfitMargin', rowControl, 'ZO_KeyboardGuildRosterRowLabel')
     -- 55 is better for large sale prices, but 65 is better for items super overpriced or underpriced
     profitMarginControl:SetDimensions(55, h)
     profitMarginControl:ClearAnchors()
-    profitMarginControl:SetAnchor(LEFT, timeRemainingControl, RIGHT, -5)
-    profitMarginControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
-    profitMarginControl:SetVerticalAlignment(TEXT_ALIGN_CENTER) --Center and right look better, but left fits better
+    profitMarginControl:SetAnchor(TOPLEFT, timeRemainingControl, TOPRIGHT, -10)
+    profitMarginControl:SetHorizontalAlignment(TEXT_ALIGN_CENTER)
+    profitMarginControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
     profitMarginControl:SetFont('ZoFontGameShadow')
   end
 
