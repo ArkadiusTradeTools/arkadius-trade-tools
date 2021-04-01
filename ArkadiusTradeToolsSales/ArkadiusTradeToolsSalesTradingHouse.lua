@@ -507,6 +507,7 @@ function ArkadiusTradeToolsSales.TradingHouse.InitAGSIntegration(tradingHouseWra
 
     function AGSFilter:FilterLocalResult(data)
       local itemLink = GetNormalizedTradingHouseSearchResultItemLink(data.slotIndex)
+      if not itemLink then return false end
       local days = ArkadiusTradeToolsSales.TradingHouse:GetCalcDays()
       local margin = GetMarginData(self.averagePrices, data, itemLink, days)
       return self:IsWithinDealRange(margin) or self:IsDefaultDealLevel(margin)
