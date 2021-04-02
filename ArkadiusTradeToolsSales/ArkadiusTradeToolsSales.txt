@@ -5,7 +5,7 @@
 ## Version: 1.12.1
 ## AddOnVersion: 11201
 ## SavedVariables: ArkadiusTradeToolsSalesData
-## DependsOn: ArkadiusTradeTools
+## DependsOn: ArkadiusTradeTools LibDebugLogger>=180 LibHistoire>=394
 ## OptionalDependsOn: AwesomeGuildStore LibGuildRoster
 
 ArkadiusTradeToolsSales.lua

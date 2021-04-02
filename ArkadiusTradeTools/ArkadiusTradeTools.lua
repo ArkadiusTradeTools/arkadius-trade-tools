@@ -48,6 +48,7 @@ local function RequestMoreGuildHistoryCategoryEventsLocal(guildIndex, category, 
     return true
   end
 
+  -- We may be able to make this useful again with LibHistoire
   ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
 
   return false
@@ -71,6 +72,7 @@ local function ScanGuildHistoryEvents()
     zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
   end
 end
+
 
 --------------------------------------------------------
 ------------------- Global functions -------------------
@@ -147,7 +149,9 @@ function ArkadiusTradeTools:Initialize()
     buttonDonate:SetHidden(true)
   end
 
-  self.nextScanGuild = 1
+  for i = 1, GetNumGuilds() do
+    self.guildStatus:SetDone(i)
+  end
 end
 
 function ArkadiusTradeTools:Finalize()
@@ -628,10 +632,10 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
     else
       self:FireCallbacks(EVENTS.ON_CRAFTING_STATION_CLOSE)
     end
-  elseif (eventCode == EVENT_GUILD_HISTORY_RESPONSE_RECEIVED) then
-    if (arg2 == GUILD_HISTORY_STORE) then
-      self:FireCallbacks(EVENTS.ON_GUILDHISTORY_STORE, arg1)
-    end
+  -- elseif (eventCode == EVENT_GUILD_HISTORY_RESPONSE_RECEIVED) then
+  --   if (arg2 == GUILD_HISTORY_STORE) then
+  --     self:FireCallbacks(EVENTS.ON_GUILDHISTORY_STORE, arg1)
+  --   end
   elseif (eventCode == EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE) then
     local _, _, _, quantity, sellerName, _, price = GetTradingHouseSearchResultItemInfo(arg1) -- TODO check this again, may return empty vaules
     local _, guildName = GetCurrentTradingHouseGuildDetails()
@@ -704,7 +708,6 @@ local function OnPlayerActivated(eventCode)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_CLOSE_TRADING_HOUSE, OnEvent)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_CRAFTING_STATION_INTERACT, OnEvent)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_END_CRAFTING_STATION_INTERACT, OnEvent)
-  EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_GUILD_HISTORY_RESPONSE_RECEIVED, OnEvent)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_PLAYER_COMBAT_STATE, OnEvent)
 
   --- Workaround if AGS is active, as EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE won't work as intended ---
@@ -729,7 +732,7 @@ local function OnPlayerActivated(eventCode)
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, OnEvent)
   end
 
-  ScanGuildHistoryEvents()
+  -- ScanGuildHistoryEvents()
 end
 
 local function OnPlayerDeactivated(eventCode)

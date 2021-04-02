@@ -3,6 +3,8 @@ local ArkadiusTradeToolsSales = ArkadiusTradeTools.Modules.Sales
 ArkadiusTradeToolsSales.Localization = {}
 ArkadiusTradeToolsSales.SalesTables = {}
 
+local logger = LibDebugLogger("ArkadiusTradeToolsSales")
+
 local L = ArkadiusTradeToolsSales.Localization
 local Utilities = ArkadiusTradeTools.Utilities
 local SalesTables = ArkadiusTradeToolsSales.SalesTables
@@ -222,12 +224,51 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     ArkadiusTradeToolsSortFilterList.SetupRow(self, rowControl, rowData)
 end
 
+function ArkadiusTradeToolsSales:RegisterLibHistoire()
+    logger:Info('Registering LibHistoire')
+    self.guildListeners = {}
+    local function SetUpListener(guildIndex, guildId)
+        local guildName = GetGuildName(guildId)
+        logger:Info("Setting up for guild", guildName)
+        local listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
+        local guildSettings = Settings.guilds[guildName]
+        local latestEventId
+        if guildSettings.latestEventId then
+            latestEventId = StringToId64(guildSettings.latestEventId)
+            listener:SetAfterEventId(latestEventId)
+        else
+            local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
+            listener:SetAfterEventTime(olderThanTimeStamp)
+        end
+        listener:SetEventCallback(function(eventType, eventId, eventTime, seller, buyer, quantity, itemLink, price, tax)
+            -- TODO: The guild status bar is designed to only have one busy item at a time,
+            -- so it will need to be reworked to stop the icon flashing and the
+            -- case where a guild gets stuck on busy
+            ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
+            if not latestEventId or CompareId64s(eventId, latestEventId) > 0 then
+                guildSettings.latestEventId = Id64ToString(eventId)
+                latestEventId = eventId
+            end
+            self:AddEvent(guildId, eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax)
+            local remaining = listener:GetPendingEventMetrics()
+            logger:Info(remaining, "events remaining for", guildName)
+            if remaining == 0 then
+                ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
+            end
+        end)
+        listener:Start()
+        self.guildListeners[guildId] = listener
+    end
+    for i = 1, GetNumGuilds() do
+        SetUpListener(i, GetGuildId(i))
+    end
+end
+
 ---------------------------------------------------------------------------------------
 function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     for i = 1, NUM_SALES_TABLES do
         if (SalesTables[i] == nil) then
             CHAT_ROUTER:AddSystemMessage("ArkadiusTradeToolsSales: Error! Number of data tables is not correct. Maybe you forgot to activate them in the addons menu?")
-
             return
         end
     end
@@ -300,7 +341,8 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     ---------------------------------------------
 
     self.list:RefreshData()
-    ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDHISTORY_STORE, function(...) self:OnGuildHistoryEventStore(...) end)
+    -- ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDHISTORY_STORE, function(...) self:OnGuildHistoryEventStore(...) end)
+    self:RegisterLibHistoire()
 end
 
 function ArkadiusTradeToolsSales:Finalize()
@@ -481,8 +523,10 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
     guildSales[sale.guildName].displayNames[sale.sellerName].sales[#guildSales[sale.guildName].displayNames[sale.sellerName].sales + 1] = #guildSales[sale.guildName].sales
 end
 
-function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
-    local eventType, secsSinceEvent, seller, buyer, quantity, itemLink, price, tax = GetGuildEventInfo(guildId, category, eventIndex)
+-- Maybe call this from OnGuildHistoryEventStore?
+--eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax
+function ArkadiusTradeToolsSales:AddEvent(guildId, eventId, eventType, eventTimeStamp, seller, buyer, quantity, itemLink, price, tax)
+    logger:Debug('ArkadiusTradeToolsSales:AddEvent', eventTimeStamp, guildId, Id64ToString(eventId))
     local unitPrice = nil
 
     if (eventType ~= GUILD_EVENT_ITEM_SOLD) then
@@ -491,21 +535,9 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 
     local timeStamp = GetTimeStamp()
     local guildName = GetGuildName(guildId)
-    local eventTimeStamp = timeStamp - secsSinceEvent
-
-    if ((Settings.guilds[guildName]) and (Settings.guilds[guildName].keepSalesForDays) and (Settings.guilds[guildName].keepSalesForDays < 10)) then
-        local olderThanTimeStamp = timeStamp - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
-
-        if (eventTimeStamp < olderThanTimeStamp) then
-            return false
-        end
-    end
-
-    local eventId = GetGuildEventId(guildId, category, eventIndex)
     local eventIdNum = tonumber(Id64ToString(eventId))
     local dataIndex = floor((eventIdNum % (NUM_SALES_TABLES * 2)) / 2) + 1
     local dataTable = SalesTables[dataIndex][self.serverName]
-
     if (eventIdNum ~= 0) then
         if (dataTable.sales[eventIdNum] == nil) then
             -- Add event to data table --
