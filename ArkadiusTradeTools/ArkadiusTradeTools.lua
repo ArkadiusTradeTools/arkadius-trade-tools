@@ -16,6 +16,7 @@ ArkadiusTradeTools.EVENTS = {
   ON_GUILDSTORE_ITEM_BOUGHT = 7,
   ON_GUILDHISTORY_STORE = 8,
   ON_GUILDSTORE_PENDING_ITEM_UPDATE = 9,
+  ON_RESCAN_GUILDS = 10
 }
 local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true, ['Exports'] = true }
 local Logger = LibDebugLogger('ArkadiusTradeTools')
@@ -118,8 +119,10 @@ function ArkadiusTradeTools:Initialize()
   local header = self.frame:GetNamedChild('Header')
   local buttonClose = header:GetNamedChild('Close')
   local buttonDrawTier = header:GetNamedChild('DrawTier')
+  local buttonForceRescan = header:GetNamedChild('ForceRescan')
   buttonClose.tooltip:SetContent(L['ATT_STR_BUTTON_CLOSE_TOOLTIP'])
   buttonDrawTier.tooltip:SetContent(L['ATT_STR_BUTTON_DRAWTIER_TOOLTIP'])
+  buttonForceRescan.tooltip:SetContent(L['ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP'])
   buttonDrawTier.OnToggle = function(switch, pressed)
     local drawTier
     if (pressed) then
@@ -131,6 +134,7 @@ function ArkadiusTradeTools:Initialize()
     Settings.drawTier = drawTier
   end
   buttonDrawTier:SetPressed(Settings.drawTier == DT_MEDIUM)
+  buttonForceRescan.OnClicked = function() self:FireCallbacks(EVENTS.ON_RESCAN_GUILDS) end
 
   local statusBar = self.frame:GetNamedChild('StatusBar')
   self.guildStatus = statusBar:GetNamedChild('GuildStatus')
@@ -681,13 +685,6 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
         GetTimeStamp()
       )
     end
-  -- Could probably nix this as we removed it from the auto pricing, but it's not hurting anything right now
-  elseif (eventCode == EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE) then
-    self:FireCallbacks(
-        EVENTS.ON_GUILDSTORE_PENDING_ITEM_UPDATE,
-        arg1,
-        arg2
-      )
   elseif (eventCode == EVENT_PLAYER_COMBAT_STATE) then
     self.isInCombat = arg1
   end

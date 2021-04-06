@@ -22,6 +22,7 @@ local localization =
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE3               = "Gilde ist aktuell",
     ATT_STR_BUTTON_CLOSE_TOOLTIP                    = "Schließe Fenster",
     ATT_STR_BUTTON_DRAWTIER_TOOLTIP                 = "Zeige Fenster über oder unter anderen UI Elementen",
+    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Refresh data from LibHistoire",
     ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW              = "Zeige oder verstecke Hauptfenster",
 }
 

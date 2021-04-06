@@ -165,6 +165,15 @@
                                 pressed="/esoui/art/worldmap/mapnav_downarrow_up.dds"
                             />
                         </Button>
+                        <Button name="$(parent)ForceRescan" inherits="ArkadiusTradeToolsToggleButton">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="RIGHT" relativeTo="$(parent)DrawTier" relativePoint="LEFT" offsetX="0" offsetY="0" />
+                            <Textures
+                                normal="/esoui/art/help/help_tabicon_feedback_up.dds"
+                                pressed="/esoui/art/help/help_tabicon_feedback_down.dds"
+                                mouseOver="/esoui/art/help/help_tabicon_feedback_over.dds"
+                            />
+                        </Button>
                         <Control name="$(parent)Background" inherits="ArkadiusTradeToolsBackground256X32">
                         </Control>
                         <Control name="$(parent)BackgroundInit">

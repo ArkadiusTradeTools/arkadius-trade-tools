@@ -224,6 +224,47 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     ArkadiusTradeToolsSortFilterList.SetupRow(self, rowControl, rowData)
 end
 
+local function createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId)
+    local guildId = GetGuildId(guildIndex)
+    local guildName = GetGuildName(guildId)
+    return function(eventType, eventId, eventTime, seller, buyer, quantity, itemLink, price, tax)
+        logger:Info("Event received for", guildName)
+        -- TODO: This should probably be handled via an event
+        ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
+        if not latestEventId or CompareId64s(eventId, latestEventId) > 0 then
+            guildSettings.latestEventId = Id64ToString(eventId)
+            latestEventId = eventId
+        end
+        self:AddEvent(guildId, eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax)
+        local remaining = listener:GetPendingEventMetrics()
+        logger:Info(remaining, "events remaining for", guildName)
+        if remaining == 0 then
+            ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
+        end
+    end 
+end
+
+function ArkadiusTradeToolsSales:RescanHistory()
+    logger:Info('Rescanning LibHistoire events')
+    local function UpdateListener(guildIndex, guildId)
+        local guildName = GetGuildName(guildId)
+        logger:Info("Rescanning guild", guildName)
+        local listener = self.guildListeners[guildId]
+        listener:Stop()
+        listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
+        local guildSettings = Settings.guilds[guildName]
+        local latestEventId
+        local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
+        logger:Info("Setting starting event time of", olderThanTimeStamp, "for", guildName)
+        listener:SetAfterEventTime(olderThanTimeStamp)
+        listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId))
+        listener:Start()
+    end
+    for i = 1, GetNumGuilds() do
+        UpdateListener(i, GetGuildId(i))
+    end
+end
+
 function ArkadiusTradeToolsSales:RegisterLibHistoire()
     logger:Info('Registering LibHistoire')
     self.guildListeners = {}
@@ -231,6 +272,7 @@ function ArkadiusTradeToolsSales:RegisterLibHistoire()
         local guildName = GetGuildName(guildId)
         logger:Info("Setting up for guild", guildName)
         local listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
+        self.guildListeners[guildId] = listener
         local guildSettings = Settings.guilds[guildName]
         local latestEventId
         if guildSettings.latestEventId then
@@ -240,24 +282,8 @@ function ArkadiusTradeToolsSales:RegisterLibHistoire()
             local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
             listener:SetAfterEventTime(olderThanTimeStamp)
         end
-        listener:SetEventCallback(function(eventType, eventId, eventTime, seller, buyer, quantity, itemLink, price, tax)
-            -- TODO: The guild status bar is designed to only have one busy item at a time,
-            -- so it will need to be reworked to stop the icon flashing and the
-            -- case where a guild gets stuck on busy
-            ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
-            if not latestEventId or CompareId64s(eventId, latestEventId) > 0 then
-                guildSettings.latestEventId = Id64ToString(eventId)
-                latestEventId = eventId
-            end
-            self:AddEvent(guildId, eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax)
-            local remaining = listener:GetPendingEventMetrics()
-            logger:Info(remaining, "events remaining for", guildName)
-            if remaining == 0 then
-                ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
-            end
-        end)
+        listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId))
         listener:Start()
-        self.guildListeners[guildId] = listener
     end
     for i = 1, GetNumGuilds() do
         SetUpListener(i, GetGuildId(i))
@@ -341,8 +367,8 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     ---------------------------------------------
 
     self.list:RefreshData()
-    -- ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDHISTORY_STORE, function(...) self:OnGuildHistoryEventStore(...) end)
     self:RegisterLibHistoire()
+    ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_RESCAN_GUILDS, function(...) self:RescanHistory(...) end)
 end
 
 function ArkadiusTradeToolsSales:Finalize()
