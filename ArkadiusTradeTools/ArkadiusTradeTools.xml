@@ -28,12 +28,12 @@
 
         <Control name="ArkadiusTradeToolsGuildStatus" mouseEnabled="true" resizeToFitDescendents="true" virtual="true">
             <OnInitialized>
+                -- This texture should be used when LibHistoire is not yet linked
                 local textureNotDone = "/esoui/art/buttons/checkbox_unchecked.dds"
                 local textureBusy = "/esoui/art/buttons/checkbox_indeterminate.dds"
                 local textureDone = "/esoui/art/buttons/checkbox_checked.dds"
-
-                self.done = {}
-                self.busy = 0
+                local GUILD_STATUS = { NOT_DONE = 1, BUSY = 2, DONE = 3 }
+                self.status = {}
                 self.icons = {}
                 self.icons[1] = GetControl(self, "Icon1")
                 self.icons[2] = GetControl(self, "Icon2")
@@ -42,37 +42,38 @@
                 self.icons[5] = GetControl(self, "Icon5")
 
                 self.SetDone = function(self, guildIndex)
-                    if (self.done[guildIndex]) then
+                    if (self.status[guildIndex] == GUILD_STATUS.DONE) then
                         return
                     end
 
                     self.icons[guildIndex]:SetTexture(textureDone)
-                    self.done[guildIndex] = true
+                    self.status[guildIndex] = GUILD_STATUS.DONE
                 end
 
-                self.SetBusy = function(self, guildIndex)
-                    if (self.busy == guildIndex) then
+                self.SetNotDone = function(self, guildIndex)
+                    if (self.status[guildIndex] == GUILD_STATUS.NOT_DONE) then
                         return
                     end
 
-                    if (self.icons[self.busy]) then
-                        if (self.done[self.busy]) then
-                            self.icons[self.busy]:SetTexture(textureDone)
-                        else
-                            self.icons[self.busy]:SetTexture(textureNotDone)
-                        end
+                    self.icons[guildIndex]:SetTexture(textureNotDone)
+                    self.status[guildIndex] = GUILD_STATUS.NOT_DONE
+                end
+
+                self.SetBusy = function(self, guildIndex)
+                    if (self.status[guildIndex] == GUILD_STATUS.BUSY) then
+                        return
                     end
 
                     if (guildIndex ~= 0) then
                         self.icons[guildIndex]:SetTexture(textureBusy)
                     end
 
-                    self.busy = guildIndex
+                    self.status[guildIndex] = true
                 end
 
                 self.SetText = function(self, line, text)
                     local l
-		            l = GetControl(self.tooltip.content, "Line" .. line)
+                    l = GetControl(self.tooltip.content, "Line" .. line)
 
                     if (l) then
                         local t = GetControl(l, "Text")
@@ -82,7 +83,7 @@
 
                 self.SetIcon = function(self, line, icon)
                     local l
-		            l = GetControl(self.tooltip.content, "Line" .. line)
+                    l = GetControl(self.tooltip.content, "Line" .. line)
 
                     if (l) then
                         local i = GetControl(l, "Icon")

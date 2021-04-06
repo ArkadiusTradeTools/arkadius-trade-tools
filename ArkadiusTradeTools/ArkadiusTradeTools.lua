@@ -18,6 +18,7 @@ ArkadiusTradeTools.EVENTS = {
   ON_GUILDSTORE_PENDING_ITEM_UPDATE = 9,
 }
 local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true, ['Exports'] = true }
+local Logger = LibDebugLogger('ArkadiusTradeTools')
 
 local L = ArkadiusTradeTools.Localization
 local EVENTS = ArkadiusTradeTools.EVENTS
@@ -148,10 +149,31 @@ function ArkadiusTradeTools:Initialize()
     buttonDonate = statusBar:GetNamedChild("Donate")
     buttonDonate:SetHidden(true)
   end
-
+  local guilds = {}
   for i = 1, GetNumGuilds() do
-    self.guildStatus:SetDone(i)
+    local guildId = GetGuildId(i)
+    table.insert(guilds, { id = guildId, linked = false })
   end
+  EVENT_MANAGER:RegisterForUpdate('ArkadiusTradeToolsGuildStatus', 1000, function()
+    local setOne = false
+    for i, guild in ipairs(guilds) do
+      if self.Modules.Sales.guildListeners[guild.id] and not guild.linked then
+        if self.Modules.Sales.guildListeners[guild.id].categoryCache:HasLinked() then
+          Logger:Info(GetGuildName(guild.id), "is linked. Marking done.")
+          self.guildStatus:SetDone(i)
+          guild.linked = true
+        else
+          Logger:Info(GetGuildName(guild.id), "is not linked. Marking not done.")
+          self.guildStatus:SetNotDone(i)
+        end
+        setOne = true
+      end
+    end
+    if not setOne then
+        Logger:Info("All guilds linked. Removing status update function.")
+        EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
+    end
+  end)
 end
 
 function ArkadiusTradeTools:Finalize()
@@ -165,6 +187,7 @@ function ArkadiusTradeTools:Finalize()
   Settings.windowTop = self.frame:GetTop()
   Settings.windowWidth = self.frame:GetWidth()
   Settings.windowHeight = self.frame:GetHeight()
+  EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
 end
 
 function ArkadiusTradeTools:CreateSettingsMenu()
