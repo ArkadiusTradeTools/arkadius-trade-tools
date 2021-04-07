@@ -241,6 +241,11 @@ local function createListenerCallback(self, listener, guildIndex, guildSettings,
         if remaining == 0 then
             ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
         end
+        if (self.list:IsHidden()) then
+            self.list:BuildMasterList()
+        else
+            self.list:RefreshData()
+        end
     end 
 end
 
@@ -586,11 +591,6 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, eventId, eventType, eventTime
 
             --- Update temporary lists ---
             self:UpdateTemporaryVariables(dataTable.sales[eventIdNum])
-
-            --- Update guild roster ---
-            self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].sellerName)
-            self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].buyerName)
-
             
             --- Add event to lists master list ---
             -- local entry = Utilities.EnsureUnitPrice(dataTable.sales[eventIdNum])
