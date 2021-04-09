@@ -266,7 +266,11 @@ function ArkadiusTradeToolsSales:RescanHistory()
         listener:Start()
     end
     for i = 1, GetNumGuilds() do
-        UpdateListener(i, GetGuildId(i))
+        local guildId = GetGuildId(i)
+        local guildName = GetGuildName(guildId)
+        Settings.guilds[guildName] = Settings.guilds[guildName] or {}
+        Settings.guilds[guildName].keepSalesForDays = Settings.guilds[guildName].keepSalesForDays or DefaultSettings.keepSalesForDays
+        UpdateListener(i, guildId)
     end
 end
 
@@ -291,7 +295,11 @@ function ArkadiusTradeToolsSales:RegisterLibHistoire()
         listener:Start()
     end
     for i = 1, GetNumGuilds() do
-        SetUpListener(i, GetGuildId(i))
+        local guildId = GetGuildId(i)
+        local guildName = GetGuildName(guildId)
+        Settings.guilds[guildName] = Settings.guilds[guildName] or {}
+        Settings.guilds[guildName].keepSalesForDays = Settings.guilds[guildName].keepSalesForDays or DefaultSettings.keepSalesForDays
+        SetUpListener(i, guildId)
     end
 end
 
