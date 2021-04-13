@@ -170,16 +170,16 @@ local function TradingHouseSearchResultsSetupRow(rowControl, ...)
 end
 
 local function OnEvent(eventCode, responseType, result)
-  --    if (eventCode == EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED) then
-  if (eventCode == EVENT_TRADING_HOUSE_RESPONSE_RECEIVED) and (responseType == TRADING_HOUSE_RESULT_SEARCH_PENDING) and (result == TRADING_HOUSE_RESULT_SUCCESS) then
+  if (eventCode == EVENT_TRADING_HOUSE_RESPONSE_RECEIVED) and (responseType == TRADING_HOUSE_RESULT_SEARCH_PENDING) and (result == TRADING_HOUSE_RESULT_SUCCESS) 
+    -- searchResultsList doesn't exist in gamepad mode, so we'll bail out immediately to avoid the error
+    and TRADING_HOUSE.searchResultsList then
     local dataType = TRADING_HOUSE.searchResultsList.dataTypes[1]
     ZO_PreHook(dataType, 'setupCallback', TradingHouseSearchResultsSetupRow)
 
-    --EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_SEARCH_RESULTS_RECEIVED)
-    EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED)
-
-    -- Small hack to refreh the list
+    -- Small hack to refresh the list
     ZO_ScrollList_Commit(ZO_TradingHouseBrowseItemsRightPaneSearchResults)
+    -- We can't unregister until we actually add the hook as a user may toggle gamepad mode in a single session
+    EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSales.NAME, EVENT_TRADING_HOUSE_RESPONSE_RECEIVED)
   end
 end
 
