@@ -53,7 +53,7 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
     self.guildNameSwitch = Settings.filters.guildName
     self.itemNameSwitch = Settings.filters.itemName
     self.timeStampSwitch = Settings.filters.timeStamp
-	self.eapriceSwitch = Settings.filters.unitPrice
+	self.unitPriceSwitch = Settings.filters.unitPrice
 	self.priceSwitch = Settings.filters.price
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
@@ -71,8 +71,8 @@ function ArkadiusTradeToolsPurchasesList:Initialize(control)
     self.sortHeaderGroup:HeaderForKey("itemName").switch.OnToggle = OnHeaderFilterToggle
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch:SetPressed(self.timeStampSwitch)
     self.sortHeaderGroup:HeaderForKey("timeStamp").switch.OnToggle = OnHeaderToggle
-	-- self.sortHeaderGroup:HeaderForKey("unitPrice").switch:SetPressed(self.eapriceSwitch)
-    -- self.sortHeaderGroup:HeaderForKey("unitPrice").switch.OnToggle = OnHeaderToggle
+	-- self.sortHeaderGroup:HeaderForKey("UnitPrice").switch:SetPressed(self.unitPriceSwitch)
+    -- self.sortHeaderGroup:HeaderForKey("UnitPrice").switch.OnToggle = OnHeaderToggle
 	--self.sortHeaderGroup:HeaderForKey("price").switch:SetPressed(self.priceSwitch)
     --self.sortHeaderGroup:HeaderForKey("price").switch.OnToggle = OnHeaderToggle	
     self.sortHeaderGroup:SelectHeaderByKey("timeStamp", true)
@@ -133,7 +133,7 @@ function ArkadiusTradeToolsPurchasesList:SetupPurchaseRow(rowControl, rowData)
     local sellerName = rowControl:GetNamedChild("SellerName")
     local guildName = rowControl:GetNamedChild("GuildName")
     local itemLink = rowControl:GetNamedChild("ItemLink")
-	local unitPrice = rowControl:GetNamedChild("unitPrice")
+	local unitPrice = rowControl:GetNamedChild("UnitPrice")
     local price = rowControl:GetNamedChild("Price")
     local timeStamp = rowControl:GetNamedChild("TimeStamp")
     local icon = GetItemLinkInfo(data.itemLink)
@@ -207,7 +207,7 @@ function ArkadiusTradeToolsPurchases:Initialize()
     self.frame.headers.sellerName = self.frame.headers:GetNamedChild("SellerName")
     self.frame.headers.guildName = self.frame.headers:GetNamedChild("GuildName")
     self.frame.headers.itemLink = self.frame.headers:GetNamedChild("ItemLink")
-	self.frame.headers.unitPrice = self.frame.headers:GetNamedChild("unitPrice")
+	self.frame.headers.unitPrice = self.frame.headers:GetNamedChild("UnitPrice")
     self.frame.headers.price = self.frame.headers:GetNamedChild("Price")
     self.frame.headers.timeStamp = self.frame.headers:GetNamedChild("TimeStamp")
     self.frame.OnResize = self.OnResize
