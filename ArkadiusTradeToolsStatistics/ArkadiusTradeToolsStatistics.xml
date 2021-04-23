@@ -49,7 +49,7 @@
                             </OnInitialized>
                         </Control>
 
-                        <Control name="$(parent)ItemCount" mouseEnabled="false" inherits="ArkadiusTradeToolsSortHeader">
+                        <Control name="$(parent)ItemCount" inherits="ArkadiusTradeToolsSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)InternalSalesVolumePercentage" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)InternalSalesVolumePercentage" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>

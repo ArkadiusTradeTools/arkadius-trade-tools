@@ -4,7 +4,7 @@ local localization =
     ATT_STR_SELLER                   = "Vendeur",
     ATT_STR_GUILD                    = "Guilde",
     ATT_STR_ITEM                     = "Article",
-	ATT_STR_EAPRICE                  = "Prix unitaire",
+	ATT_STR_UNIT_PRICE               = "Prix unitaire",
     ATT_STR_PRICE                    = "Prix",
     ATT_STR_TIME                     = "Temps",
 
