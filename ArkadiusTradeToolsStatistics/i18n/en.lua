@@ -7,7 +7,6 @@ local localization =
     ATT_STR_TAXES                    = "Taxes",
     ATT_STR_INTERNAL                 = "Internal",
     ATT_STR_ITEMCOUNT                = "# Items",
-
     ATT_STR_TODAY                    = "Today",
     ATT_STR_YESTERDAY                = "Yesterday",
     ATT_STR_TWO_DAYS_AGO             = "Two days ago",
@@ -18,7 +17,6 @@ local localization =
     ATT_STR_10_DAYS                  = "10 days",
     ATT_STR_14_DAYS                  = "14 days",
     ATT_STR_30_DAYS                  = "30 days",
-
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Text search for user or guild names",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Toggle between search for exact strings or substrings. Case sensitivity is ignored in both cases.",
 }
