@@ -178,6 +178,8 @@
             </Controls>
         </Control>
 
+        <Control name="ArkadiusTradeToolsNonSortHeader" mouseEnabled="false" inherits="ArkadiusTradeToolsSortHeader" virtual="true" />
+
         <Control name="ArkadiusTradeToolsSortHeaderGroup" virtual="true">
             <OnInitialized>
                 self.Update = function(self)

@@ -57,7 +57,7 @@
                                 </Button>
                             </Controls>
                         </Control>
-                        <Control name="$(parent)ItemLink" mouseEnabled="false" inherits="ArkadiusTradeToolsSortHeader">
+                        <Control name="$(parent)ItemLink" inherits="ArkadiusTradeToolsNonSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
@@ -93,7 +93,7 @@
                             </Controls>
                         </Control>
 						
-						<Control name="$(parent)UnitPrice" inherits="ArkadiusTradeToolsSortHeader">
+						<Control name="$(parent)UnitPrice" inherits="ArkadiusTradeToolsNonSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)TimeStamp" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeStamp" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
