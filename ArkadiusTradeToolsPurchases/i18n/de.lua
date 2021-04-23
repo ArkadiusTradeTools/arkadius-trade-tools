@@ -7,9 +7,7 @@ local localization =
 	ATT_STR_UNIT_PRICE               = "EP",
     ATT_STR_PRICE                    = "Preis",
     ATT_STR_TIME                     = "Zeit",
-
     ATT_STR_PURCHASES                = "Einkäufe",
-
     ATT_STR_TODAY                    = "Heute",
     ATT_STR_YESTERDAY                = "Gestern",
     ATT_STR_TWO_DAYS_AGO             = "Vorgestern",
@@ -20,9 +18,7 @@ local localization =
     ATT_STR_10_DAYS                  = "10 Tage",
     ATT_STR_14_DAYS                  = "14 Tage",
     ATT_STR_30_DAYS                  = "30 Tage",
-
     ATT_STR_KEEP_PURCHASES_FOR_DAYS  = "Behalte Einkäufe für x Tage",
-
     ATT_STR_FILTER_TEXT_TOOLTIP      = "Textsuche nach User-, Gilden- oder Gegenstandsnamen",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Schalte zwischen Suche nach exaktem String oder Teilstring um. Groß- und Kleinschreibung wird in beiden Fällen ignoriert.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Schließe diese Spalte in die/von der Textsuche ein/aus",
