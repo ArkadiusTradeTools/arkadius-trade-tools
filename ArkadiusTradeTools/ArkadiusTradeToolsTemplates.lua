@@ -911,6 +911,22 @@ function ArkadiusTradeToolsTooltip:Hide()
     ClearTooltip(InformationTooltip)
 end
 
+local ArkadiusTradeToolsEditBox = {}
+ArkadiusTradeTools.Templates.EditBox = ArkadiusTradeToolsEditBox
+
+function ArkadiusTradeToolsEditBox:Initialize(control)
+    ZO_ShallowTableCopy(self, control)
+    control:SetHandler('OnEnter', function(...) control:OnEnter(...) end)
+    ArkadiusTradeTools.Templates.Tooltip:Initialize(control, nil, TOPLEFT, 0, 0, TOPRIGHT)
+end
+
+function ArkadiusTradeToolsEditBox:OnEnter()
+    if ((self.OnChanged) and (type(self.OnChanged) == "function")) then
+        self.OnChanged(self:GetText())
+    end
+
+    self:LoseFocus()
+end
 
 --- Small hack to create text string for key bindings ---
 ZO_CreateStringId("SI_BINDING_NAME_ATT_TOGGLE_MAIN_WINDOW", ArkadiusTradeTools.Localization["ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW"])
