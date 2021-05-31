@@ -165,122 +165,6 @@ local MASTER_WRIT_TEMPERS_QUANTITY =
     },
 }
 
-local MASTER_WRIT_STYLES =
-{
-    [1]  = "|H0:item:33251:30:1:0:0:0:0:0:0:0:0:0:0:0:0:1:0:0:0:0:0|h|h",   -- Breton, Molybdenum
-    [2]  = "|H0:item:33258:30:1:0:0:0:0:0:0:0:0:0:0:0:0:2:0:0:0:0:0|h|h",   -- Redguard, Starmetal
-    [3]  = "|H0:item:33257:30:1:0:0:0:0:0:0:0:0:0:0:0:0:3:0:0:0:0:0|h|h",   -- Orc, Manganese
-    [4]  = "|H0:item:33253:30:1:0:0:0:0:0:0:0:0:0:0:0:0:4:0:0:0:0:0|h|h",   -- Dunmer, Obisidian
-    [5]  = "|H0:item:33256:30:1:0:0:0:0:0:0:0:0:0:0:0:0:5:0:0:0:0:0|h|h",   -- Nord, Corundum
-    [6]  = "|H0:item:33150:30:1:0:0:0:0:0:0:0:0:0:0:0:0:6:0:0:0:0:0|h|h",   -- Argonian, Flint
-    [7]  = "|H0:item:33252:30:1:0:0:0:0:0:0:0:0:0:0:0:0:7:0:0:0:0:0|h|h",   -- Altmer, Adamantite
-    [8]  = "|H0:item:33252:30:1:0:0:0:0:0:0:0:0:0:0:0:0:7:0:0:0:0:0|h|h",   -- Bosmer, Bone
-    [9]  = "|H0:item:33255:30:1:0:0:0:0:0:0:0:0:0:0:0:0:9:0:0:0:0:0|h|h",   -- Khajiit, Moonstone
---    [10] = "Not craftable",                                                 -- Unique
-    [11] = "|H0:item:75370:30:1:0:0:0:0:0:0:0:0:0:0:0:0:11:0:0:0:0:0|h|h",  -- Thieves Guild, Fine Chalk
-    [12] = "|H0:item:79304:30:1:0:0:0:0:0:0:0:0:0:0:0:0:12:0:0:0:0:0|h|h",  -- Dark Brotherhodd, Black Beeswax
-    [13] = "|H0:item:71584:30:1:0:0:0:0:0:0:0:0:0:0:0:0:13:0:0:0:0:0|h|h",  -- Malacath, Potash
-    [14] = "|H0:item:57587:30:1:0:0:0:0:0:0:0:0:0:0:0:0:14:0:0:0:0:0|h|h",  -- Dwemer, Dwemer Frame
-    [15] = "|H0:item:46152:30:1:0:0:0:0:0:0:0:0:0:0:0:0:15:0:0:0:0:0|h|h",  -- Ancient Elf, Palladum
-    [16] = "|H0:item:81996:30:1:0:0:0:0:0:0:0:0:0:0:0:0:16:0:0:0:0:0|h|h",  -- Order of the Hour, Pearl Sand
-    [17] = "|H0:item:46149:30:1:0:0:0:0:0:0:0:0:0:0:0:0:17:0:0:0:0:0|h|h",  -- Barbaric, Bronze
---    [18] = "Not craftable",                                                 -- Bandit
-    [19] = "|H0:item:46150:30:1:0:0:0:0:0:0:0:0:0:0:0:0:19:0:0:0:0:0|h|h",  -- Primal, Argentum
-    [20] = "|H0:item:46151:30:1:0:0:0:0:0:0:0:0:0:0:0:0:20:0:0:0:0:0|h|h",  -- Daedric, Daedra Heart
-    [21] = "|H0:item:71582:30:1:0:0:0:0:0:0:0:0:0:0:0:0:21:0:0:0:0:0|h|h",  -- Trinimac, Auric Tusk
-    [22] = "|H0:item:69555:30:1:0:0:0:0:0:0:0:0:0:0:0:0:22:0:0:0:0:0|h|h",  -- Ancient Orc, Cassiterite
-    [23] = "|H0:item:71742:30:1:0:0:0:0:0:0:0:0:0:0:0:0:23:0:0:0:0:0|h|h",  -- Daggerfall Covenant, Lion Fang
-    [24] = "|H0:item:71740:30:1:0:0:0:0:0:0:0:0:0:0:0:0:24:0:0:0:0:0|h|h",  -- Ebonheart Pact, Dragon Scute
-    [25] = "|H0:item:71738:30:1:0:0:0:0:0:0:0:0:0:0:0:0:25:0:0:0:0:0|h|h",  -- Aldermi Dominion, Eagle Feather
-    [26] = "|H0:item:64713:30:1:0:0:0:0:0:0:0:0:0:0:0:0:26:0:0:0:0:0|h|h",  -- Mercenary, Laurel
-    [27] = "|H0:item:81998:30:1:0:0:0:0:0:0:0:0:0:0:0:0:27:0:0:0:0:0|h|h",  -- Celestial, Star Sapphire
-    [28] = "|H0:item:64689:30:1:0:0:0:0:0:0:0:0:0:0:0:0:28:0:0:0:0:0|h|h",  -- Glass, Malachite
-    [29] = "|H0:item:59922:30:1:0:0:0:0:0:0:0:0:0:0:0:0:29:0:0:0:0:0|h|h",  -- Xivkyn, Charcoal of Remorse
-    [30] = "|H0:item:71766:30:1:0:0:0:0:0:0:0:0:0:0:0:0:30:0:0:0:0:0|h|h",  -- Soul Shriven, Azure Plasm
-    [31] = "|H0:item:75373:30:1:0:0:0:0:0:0:0:0:0:0:0:0:31:0:0:0:0:0|h|h",  -- Draugr, Pristine Shrouds
---    [32] = "Not craftable",                                                 -- Maormer
-    [33] = "|H0:item:64687:30:1:0:0:0:0:0:0:0:0:0:0:0:0:33:0:0:0:0:0|h|h",  -- Akaviri, Goldscale
-    [34] = "|H0:item:33254:30:1:0:0:0:0:0:0:0:0:0:0:0:0:34:0:0:0:0:0|h|h",  -- Imperial, Nickel
-    [35] = "|H0:item:64685:30:1:0:0:0:0:0:0:0:0:0:0:0:0:35:0:0:0:0:0|h|h",  -- Yokudan, Ferrous Salts
---    [36] = "Not craftable",                                                 -- Universal
---    [37] = "Not craftable",                                                 -- Reach Winter
---    [38] = "Not craftable",                                                 -- Tsaesci
-    [39] = "|H0:item:81994:30:1:0:0:0:0:0:0:0:0:0:0:0:0:39:0:0:0:0:0|h|h",  -- Minotaur, Oxblood Fungus
-    [40] = "|H0:item:82004:30:1:0:0:0:0:0:0:0:0:0:0:0:0:40:0:0:0:0:0|h|h",  -- Ebony, Night Pumice
-    [41] = "|H0:item:76914:30:1:0:0:0:0:0:0:0:0:0:0:0:0:41:0:0:0:0:0|h|h",  -- Abah's Watch, Polished Shilling
-    [42] = "|H0:item:96388:30:1:0:0:0:0:0:0:0:0:0:0:0:0:42:0:0:0:0:0|h|h",  -- Skinchanger, Wolfbane Incense
-    [43] = "|H0:item:79305:30:1:0:0:0:0:0:0:0:0:0:0:0:0:43:0:0:0:0:0|h|h",  -- Morag Tong, Boiled Carapace
-    [44] = "|H0:item:71736:30:1:0:0:0:0:0:0:0:0:0:0:0:0:44:0:0:0:0:0|h|h",  -- Ra Gada, Ancient Sandstone
-    [45] = "|H0:item:79672:30:1:0:0:0:0:0:0:0:0:0:0:0:0:45:0:0:0:0:0|h|h",  -- Dro-m'Athra, Defiled Whiskers
-    [46] = "|H0:item:76910:30:1:0:0:0:0:0:0:0:0:0:0:0:0:46:0:0:0:0:0|h|h",  -- Assassins League, Tainted Blood
-    [47] = "|H0:item:71538:30:1:0:0:0:0:0:0:0:0:0:0:0:0:47:0:0:0:0:0|h|h",  -- Outlaw, Rogue's Soot
-    [48] = "|H0:item:130060:30:1:0:0:0:0:0:0:0:0:0:0:0:0:48:0:0:0:0:0|h|h", -- Redoran, Polished Scarab Elytra
-    [49] = "|H0:item:130059:30:1:0:0:0:0:0:0:0:0:0:0:0:0:49:0:0:0:0:0|h|h", -- Hlaalu, Refined Bonemold Resin 
-    [50] = "|H0:item:121520:30:1:0:0:0:0:0:0:0:0:0:0:0:0:50:0:0:0:0:0|h|h", -- Militant Ordinator, Lustrous Sphalerite
-    [51] = "|H0:item:121519:30:1:0:0:0:0:0:0:0:0:0:0:0:0:51:0:0:0:0:0|h|h", -- Telvanni, Wrought Ferrofungus
-    [52] = "|H0:item:121518:30:1:0:0:0:0:0:0:0:0:0:0:0:0:52:0:0:0:0:0|h|h", -- Buoyant Armiger, Volcanic Viridian
-    [53] = "|H0:item:114283:30:1:0:0:0:0:0:0:0:0:0:0:0:0:53:0:0:0:0:0|h|h", -- Stahlrim frost caster. Stahlrim shard
-    [54] = "|H0:item:125476:30:1:0:0:0:0:0:0:0:0:0:0:0:0:54:0:0:0:0:0|h|h", -- Ashlander, Ash Canvas
-    [55] = "|H0:item:134798:30:1:0:0:0:0:0:0:0:0:0:0:0:0:55:0:0:0:0:0|h|h", -- Worm Cult, Desecrated Grave Soil
-    [56] = "|H0:item:114983:30:1:0:0:0:0:0:0:0:0:0:0:0:0:56:0:0:0:0:0|h|h", -- Silken Ring, Distilled Slowsilver
-    [57] = "|H0:item:114984:30:1:0:0:0:0:0:0:0:0:0:0:0:0:57:0:0:0:0:0|h|h", -- Mazzatun , Leviathan Scrimshaw
-    [58] = "|H0:item:82002:30:1:0:0:0:0:0:0:0:0:0:0:0:0:58:0:0:0:0:0|h|h",  -- Grim Harlequin, Grinstone
-    [59] = "|H0:item:82000:30:1:0:0:0:0:0:0:0:0:0:0:0:0:59:0:0:0:0:0|h|h",  -- Hollow Jack, Amber Marble
-    [60] = "|H0:item:130061:30:1:0:0:0:0:0:0:0:0:0:0:0:0:60:0:0:0:0:0|h|h", -- Refabricated, Polished Rivets
-    [61] = "|H0:item:132620:30:1:0:0:0:0:0:0:0:0:0:0:0:0:61:0:0:0:0:0|h|h", -- Bloodforge, Bloodroot Flux
-    [62] = "|H0:item:132619:30:1:0:0:0:0:0:0:0:0:0:0:0:0:62:0:0:0:0:0|h|h", -- Dreadhorn, Minotaur Bezoar
---    [63] = "Not craftable",                                                 -- none
---    [64] = "Not craftable",                                                 -- none
-    [65] = "|H0:item:132617:30:1:0:0:0:0:0:0:0:0:0:0:0:0:65:0:0:0:0:0|h|h", -- Apostle, Polished Brass
-    [66] = "|H0:item:132618:30:1:0:0:0:0:0:0:0:0:0:0:0:0:66:0:0:0:0:0|h|h", -- Ebonshadow, Tenebrous Cord
---    [67] = "Not craftable",                                                 -- Undaunted
---    [68] = "Not craftable",                                                 -- none
-    [69] = "|H0:item:137958:30:1:0:0:0:0:0:0:0:0:0:0:0:0:69:0:0:0:0:0|h|h", -- Fang Lair, Dragon Bone
-    [70] = "|H0:item:137961:30:1:0:0:0:0:0:0:0:0:0:0:0:0:70:0:0:0:0:0|h|h", -- Scalecaller, Infected Flesh
-    [71] = "|H0:item:137951:30:1:0:0:0:0:0:0:0:0:0:0:0:0:71:0:0:0:0:0|h|h", -- Psijic, Vitrified Malondo
-    [72] = "|H0:item:137953:30:1:0:0:0:0:0:0:0:0:0:0:0:0:72:0:0:0:0:0|h|h", -- Sapiarch, Culanda Lacquer
-    [73] = "|H0:item:141740:30:1:0:0:0:0:0:0:0:0:0:0:0:0:73:0:0:0:0:0|h|h", -- Welkynar Style, Gryphon Plume
-    [74] = "|H0:item:137957:30:1:0:0:0:0:0:0:0:0:0:0:0:0:74:0:0:0:0:0|h|h", -- Dremora, Warrior's Heart Ashes
-    [75] = "|H0:item:140267:30:1:0:0:0:0:0:0:0:0:0:0:0:0:75:0:0:0:0:0|h|h", -- Pyandonean, Sea Serpent Hide
---    [76] = "Not craftable",                                                 -- Divine Prosecution
-    [77] = "|H0:item:141820:30:1:0:0:0:0:0:0:0:0:0:0:0:0:77:0:0:0:0:0|h|h", -- Huntsman, Bloodscent Dew
-    [78] = "|H0:item:141821:30:1:0:0:0:0:0:0:0:0:0:0:0:0:78:0:0:0:0:0|h|h", -- Silver Dawn, Argent Pelt
-    [79] = "|H0:item:145532:30:1:0:0:0:0:0:0:0:0:0:0:0:0:79:0:0:0:0:0|h|h", -- Dead Water, Crocodile Leather
-    [80] = "|H0:item:147288:30:1:0:0:0:0:0:0:0:0:0:0:0:0:80:0:0:0:0:0|h|h", -- Honor Guard, Red Diamond Seal
-    [81] = "|H0:item:145533:30:1:0:0:0:0:0:0:0:0:0:0:0:0:81:0:0:0:0:0|h|h", -- Elder Argonian, Hackwing Plumage
-    [82] = "|H0:item:151907:30:1:0:0:0:0:0:0:0:0:0:0:0:0:82:0:0:0:0:0|h|h", -- Coldsnap, Goblin-Cloth Scrap
-    [83] = "|H0:item:151908:30:1:0:0:0:0:0:0:0:0:0:0:0:0:83:0:0:0:0:0|h|h", -- Meridian, Auroran Dust
-    [84] = "|H0:item:151621:30:1:0:0:0:0:0:0:0:0:0:0:0:0:84:0:0:0:0:0|h|h", -- Anequina, Shimmering Sand
-    [85] = "|H0:item:151622:30:1:0:0:0:0:0:0:0:0:0:0:0:0:85:0:0:0:0:0|h|h", -- Pellitine, Dragonthread
-    [86] = "|H0:item:152235:30:1:0:0:0:0:0:0:0:0:0:0:0:0:86:0:0:0:0:0|h|h", -- Sunspire, Frost Embers
---    [87] = "Not craftable",                                               -- none
---    [88] = "Not craftable",                                               -- none
-    [89] = "|H0:item:156589:30:1:0:0:0:0:0:0:0:0:0:0:0:0:89:0:0:0:0:0|h|h",  -- Stags of Z'en, Oath Cord
---    [90] = "Not craftable",                                               -- Glenmoril Wyrd
---    [91] = "Not craftable",                                               -- none
-    [92] = "|H0:item:156571:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Dragonguard, Gilding Salts
-    [93] = "|H0:item:156606:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- Moongrave Fane, Blood of Sahrotnax
-    [94] = "|H0:item:156624:30:1:0:0:0:0:0:0:0:0:0:0:0:0:92:0:0:0:0:0|h|h", -- New Moon Priest, Aeonstone Shard
-    [95] = "|H0:item:156643:30:1:0:0:0:0:0:0:0:0:0:0:0:0:95:0:0:0:0:0|h|h", -- Shield of Senchal, Carmine Shieldsilk
---    [96] = "Not craftable",                                               --
-    [97] = "|H0:item:157533:30:1:0:0:0:0:0:0:0:0:0:0:0:0:97:0:0:0:0:0|h|h", -- Icereach Coven, Fryse Willow
-    [98] = "|H0:item:158307:30:1:0:0:0:0:0:0:0:0:0:0:0:0:98:0:0:0:0:0|h|h", -- Pyre Watch, Consecrated Myrrh
---    [99] = "Not craftable",                                               --
-    [100] = "|H0:item:160509:30:1:0:0:0:0:0:0:0:0:0:0:0:0:100:0:0:0:0:0|h|h", -- Blackreach Vanguard, Gloomspore Chitin
-    [101] = "|H0:item:160558:30:1:0:0:0:0:0:0:0:0:0:0:0:0:101:0:0:0:0:0|h|h", -- Greymoor, Bat Oil
-    [102] = "|H0:item:160575:30:1:0:0:0:0:0:0:0:0:0:0:0:0:102:0:0:0:0:0|h|h", -- Sea Giant, Sea Snake Fang
-    [103] = "|H0:item:160592:30:1:0:0:0:0:0:0:0:0:0:0:0:0:103:0:0:0:0:0|h|h", -- Ancestral Nord, Etched Corundum
-    [104] = "|H0:item:160609:30:1:0:0:0:0:0:0:0:0:0:0:0:0:104:0:0:0:0:0|h|h", -- Ancestral High Elf, Etched Adamantite
-    [105] = "|H0:item:160626:30:1:0:0:0:0:0:0:0:0:0:0:0:0:105:0:0:0:0:0|h|h", -- Ancestral Orc, Etched Manganese
-    [106] = "|H0:item:166988:30:1:0:0:0:0:0:0:0:0:0:0:0:0:106:0:0:0:0:0|h|h", -- Thorn Legion, Thorn Sigil
-    [107] = "|H0:item:167005:30:1:0:0:0:0:0:0:0:0:0:0:0:0:107:0:0:0:0:0|h|h", -- Hazardous Alchemy, Viridian Phial
-    -- [108] = "Not craftable",
-    -- [109] = "Not craftable",
-    [110] = "|H0:item:167286:30:1:0:0:0:0:0:0:0:0:0:0:0:0:110:0:0:0:0:0|h|h", -- Hazardous Alchemy, Viridian Phial
-    -- [111] = "Not craftable",
-    [112] = "|H0:item:167976:30:1:0:0:0:0:0:0:0:0:0:0:0:0:112:0:0:0:0:0|h|h", -- Arkthzand Armory, Arkthzand Sprocket
-}
-
 local MASTER_WRIT_TRAITS =
 {
     [1]  = "|H0:item:23203:30:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0|h|h",  -- Powered, Chysolite
@@ -345,7 +229,7 @@ function ArkadiusTradeToolsSales:GetMasterWritComponents(itemLink)
         table.insert(components, component)
 
         if (writType ~= MASTER_WRIT_TYPE_JEWELRY) then
-            component = { itemLink = MASTER_WRIT_STYLES[style], quantity = 1 }
+            component = { itemLink = GetItemStyleMaterialLink(style), quantity = 1 }
             table.insert(components, component)
         end
 
