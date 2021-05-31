@@ -1,6 +1,6 @@
 ## Title: Arkadius' Trade Tools - Exports
 ## Author: Aldanga (@Aldanga NA)
-## APIVersion: 100034
+## APIVersion: 100034 100035
 ## Description: Adds export functionality for saved data
 ## Version: 1.12.2
 ## AddOnVersion: 11202
