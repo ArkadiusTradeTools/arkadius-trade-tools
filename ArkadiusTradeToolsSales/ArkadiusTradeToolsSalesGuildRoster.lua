@@ -82,6 +82,7 @@ function ArkadiusTradeToolsSales.GuildRoster:Enable(enable)
         --- Create columns ---
         local guildRoster = ZO_GuildRoster
         local guildRosterHeaders = ZO_GuildRoster:GetNamedChild("Headers")
+        local guildRosterList = ZO_GuildRoster:GetNamedChild("List")
         local levelHeader = guildRosterHeaders:GetNamedChild("Level")
         local purchasesHeader
         local salesHeader
@@ -99,7 +100,7 @@ function ArkadiusTradeToolsSales.GuildRoster:Enable(enable)
             )
             purchasesHeader:SetDimensions(100, 32)
             purchasesHeader:SetAnchor(LEFT, levelHeader, RIGHT, 50, 0)
-            salesDays:SetAnchor(TOP, purchasesHeader, BOTTOMRIGHT, 0, 566)
+            salesDays:SetAnchor(BOTTOMRIGHT, guildRosterList, BOTTOMRIGHT, 0, 40)
 
             salesHeader =
                 CreateControlFromVirtual(guildRosterHeaders:GetName() .. "Sales", guildRosterHeaders, "ZO_SortHeader")
@@ -180,7 +181,7 @@ function ArkadiusTradeToolsSales.GuildRoster:Enable(enable)
 
             LGR:OnRosterReady(
                 function()
-                    salesDays:SetAnchor(TOP, purchasesColumn:GetHeader(), BOTTOMRIGHT, 0, 566)
+                    salesDays:SetAnchor(BOTTOMRIGHT, guildRosterList, BOTTOMRIGHT, 0, 40)
                 end
             )
         end
