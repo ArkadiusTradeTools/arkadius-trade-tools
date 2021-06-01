@@ -247,10 +247,10 @@ function ArkadiusTradeToolsSales.TooltipExtension:Initialize()
     ---
     local TooltipSetWornItem = self.tooltip.SetWornItem
 
-    function self.tooltip.SetWornItem(tooltip, index)
-        local itemLink = GetItemLink(BAG_WORN, index)
-
-        TooltipSetWornItem(tooltip, index)
+    function self.tooltip.SetWornItem(tooltip, index, bagId)
+        local itemLink = GetItemLink(bagId, index)
+        
+        TooltipSetWornItem(tooltip, index, bagId)
         UpdateTooltip(tooltip, itemLink)
     end
 	---
