@@ -24,6 +24,7 @@ local localization =
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE3              = "A guilda está atualizada",
     ATT_STR_BUTTON_CLOSE_TOOLTIP                   = "Fechar janela",
     ATT_STR_BUTTON_DRAWTIER_TOOLTIP                = "Mostrar janela acima ou abaixo de outros elementos da interface do usuário",
+    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Refresh data from LibHistoire",
     ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW             = "Mostrar ou ocultar a janela principal",
 }
 

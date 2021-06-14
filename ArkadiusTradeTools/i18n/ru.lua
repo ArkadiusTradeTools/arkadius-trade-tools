@@ -24,6 +24,7 @@ local localization =
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE3               = "Данные по гильдии актуальны",
     ATT_STR_BUTTON_CLOSE_TOOLTIP                    = "Закрыть окно",
     ATT_STR_BUTTON_DRAWTIER_TOOLTIP                 = "Показывать окно поверх других элементов управления или нет",
+    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Refresh data from LibHistoire",
     ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW              = "Показать или скрыть основное окно",
 }
 

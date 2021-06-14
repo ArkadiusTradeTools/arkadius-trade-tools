@@ -24,6 +24,7 @@ local localization =
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE3               = "Guild is up to date",
     ATT_STR_BUTTON_CLOSE_TOOLTIP                    = "Close window",
     ATT_STR_BUTTON_DRAWTIER_TOOLTIP                 = "Show window above or below other ui elements",
+    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Refresh data from LibHistoire",
     ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW              = "Show or hide main window",
 }
 

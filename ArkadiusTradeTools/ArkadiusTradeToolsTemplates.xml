@@ -78,15 +78,8 @@
         <EditBox name="ArkadiusTradeToolsEditBox" inherits="ZO_DefaultEdit" virtual="true">
             <Dimensions x="100" y="26"/>
             <OnInitialized>
-                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
+                ArkadiusTradeTools.Templates.EditBox:Initialize(self)
             </OnInitialized>
-            <OnEnter>
-               if ((self.OnChanged) and (type(self.OnChanged) == "function")) then
-                   self.OnChanged(self:GetText())
-                end
-
-                self:LoseFocus()
-            </OnEnter>
             <Controls>
                 <Backdrop inherits="ZO_EditBackdrop">
                     <AnchorFill />

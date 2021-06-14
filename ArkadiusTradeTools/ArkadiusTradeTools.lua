@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = 'ArkadiusTradeTools'
 ArkadiusTradeTools.TITLE = 'Arkadius Trade Tools'
-ArkadiusTradeTools.VERSION = '1.13.0'
+ArkadiusTradeTools.VERSION = '2.0.0-INTERNAL'
 ArkadiusTradeTools.AUTHOR = '@Aldanga, @Arkadius1'
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
@@ -16,8 +16,10 @@ ArkadiusTradeTools.EVENTS = {
   ON_GUILDSTORE_ITEM_BOUGHT = 7,
   ON_GUILDHISTORY_STORE = 8,
   ON_GUILDSTORE_PENDING_ITEM_UPDATE = 9,
+  ON_RESCAN_GUILDS = 10
 }
 local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true, ['Exports'] = true }
+local Logger = LibDebugLogger('ArkadiusTradeTools')
 
 local L = ArkadiusTradeTools.Localization
 local EVENTS = ArkadiusTradeTools.EVENTS
@@ -48,6 +50,7 @@ local function RequestMoreGuildHistoryCategoryEventsLocal(guildIndex, category, 
     return true
   end
 
+  -- We may be able to make this useful again with LibHistoire
   ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
 
   return false
@@ -71,6 +74,7 @@ local function ScanGuildHistoryEvents()
     zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
   end
 end
+
 
 --------------------------------------------------------
 ------------------- Global functions -------------------
@@ -115,8 +119,10 @@ function ArkadiusTradeTools:Initialize()
   local header = self.frame:GetNamedChild('Header')
   local buttonClose = header:GetNamedChild('Close')
   local buttonDrawTier = header:GetNamedChild('DrawTier')
+  local buttonForceRescan = header:GetNamedChild('ForceRescan')
   buttonClose.tooltip:SetContent(L['ATT_STR_BUTTON_CLOSE_TOOLTIP'])
   buttonDrawTier.tooltip:SetContent(L['ATT_STR_BUTTON_DRAWTIER_TOOLTIP'])
+  buttonForceRescan.tooltip:SetContent(L['ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP'])
   buttonDrawTier.OnToggle = function(switch, pressed)
     local drawTier
     if (pressed) then
@@ -128,6 +134,7 @@ function ArkadiusTradeTools:Initialize()
     Settings.drawTier = drawTier
   end
   buttonDrawTier:SetPressed(Settings.drawTier == DT_MEDIUM)
+  buttonForceRescan.OnClicked = function() self:FireCallbacks(EVENTS.ON_RESCAN_GUILDS) end
 
   local statusBar = self.frame:GetNamedChild('StatusBar')
   self.guildStatus = statusBar:GetNamedChild('GuildStatus')
@@ -146,8 +153,31 @@ function ArkadiusTradeTools:Initialize()
     buttonDonate = statusBar:GetNamedChild("Donate")
     buttonDonate:SetHidden(true)
   end
-
-  self.nextScanGuild = 1
+  local guilds = {}
+  for i = 1, GetNumGuilds() do
+    local guildId = GetGuildId(i)
+    table.insert(guilds, { id = guildId, linked = false })
+  end
+  EVENT_MANAGER:RegisterForUpdate('ArkadiusTradeToolsGuildStatus', 1000, function()
+    local setOne = false
+    for i, guild in ipairs(guilds) do
+      if self.Modules.Sales.guildListeners[guild.id] and not guild.linked then
+        if self.Modules.Sales.guildListeners[guild.id].categoryCache:HasLinked() then
+          Logger:Info(GetGuildName(guild.id), "is linked. Marking done.")
+          self.guildStatus:SetDone(i)
+          guild.linked = true
+        else
+          Logger:Info(GetGuildName(guild.id), "is not linked. Marking not done.")
+          self.guildStatus:SetNotDone(i)
+        end
+        setOne = true
+      end
+    end
+    if not setOne then
+        Logger:Info("All guilds linked. Removing status update function.")
+        EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
+    end
+  end)
 end
 
 function ArkadiusTradeTools:Finalize()
@@ -161,6 +191,7 @@ function ArkadiusTradeTools:Finalize()
   Settings.windowTop = self.frame:GetTop()
   Settings.windowWidth = self.frame:GetWidth()
   Settings.windowHeight = self.frame:GetHeight()
+  EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
 end
 
 function ArkadiusTradeTools:CreateSettingsMenu()
@@ -628,10 +659,10 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
     else
       self:FireCallbacks(EVENTS.ON_CRAFTING_STATION_CLOSE)
     end
-  elseif (eventCode == EVENT_GUILD_HISTORY_RESPONSE_RECEIVED) then
-    if (arg2 == GUILD_HISTORY_STORE) then
-      self:FireCallbacks(EVENTS.ON_GUILDHISTORY_STORE, arg1)
-    end
+  -- elseif (eventCode == EVENT_GUILD_HISTORY_RESPONSE_RECEIVED) then
+  --   if (arg2 == GUILD_HISTORY_STORE) then
+  --     self:FireCallbacks(EVENTS.ON_GUILDHISTORY_STORE, arg1)
+  --   end
   elseif (eventCode == EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE) then
     local _, _, _, quantity, sellerName, _, price = GetTradingHouseSearchResultItemInfo(arg1) -- TODO check this again, may return empty vaules
     local _, guildName = GetCurrentTradingHouseGuildDetails()
@@ -654,13 +685,6 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
         GetTimeStamp()
       )
     end
-  -- Could probably nix this as we removed it from the auto pricing, but it's not hurting anything right now
-  elseif (eventCode == EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE) then
-    self:FireCallbacks(
-        EVENTS.ON_GUILDSTORE_PENDING_ITEM_UPDATE,
-        arg1,
-        arg2
-      )
   elseif (eventCode == EVENT_PLAYER_COMBAT_STATE) then
     self.isInCombat = arg1
   end
@@ -704,7 +728,6 @@ local function OnPlayerActivated(eventCode)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_CLOSE_TRADING_HOUSE, OnEvent)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_CRAFTING_STATION_INTERACT, OnEvent)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_END_CRAFTING_STATION_INTERACT, OnEvent)
-  EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_GUILD_HISTORY_RESPONSE_RECEIVED, OnEvent)
   EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_PLAYER_COMBAT_STATE, OnEvent)
 
   --- Workaround if AGS is active, as EVENT_TRADING_HOUSE_CONFIRM_ITEM_PURCHASE won't work as intended ---
@@ -729,7 +752,7 @@ local function OnPlayerActivated(eventCode)
     EVENT_MANAGER:RegisterForEvent(ArkadiusTradeTools.NAME, EVENT_TRADING_HOUSE_PENDING_ITEM_UPDATE, OnEvent)
   end
 
-  ScanGuildHistoryEvents()
+  -- ScanGuildHistoryEvents()
 end
 
 local function OnPlayerDeactivated(eventCode)
