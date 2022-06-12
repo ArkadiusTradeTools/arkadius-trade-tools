@@ -52,8 +52,8 @@ local function ATT_ZO_ScrollList_Commit_Hook(list)
                 if itemLink then
                     local avgPrice = ArkadiusTradeToolsSales.InventoryExtensions:GetPrice(itemLink)
                     if avgPrice > 0 then
-                        data.marketValue = math.floor(avgPrice * data.stackCount + 0.5)
-                        data.marketValueStackCount = data.stackCount
+                        data.marketValue = math.floor(avgPrice * (data.stackCount or 0) + 0.5)
+                        data.marketValueStackCount = (data.stackCount or 0)
                         data.marketValueItemLink = itemLink
                         data.ATT_PRICE = true
                     else
