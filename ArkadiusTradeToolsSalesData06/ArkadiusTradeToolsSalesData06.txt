@@ -2,8 +2,8 @@
 ## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
 ## APIVersion: 101034
 ## Description: None
-## Version: 1.13.1
-## AddOnVersion: 11301
+## Version: 1.13.2-alpha
+## AddOnVersion: 11302
 ## IsLibrary: true
 ## SavedVariables: ArkadiusTradeToolsSalesData06
 ## DependsOn: ArkadiusTradeToolsSales
