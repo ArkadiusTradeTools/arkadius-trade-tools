@@ -502,45 +502,51 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
     end
 
     local eventId = GetGuildEventId(guildId, category, eventIndex)
-    local eventIdNum = tonumber(Id64ToString(eventId))
-    local dataIndex = floor((eventIdNum % (NUM_SALES_TABLES * 2)) / 2) + 1
+    local eventIdString = Id64ToString(eventId)
+    -- We'll use the traditional number if there's no overflow so we don't duplicate sales
+    -- in a different sales table. Otherwise, use the new way to sort and use the stringified ID.
+    -- The only other way to solve this would be to iterate sales in each table, replace
+    -- the keys and redistribute them across tables which doesn't seem worth it right now.
+    local eventIdNumber = tonumber(eventIdString)
+    local hashNumber = eventIdNumber > 0 and eventId or tonumber(eventIdString:sub(-9))
+    local dataIndex = floor((hashNumber % (NUM_SALES_TABLES * 2)) / 2) + 1
     local dataTable = SalesTables[dataIndex][self.serverName]
-
-    if (eventIdNum ~= 0) then
-        if (dataTable.sales[eventIdNum] == nil) then
+    if (eventIdString ~= '0') then
+        -- We don't want to use a number key stringified and duplicate the data
+        if (dataTable.sales[eventIdString] == nil and dataTable.sales[eventIdNumber] == nil) then
             -- Add event to data table --
-            dataTable.sales[eventIdNum] = {}
-            dataTable.sales[eventIdNum].timeStamp = eventTimeStamp
-            dataTable.sales[eventIdNum].guildName = guildName
-            dataTable.sales[eventIdNum].sellerName = seller
-            dataTable.sales[eventIdNum].buyerName = buyer
-            dataTable.sales[eventIdNum].quantity = quantity
-            dataTable.sales[eventIdNum].itemLink = itemLink
-            dataTable.sales[eventIdNum].unitPrice = unitPrice
-            dataTable.sales[eventIdNum].price = price
-            dataTable.sales[eventIdNum].taxes = tax
+            dataTable.sales[eventIdString] = {}
+            dataTable.sales[eventIdString].timeStamp = eventTimeStamp
+            dataTable.sales[eventIdString].guildName = guildName
+            dataTable.sales[eventIdString].sellerName = seller
+            dataTable.sales[eventIdString].buyerName = buyer
+            dataTable.sales[eventIdString].quantity = quantity
+            dataTable.sales[eventIdString].itemLink = itemLink
+            dataTable.sales[eventIdString].unitPrice = unitPrice
+            dataTable.sales[eventIdString].price = price
+            dataTable.sales[eventIdString].taxes = tax
 
             if (GetGuildMemberIndexFromDisplayName(guildId, buyer)) then
-                dataTable.sales[eventIdNum].internal = 1
+                dataTable.sales[eventIdString].internal = 1
             else
-                dataTable.sales[eventIdNum].internal = 0
+                dataTable.sales[eventIdString].internal = 0
             end
 
             --- Update temporary lists ---
-            self:UpdateTemporaryVariables(dataTable.sales[eventIdNum])
+            self:UpdateTemporaryVariables(dataTable.sales[eventIdString])
 
             --- Update guild roster ---
-            self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].sellerName)
-            self.GuildRoster:Update(dataTable.sales[eventIdNum].guildName, dataTable.sales[eventIdNum].buyerName)
+            self.GuildRoster:Update(dataTable.sales[eventIdString].guildName, dataTable.sales[eventIdString].sellerName)
+            self.GuildRoster:Update(dataTable.sales[eventIdString].guildName, dataTable.sales[eventIdString].buyerName)
 
             
             --- Add event to lists master list ---
             -- local entry = Utilities.EnsureUnitPrice(dataTable.sales[eventIdNum])
-            self.list:UpdateMasterList(dataTable.sales[eventIdNum])
+            self.list:UpdateMasterList(dataTable.sales[eventIdString])
 
             -- Announce sale
-            if (dataTable.sales[eventIdNum].sellerName == self.displayName) then
-                local saleString = string.format(L["ATT_FMTSTR_ANNOUNCE_SALE"], dataTable.sales[eventIdNum].quantity, dataTable.sales[eventIdNum].itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(dataTable.sales[eventIdNum].price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", dataTable.sales[eventIdNum].guildName)
+            if (dataTable.sales[eventIdString].sellerName == self.displayName) then
+                local saleString = string.format(L["ATT_FMTSTR_ANNOUNCE_SALE"], dataTable.sales[eventIdString].quantity, dataTable.sales[eventIdString].itemLink, ArkadiusTradeTools:LocalizeDezimalNumber(dataTable.sales[eventIdString].price) .. " |t16:16:EsoUI/Art/currency/currency_gold.dds|t", dataTable.sales[eventIdString].guildName)
                 ArkadiusTradeTools:ShowNotification(saleString)
             end
 
