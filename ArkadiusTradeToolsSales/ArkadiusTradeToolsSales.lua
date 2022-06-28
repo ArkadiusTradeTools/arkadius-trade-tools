@@ -504,11 +504,11 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
     local eventId = GetGuildEventId(guildId, category, eventIndex)
     local eventIdString = Id64ToString(eventId)
     -- We'll use the traditional number if there's no overflow so we don't duplicate sales
-    -- in a different sales table. Otherwise, use the new way to sort and use the stringified ID.
+    -- in a different sales table. Otherwise, use the new way to distribute and use the stringified ID.
     -- The only other way to solve this would be to iterate sales in each table, replace
-    -- the keys and redistribute them across tables which doesn't seem worth it right now.
+    -- the keys, and redistribute them across tables—and that doesn't seem worth it right now.
     local eventIdNumber = tonumber(eventIdString)
-    local hashNumber = eventIdNumber > 0 and eventId or tonumber(eventIdString:sub(-9))
+    local hashNumber = eventIdNumber > 0 and eventIdNumber or tonumber(eventIdString:sub(-9))
     local dataIndex = floor((hashNumber % (NUM_SALES_TABLES * 2)) / 2) + 1
     local dataTable = SalesTables[dataIndex][self.serverName]
     if (eventIdString ~= '0') then
