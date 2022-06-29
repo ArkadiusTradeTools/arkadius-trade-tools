@@ -12,21 +12,21 @@
                 self:OnMouseExit()
             </OnMouseExit>
             <Controls>
-                <Texture name="$(parent)Left" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/img/tab_top_inactive.dds">
+                <Texture name="$(parent)Left" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive.dds">
                     <DimensionConstraints minX="12" maxX="12" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                     <TextureCoords left="0.1" right="0.25" top="0" bottom="0.86" /> 
                 </Texture>
 
-                <Texture name="$(parent)Right" excludeFromResizeToFitExtents="true" textureFile="Arkadiustradetools/img/tab_top_inactive.dds">
+                <Texture name="$(parent)Right" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive.dds">
                     <DimensionConstraints minX="12" maxX="12" />
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                     <TextureCoords left="0.75" right="0.9" top="0" bottom="0.86" /> 
                 </Texture>
 
-                <Texture name="$(parent)Center" excludeFromResizeToFitExtents="true" textureFile="Arkadiustradetools/img/tab_top_inactive.dds">
+                <Texture name="$(parent)Center" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive.dds">
                     <DimensionConstraints minX="1" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Left" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Right" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
@@ -117,47 +117,47 @@
                 end
             </OnInitialized>
             <Controls>
-                <Texture name="$(parent)TopLeft" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)TopLeft" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="7" />
                     <TextureCoords left="0" right="0.03906" top="0" bottom="0.21875" />
                 </Texture>
-                <Texture name="$(parent)BottomLeft" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)BottomLeft" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="10" offsetY="-7" />
                     <TextureCoords left="0" right="0.03906" top="0.78125" bottom="1" />
                 </Texture>
-                <Texture name="$(parent)Left" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)Left" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TopLeft" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)BottomLeft" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                     <TextureCoords left="0" right="0.03906" top="0.21875" bottom="0.78125" />
                 </Texture>
-                <Texture name="$(parent)TopRight" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)TopRight" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-10" offsetY="7" />
                     <TextureCoords left="0.96094" right="1" top="0" bottom="0.21875" />
                 </Texture>
-                <Texture name="$(parent)BottomRight" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)BottomRight" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-10" offsetY="-7" />
                     <TextureCoords left="0.96094" right="1" top="0.78125" bottom="1" />
                 </Texture>
-                <Texture name="$(parent)Right" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)Right" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TopRight" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)BottomRight" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                     <TextureCoords left="0.96094" right="1" top="0.21875" bottom="0.78125" />
                 </Texture>
-                <Texture name="$(parent)Top" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)Top" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TopLeft" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)TopRight" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                     <TextureCoords left="0.03906" right="0.96094" top="0" bottom="0.21875" />
                 </Texture>
-                <Texture name="$(parent)Bottom" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)Bottom" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)BottomLeft" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)BottomRight" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                     <TextureCoords left="0.03906" right="0.96094" top="0.78125" bottom="1" />
                 </Texture>
-                <Texture name="$(parent)Center" textureFile="ArkadiusTradeTools/img/blade_closed_up.dds">
+                <Texture name="$(parent)Center" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TopLeft" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)BottomRight" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <TextureCoords left="0.03906" right="0.96094" top="0.21875" bottom="0.78125" />

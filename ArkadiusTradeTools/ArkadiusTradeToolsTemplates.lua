@@ -140,9 +140,9 @@ ArkadiusTradeTools.Templates.TabButton = ArkadiusTradeToolsTabButton
 function ArkadiusTradeToolsTabButton:Initialize(control)
     ZO_ShallowTableCopy(ArkadiusTradeToolsTabButton, control)
 
-    control.textureActive = "ArkadiusTradeTools/img/tab_top_active.dds"
-    control.textureInactive = "ArkadiusTradeTools/img/tab_top_inactive.dds"
-    control.textureMouseOver = "ArkadiusTradeTools/img/tab_top_inactive_mouseover.dds"
+    control.textureActive = "ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_active.dds"
+    control.textureInactive = "ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive.dds"
+    control.textureMouseOver = "ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive_mouseover.dds"
     control.isActive = false
     control.icon = control:GetNamedChild("Icon")
 end
@@ -313,7 +313,7 @@ function ArkadiusTradeToolsSortHeaderGroup:SelectHeader(header)
     local background = header:GetNamedChild("Background")
 
     if(background) then
-        background:SetTexture("ArkadiusTradeTools/img/blade_closed_down.dds")
+        background:SetTexture("ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_down.dds")
     end
 end
 
@@ -322,7 +322,7 @@ function ArkadiusTradeToolsSortHeaderGroup:DeselectHeader()
         local background = self.selectedSortHeader:GetNamedChild("Background")
 
         if (background) then
-            background:SetTexture("ArkadiusTradeTools/img/blade_closed_up.dds")
+            background:SetTexture("ArkadiusTradeTools/ArkadiusTradeTools/img/blade_closed_up.dds")
         end
     end
 

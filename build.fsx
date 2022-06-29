@@ -6,7 +6,7 @@ nuget Fake.IO.Zip //"
 
 let projectName = "ArkadiusTradeTools"
 let archiveName = "arkadius-trade-tools"
-let directoryGlob = "build/"
+let directoryGlob = "build/ArkadiusTradeTools/"
 
 
 open Fake.Core
