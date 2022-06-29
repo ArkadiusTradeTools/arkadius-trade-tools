@@ -26,8 +26,9 @@ local function GetControlsForSearchResults(rowControl)
   local sellPriceControl = rowControl:GetNamedChild('SellPrice')
   local timeRemainingControl = rowControl:GetNamedChild('TimeRemaining')
   local purchasePricePerUnit = rowControl.dataEntry.data.purchasePricePerUnit
-  local averagePrice = rowControl.dataEntry.data.averagePrice or 0
-  local averagePricePerUnit = rowControl.dataEntry.data.averagePricePerUnit or 0
+  local UNIT_PRICE_PRECISION = .01
+  local averagePrice = zo_roundToNearest(rowControl.dataEntry.data.averagePrice or 0, UNIT_PRICE_PRECISION)
+  local averagePricePerUnit = zo_roundToNearest(rowControl.dataEntry.data.averagePricePerUnit or 0, UNIT_PRICE_PRECISION)
 
   return profitMarginControl, averagePricePerUnitControl, averagePriceControl, nameControl, sellPricePerUnitControl, sellPriceControl, timeRemainingControl, purchasePricePerUnit, averagePrice, averagePricePerUnit
 end
@@ -72,9 +73,9 @@ local function SetUpSearchResultsWithoutAGS(rowControl)
     sellPriceControl:SetAnchor(LEFT, sellPricePerUnitControl, RIGHT, 0)
 
     averagePricePerUnitControl = CreateControlFromVirtual(rowControl:GetName() .. 'AveragePricePerUnit', rowControl, 'ZO_KeyboardGuildRosterRowLabel')
-    averagePricePerUnitControl:SetDimensions(99, 20)
+    averagePricePerUnitControl:SetDimensions(100, 20)
     averagePricePerUnitControl:ClearAnchors()
-    averagePricePerUnitControl:SetAnchor(TOPLEFT, profitMarginControl, RIGHT, 10)
+    averagePricePerUnitControl:SetAnchor(TOPLEFT, sellPricePerUnitControl, BOTTOMLEFT, 0, 1)
     averagePricePerUnitControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
     averagePricePerUnitControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
     averagePricePerUnitControl:SetFont('ZoFontGameShadow')
@@ -82,7 +83,7 @@ local function SetUpSearchResultsWithoutAGS(rowControl)
     averagePriceControl = CreateControlFromVirtual(rowControl:GetName() .. 'AveragePrice', rowControl, 'ZO_KeyboardGuildRosterRowLabel')
     averagePriceControl:SetDimensions(100, 20)
     averagePriceControl:ClearAnchors()
-    averagePriceControl:SetAnchor(LEFT, averagePricePerUnitControl, RIGHT, 0)
+    averagePriceControl:SetAnchor(TOPLEFT, sellPriceControl, BOTTOMLEFT, 0, 1)
     averagePriceControl:SetHorizontalAlignment(TEXT_ALIGN_RIGHT)
     averagePriceControl:SetVerticalAlignment(TEXT_ALIGN_CENTER)
     averagePriceControl:SetFont('ZoFontGameShadow')
@@ -92,9 +93,9 @@ local function SetUpSearchResultsWithoutAGS(rowControl)
     local color = ZO_ColorDef:New(1.0, 1.0, 1.0)
     profitMarginControl:SetText('----')
     profitMarginControl:SetColor(color:UnpackRGBA())
-    averagePriceControl:SetText('- |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
+    averagePriceControl:SetText('- |t80%:80%:/esoui/art/currency/gold_mipmap.dds|t')
     averagePriceControl:SetColor(color:UnpackRGBA())
-    averagePricePerUnitControl:SetText('- |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
+    averagePricePerUnitControl:SetText('- |t80%:80%:/esoui/art/currency/gold_mipmap.dds|t')
     averagePricePerUnitControl:SetColor(color:UnpackRGBA())
   else
     local margin = attRound((100 / averagePricePerUnit * purchasePricePerUnit - 100) * (-1))
@@ -102,14 +103,8 @@ local function SetUpSearchResultsWithoutAGS(rowControl)
 
     profitMarginControl:SetText(margin .. '%')
     profitMarginControl:SetColor(color:UnpackRGBA())
-    --ZO_CurrencyControl_SetSimpleCurrency(averagePriceControl, currencyType, attRound(averagePrice), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
-    averagePriceControl:SetText(ArkadiusTradeTools:LocalizeDezimalNumber(attRound(averagePrice) .. ' |t18:18:EsoUI/Art/currency/currency_gold.dds|t'))
-    averagePriceControl:SetColor(color:UnpackRGBA())
-    --ZO_CurrencyControl_SetSimpleCurrency(averagePricePerUnitControl, currencyType, attRound(averagePricePerUnit, 2), ITEM_RESULT_CURRENCY_OPTIONS, nil, false)
-    averagePricePerUnitControl:SetText(
-      ArkadiusTradeTools:LocalizeDezimalNumber(attRound(averagePricePerUnit, 2) .. ' |t18:18:EsoUI/Art/currency/currency_gold.dds|t')
-    )
-    averagePricePerUnitControl:SetColor(color:UnpackRGBA())
+    ZO_CurrencyControl_SetSimpleCurrency(averagePriceControl, rowControl.dataEntry.data.currencyType, averagePrice, ITEM_RESULT_CURRENCY_OPTIONS, nil, false, { color = color })
+    ZO_CurrencyControl_SetSimpleCurrency(averagePricePerUnitControl, rowControl.dataEntry.data.currencyType, averagePricePerUnit, ITEM_RESULT_CURRENCY_OPTIONS, nil, false, { color = color })
   end
 end
 
