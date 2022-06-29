@@ -263,6 +263,7 @@ function ArkadiusTradeToolsSales.TradingHouse:AddAGSPriceButton()
   local averagePriceButton = AwesomeGuildStore.class.ToggleButton:New(buttonContainer, "$(parent)ATTPriceButton", ATT_AVERAGE_PRICE_TEXTURE, 0, 0, LISTING_INPUT_BUTTON_SIZE, LISTING_INPUT_BUTTON_SIZE, averagePriceButtonLabel)
   averagePriceButton.control:ClearAnchors()
   averagePriceButton.control:SetAnchor(RIGHT, lastSellPriceButton, LEFT, 2, 0)
+  averagePriceButton.control:SetDrawLayer(DL_OVERLAY) -- need to set it on every button now
   averagePriceButton.HandlePress = function(button)
     local itemLink = ArkadiusTradeToolsSales:NormalizeItemLink(AwesomeGuildStore.internal.tradingHouse.sellTab.pendingItemLink)
     -- We could use the isMasterWrit internal method of the SellTabWrapper, but I want to use as few internal AGS APIs as possible
