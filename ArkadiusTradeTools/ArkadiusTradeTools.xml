@@ -178,7 +178,7 @@
                         </Control>
                         <Control name="$(parent)BackgroundInit">
                             <OnInitialized>
-                                self:GetParent():GetNamedChild("Background"):SetTexture("ArkadiusTradeTools/img/title.dds")
+                                self:GetParent():GetNamedChild("Background"):SetTexture("ArkadiusTradeTools/ArkadiusTradeTools/img/title.dds")
                             </OnInitialized>
                         </Control>
                     </Controls>
