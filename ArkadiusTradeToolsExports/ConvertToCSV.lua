@@ -1,4 +1,4 @@
-IN_FILE_PATH  = "..\\..\\SavedVariables\\ArkadiusTradeToolsExports.lua"
+IN_FILE_PATH  = "..\\..\\..\\SavedVariables\\ArkadiusTradeToolsExports.lua"
 dofile(IN_FILE_PATH)
 
 local cli = require "cliargs"
@@ -6,7 +6,7 @@ local cli = require "cliargs"
 cli:set_name('Arkadius Trade Tools Exports - Convert to CSV')
 cli:flag('-l, --latest', 'Use the latest export', false)
 cli:flag('-m, --members', 'Export only members', false)
-cli:option('-d DIRECTORY, --directory=DIRECTORY', 'Output directory (no trailing slash)', '..\\..\\SavedVariables')
+cli:option('-d DIRECTORY, --directory=DIRECTORY', 'Output directory (no trailing slash)', '..\\..\\..\\SavedVariables')
 cli:option('-o OUTFILE, --out-file=OUTFILE', 'Output filename', 'ArkadiusTradeToolsExports-guildName isMembers startTimeStamp-endTimeStamp')
 cli:option('-f FORMAT, --date-format=FORMAT', 'Date format to use for the file name', "%Y-%m-%dT%H.%M.%S")
 
@@ -141,7 +141,7 @@ local isMembers = useOnlyMembers or sortedExportsData.onlyMembers and "Members" 
 local outFileName = outFile:gsub('guildName', sortedExportsData.guildName):gsub('isMembers', isMembers):gsub('startTimeStamp', startTimeStamp):gsub('endTimeStamp', endTimeStamp)
 local newPath = string.format("%s\\%s.csv", directory, outFileName)
 
-OUT_FILE_PATH = "..\\..\\SavedVariables\\ArkadiusTradeToolsExports.csv"
+OUT_FILE_PATH = "..\\..\\..\\SavedVariables\\ArkadiusTradeToolsExports.csv"
 OUT_FILE = assert(io.open(newPath, "w"))
 OUT_FILE:write(headers)
 
