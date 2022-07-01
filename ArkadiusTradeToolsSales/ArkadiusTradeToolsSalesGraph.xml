@@ -5,7 +5,7 @@
                 ArkadiusTradeToolsSalesGraph:New(self)
             </OnInitialized>
             <Controls>
-                <TextureComposite name="$(parent)DrawArea" textureFile="ArkadiusTradeToolsSales/img/dot.dds">
+                <TextureComposite name="$(parent)DrawArea" textureFile="ArkadiusTradeTools/ArkadiusTradeToolsSales/img/dot.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="20" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-20" offsetY="-30" />
                 </TextureComposite>
