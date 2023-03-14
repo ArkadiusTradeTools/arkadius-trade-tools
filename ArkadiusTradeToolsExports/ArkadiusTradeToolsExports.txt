@@ -2,8 +2,8 @@
 ## Author: Aldanga (@Aldanga NA)
 ## APIVersion: 101034
 ## Description: Adds export functionality for saved data
-## Version: 1.13.5
-## AddOnVersion: 11305
+## Version: 1.13.6
+## AddOnVersion: 11306
 ## SavedVariables: ArkadiusTradeToolsExportsData
 ## DependsOn: ArkadiusTradeTools ArkadiusTradeToolsSales
 
