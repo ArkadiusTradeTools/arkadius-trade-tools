@@ -6,7 +6,7 @@
                     <Dimensions x="16" y="16" />
                     <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="0" offsetY="0" />
                 </Texture>
-                <Label name="$(parent)Text" text="test" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="ZoFontGame" resizeToFitDescendents="true">
+                <Label name="$(parent)Text" text="test" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="ZoFontGame">
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="5" offsetY="1" />
                 </Label>
             </Controls>
@@ -100,7 +100,7 @@
                 self:SetIcon(3, textureDone)
             </OnInitialized>
             <Controls>
-                <Label name="$(parent)Text" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin" resizeToFitDescendents="true">
+                <Label name="$(parent)Text" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="5" offsetY="0" />
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="5" offsetY="0" />
                 </Label>
@@ -138,7 +138,7 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="80" />
                     <Controls>
-                        <Label name="$(parent)Caption" text="Arkadius' Trade Tools" color="FFFFFF" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|18" resizeToFitDescendents="true">
+                        <Label name="$(parent)Caption" text="Arkadius' Trade Tools" color="FFFFFF" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|18">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="10" />
                         </Label>
                         <Button name="$(parent)Close">
