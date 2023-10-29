@@ -1,7 +1,7 @@
-ArkadiusTradeToolsSalesGraph = ZO_Object:Subclass()
+ArkadiusTradeToolsSalesGraph = ZO_InitializingObject:Subclass()
 
 function ArkadiusTradeToolsSalesGraph:New(control, ...)
-    local object = ZO_Object.New(self, ...)
+    local object = setmetatable({}, self)
     object.control = control
     object.minX = 0
     object.maxX = 0
@@ -23,7 +23,7 @@ end
 
 function ArkadiusTradeToolsSalesGraph:Clear()
     for i = 1, self.numSurfaces do
-       self.drawArea:SetSurfaceHidden(i, true)
+        self.drawArea:SetSurfaceHidden(i, true)
     end
 
     self.numDots = 0
@@ -64,7 +64,7 @@ function ArkadiusTradeToolsSalesGraph:AddDot(x, y, color)
     -- Serves as the index for our current surface
     self.numDots = self.numDots + 1
 
-    if (self.numDots > self.numSurfaces) then
+    if self.numDots > self.numSurfaces then
         self.drawArea:AddSurface(0.25, 0.75, 0.25, 0.75)
         self.numSurfaces = self.numSurfaces + 1
     else

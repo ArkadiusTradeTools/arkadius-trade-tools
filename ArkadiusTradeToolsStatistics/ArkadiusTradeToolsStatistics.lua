@@ -14,18 +14,18 @@ local ArkadiusTradeToolsStatisticsList = ArkadiusTradeToolsSortFilterList:Subcla
 function ArkadiusTradeToolsStatisticsList:Initialize(control)
     ArkadiusTradeToolsSortFilterList.Initialize(self, control)
 
-    self.SORT_KEYS = {["displayName"] = {},
-                      ["guildName"]  = {tiebreaker = "displayName"},
-                      ["salesVolume"]  = {tiebreaker = "displayName"},
-                      ["taxes"]  = {tiebreaker = "displayName"},
-                      ["internalSalesVolumePercentage"] = {tiebreaker = "displayName"},
-                      ["itemCount"]  = {tiebreaker = "displayName"}}
+    self.SORT_KEYS = {
+        ["displayName"] = {},
+        ["guildName"] = { tiebreaker = "displayName" },
+        ["salesVolume"] = { tiebreaker = "displayName" },
+        ["taxes"] = { tiebreaker = "displayName" },
+        ["internalSalesVolumePercentage"] = { tiebreaker = "displayName" },
+        ["itemCount"] = { tiebreaker = "displayName" },
+    }
 
-    ZO_ScrollList_AddDataType(self.list, 1, "ArkadiusTradeToolsStatisticsRow", 32,
-        function(control, data)
-            self:SetupStatisticRow(control, data)
-        end
-    )
+    ZO_ScrollList_AddDataType(self.list, 1, "ArkadiusTradeToolsStatisticsRow", 32, function(control, data)
+        self:SetupStatisticRow(control, data)
+    end)
 
     self.sortHeaderGroup.headerContainer.sortHeaderGroup = self.sortHeaderGroup
     self.sortHeaderGroup:SelectHeaderByKey("salesVolume")
@@ -37,7 +37,7 @@ function ArkadiusTradeToolsStatisticsList:BuildMasterList()
     local newerThanTimeStamp = item.NewerThanTimeStamp()
     local olderThanTimestamp = item.OlderThanTimeStamp()
 
-    if (ArkadiusTradeTools.Modules.Sales) then
+    if ArkadiusTradeTools.Modules.Sales then
         local statistics = ArkadiusTradeTools.Modules.Sales:GetStatistics(newerThanTimeStamp, olderThanTimestamp)
 
         local scrollData = ZO_ScrollList_GetDataList(self.list)
@@ -54,8 +54,13 @@ function ArkadiusTradeToolsStatisticsList:SetupFilters()
     local useSubStrings = ArkadiusTradeToolsStatistics.frame.filterBar.SubStrings:IsPressed()
 
     local CompareStringsFuncs = {}
-    CompareStringsFuncs[true] = function(string1, string2) string2 = string2:gsub("-", "--") return (string.find(string1:lower(), string2) ~= nil) end
-    CompareStringsFuncs[false] = function(string1, string2) return (string1:lower() == string2) end
+    CompareStringsFuncs[true] = function(string1, string2)
+        string2 = string2:gsub("-", "--")
+        return (zo_strfind(string1:lower(), string2) ~= nil)
+    end
+    CompareStringsFuncs[false] = function(string1, string2)
+        return (string1:lower() == string2)
+    end
 
     self.Filter:SetKeywords(ArkadiusTradeToolsStatistics.frame.filterBar.Text:GetStrings())
     self.Filter:SetKeyFunc(1, "displayName", CompareStringsFuncs[useSubStrings])
@@ -63,8 +68,7 @@ function ArkadiusTradeToolsStatisticsList:SetupFilters()
 end
 
 function ArkadiusTradeToolsStatisticsList:MatchFilter(data, filter)
-    return (string.find(data.displayName:lower(), filter) ~= nil) or
-           (string.find(data.guildName:lower(), filter) ~= nil)
+    return (zo_strfind(data.displayName:lower(), filter) ~= nil) or (zo_strfind(data.guildName:lower(), filter) ~= nil)
 end
 
 function ArkadiusTradeToolsStatisticsList:SetupStatisticRow(rowControl, rowData)
@@ -109,7 +113,7 @@ end
 ---------------------------------------------------------------------------------------
 function ArkadiusTradeToolsStatistics:Initialize()
     self.frame = ArkadiusTradeToolsStatisticsFrame
-    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_STATISTICS"], "/esoui/art/characterwindow/charsheet_statstab_icon.dds", "/esoui/art/characterwindow/charsheet_statstab_icon_inactive.dds", {left = 0.15, top = 0.15, right = 0.9, bottom = 0.85})
+    ArkadiusTradeTools.TabWindow:AddTab(self.frame, L["ATT_STR_STATISTICS"], "/esoui/art/characterwindow/charsheet_statstab_icon.dds", "/esoui/art/characterwindow/charsheet_statstab_icon_inactive.dds", { left = 0.15, top = 0.15, right = 0.9, bottom = 0.85 })
 
     self.list = ArkadiusTradeToolsStatisticsList:New(self, self.frame)
     self.frame.list = self.frame:GetNamedChild("List")
@@ -121,7 +125,11 @@ function ArkadiusTradeToolsStatistics:Initialize()
     self.frame.headers.internalSalesVolumePercentage = self.frame.headers:GetNamedChild("InternalSalesVolumePercentage")
     self.frame.headers.numberItems = self.frame.headers:GetNamedChild("NumberItems")
     self.frame.OnResize = self.OnResize
-    self.frame:SetHandler("OnEffectivelyShown", function(_, hidden) if (hidden == false) then self.list:RefreshData() end end)
+    self.frame:SetHandler("OnEffectivelyShown", function(_, hidden)
+        if hidden == false then
+            self.list:RefreshData()
+        end
+    end)
 
     self:LoadSettings()
 
@@ -132,25 +140,122 @@ function ArkadiusTradeToolsStatistics:Initialize()
         Settings.filters.timeSelection = self.frame.filterBar.Time:GetSelectedIndex()
     end
 
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_TODAY"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_YESTERDAY"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(0) - 1 end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_TWO_DAYS_AGO"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-2) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-1) - 1 end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_THIS_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_LAST_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(0, true) - 1 end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_PRIOR_WEEK"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-2, true) end, OlderThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfWeek(-1, true) - 1 end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_7_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-7) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_10_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-10) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_14_DAYS"], callback = callback, NewerThanTimeStamp = function() return ArkadiusTradeTools:GetStartOfDay(-14) end, OlderThanTimeStamp = function() return GetTimeStamp() end})
-    self.frame.filterBar.Time:AddItem({name = L["ATT_STR_30_DAYS"], callback = callback, NewerThanTimeStamp = function() return 0 end, OlderThanTimeStamp = function() return GetTimeStamp() end})
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_TODAY"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(0)
+        end,
+        OlderThanTimeStamp = function()
+            return GetTimeStamp()
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_YESTERDAY"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(-1)
+        end,
+        OlderThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(0) - 1
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_TWO_DAYS_AGO"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(-2)
+        end,
+        OlderThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(-1) - 1
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_THIS_WEEK"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfWeek(0, true)
+        end,
+        OlderThanTimeStamp = function()
+            return GetTimeStamp()
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_LAST_WEEK"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfWeek(-1, true)
+        end,
+        OlderThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfWeek(0, true) - 1
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_PRIOR_WEEK"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfWeek(-2, true)
+        end,
+        OlderThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfWeek(-1, true) - 1
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_7_DAYS"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(-7)
+        end,
+        OlderThanTimeStamp = function()
+            return GetTimeStamp()
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_10_DAYS"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(-10)
+        end,
+        OlderThanTimeStamp = function()
+            return GetTimeStamp()
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_14_DAYS"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return ArkadiusTradeTools:GetStartOfDay(-14)
+        end,
+        OlderThanTimeStamp = function()
+            return GetTimeStamp()
+        end,
+    })
+    self.frame.filterBar.Time:AddItem({
+        name = L["ATT_STR_30_DAYS"],
+        callback = callback,
+        NewerThanTimeStamp = function()
+            return 0
+        end,
+        OlderThanTimeStamp = function()
+            return GetTimeStamp()
+        end,
+    })
     self.frame.filterBar.Time:SelectByIndex(Settings.filters.timeSelection)
-    self.frame.filterBar.Text.OnChanged = function(text) Settings.filters.text = text self.list:RefreshFilters() end
+    self.frame.filterBar.Text.OnChanged = function(text)
+        Settings.filters.text = text
+        self.list:RefreshFilters()
+    end
     self.frame.filterBar.Text:SetText(Settings.filters.text)
     self.frame.filterBar.Text.tooltip:SetContent(L["ATT_STR_FILTER_TEXT_TOOLTIP"])
-    self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed) self.list.Filter:SetNeedsRefilter() self.list:RefreshFilters() Settings.filters.useSubStrings = pressed end
+    self.frame.filterBar.SubStrings.OnToggle = function(switch, pressed)
+        self.list.Filter:SetNeedsRefilter()
+        self.list:RefreshFilters()
+        Settings.filters.useSubStrings = pressed
+    end
     self.frame.filterBar.SubStrings:SetPressed(Settings.filters.useSubStrings)
     self.frame.filterBar.SubStrings.tooltip:SetContent(L["ATT_STR_FILTER_SUBSTRING_TOOLTIP"])
     -----------------------
---[[    ---------------------------------------------
+    --[[    ---------------------------------------------
     local function callback(_, name, item, _)
         self.list:RefreshData()
     end
@@ -172,7 +277,7 @@ function ArkadiusTradeToolsStatistics:Initialize()
 
     comboBox:SelectItemByIndex(4)
     ----------------------------------------------
-	--]]
+    --]]
 
     self.list:RefreshData()
 end
@@ -183,14 +288,14 @@ end
 
 function ArkadiusTradeToolsStatistics:LoadSettings()
     --- Apply list header visibilites ---
-    if (Settings.hiddenHeaders) then
+    if Settings.hiddenHeaders then
         local headers = self.frame.headers
 
         for _, headerKey in pairs(Settings.hiddenHeaders) do
             for i = 1, headers:GetNumChildren() do
                 local header = headers:GetChild(i)
 
-                if ((header.key) and (header.key == headerKey)) then
+                if header.key and (header.key == headerKey) then
                     header:SetHidden(true)
 
                     break
@@ -204,13 +309,13 @@ function ArkadiusTradeToolsStatistics:SaveSettings()
     --- Save list header visibilites ---
     Settings.hiddenHeaders = {}
 
-    if ((self.frame) and (self.frame.headers)) then
+    if self.frame and self.frame.headers then
         local headers = self.frame.headers
 
         for i = 1, headers:GetNumChildren() do
             local header = headers:GetChild(i)
 
-            if ((header.key) and (header:IsControlHidden())) then
+            if header.key and (header:IsControlHidden()) then
                 table.insert(Settings.hiddenHeaders, header.key)
             end
         end
@@ -223,7 +328,7 @@ function ArkadiusTradeToolsStatistics.OnResize(frame, width, height)
 end
 
 local function onAddOnLoaded(eventCode, addonName)
-    if (addonName ~= ArkadiusTradeToolsStatistics.NAME) then
+    if addonName ~= ArkadiusTradeToolsStatistics.NAME then
         return
     end
 
@@ -233,11 +338,13 @@ local function onAddOnLoaded(eventCode, addonName)
     Settings = ArkadiusTradeToolsStatisticsData.settings
 
     --- Create default settings ---
---    Settings.keepDataDays = Settings.keepDataDays or 30
+    --    Settings.keepDataDays = Settings.keepDataDays or 30
     Settings.filters = Settings.filters or {}
     Settings.filters.timeSelection = Settings.filters.timeSelection or 4
-    Settings.filters.text = Settings.filters.text or ''
-    if (Settings.filters.useSubStrings == nil) then Settings.filters.useSubStrings = true end
+    Settings.filters.text = Settings.filters.text or ""
+    if Settings.filters.useSubStrings == nil then
+        Settings.filters.useSubStrings = true
+    end
 
     EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsStatistics.NAME, EVENT_ADD_ON_LOADED)
 end

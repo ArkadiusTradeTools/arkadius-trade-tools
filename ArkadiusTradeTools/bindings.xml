@@ -1,11 +1,13 @@
-<Bindings>
-	<Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
-		<Category name="Arkadius' Trade Tools">
-			<Action name="ATT_TOGGLE_MAIN_WINDOW">
+<?xml version="1.0" encoding="utf-8"?>
+<Bindings
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://sir.insidi.at/or/schema/esobindings.xsd">
+    <Layer name="SI_KEYBINDINGS_LAYER_GENERAL">
+        <Category name="Arkadius' Trade Tools">
+            <Action name="ATT_TOGGLE_MAIN_WINDOW">
                 <Down>
                     ArkadiusTradeToolsWindow:ToggleHidden()
                 </Down>
             </Action>
-		</Category>
-	</Layer>
+        </Category>
+    </Layer>
 </Bindings>

@@ -1,11 +1,11 @@
 return function(t, k, v)
-  local out = {}
+    local out = {}
 
-  for _, item in ipairs(t) do
-    if item[k] == v then
-      table.insert(out, item)
+    for _, item in ipairs(t) do
+        if item[k] == v then
+            table.insert(out, item)
+        end
     end
-  end
 
-  return out
+    return out
 end

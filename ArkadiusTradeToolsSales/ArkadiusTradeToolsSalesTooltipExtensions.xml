@@ -1,4 +1,6 @@
-<GuiXml>
+<?xml version="1.0" encoding="utf-8"?>
+<GuiXml
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
         <Control name="ArkadiusTradeToolsSalesTooltipExtension" virtual="true">
             <Dimensions x="350" y="320" />
@@ -30,7 +32,6 @@
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Control>
-
                 <Control name="$(parent)ItemList">
                     <Dimensions y="47" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="10"/>
@@ -83,71 +84,64 @@
                         </Line>
                     </Controls>
                 </Control>
-
                 <Control name="$(parent)CraftingInfo" inherits="ArkadiusTradeToolsSalesCraftingInfo">
                     <Dimensions y="150" />
-                    <!--<Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/>
-                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Days" relativePoint="TOPRIGHT" offsetX="0" offsetY="-5"/>!-->
+                    <!--<Anchor point="TOPLEFT" relativeTo="$(parent)Stats" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/><Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Days" relativePoint="TOPRIGHT" offsetX="0" offsetY="-5"/>!-->
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Days" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="15"/>
                 </Control>
-
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsSalesTooltipExtensionItemListRow" virtual="true">
             <Dimensions y="16"/>
             <Controls>
                 <Label name="$(parent)ItemLink" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" mouseEnabled="false" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
-                   <Dimensions x="192" />
-                   <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
-                   <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
-                   <OnMouseEnter>
+                    <Dimensions x="192" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
+                    <OnMouseEnter>
                         InitializeTooltip(ItemTooltip, self:GetParent())
                         ItemTooltip:SetLink(self:GetText())
                    </OnMouseEnter>
-                   <OnMouseExit>
+                    <OnMouseExit>
                         ClearTooltip(ItemTooltip)
                    </OnMouseExit>
-                   <OnMouseUp>
+                    <OnMouseUp>
                        if (upInside) then
                            ZO_LinkHandler_OnLinkClicked(self:GetText(), button, self:GetParent())
                        end
                    </OnMouseUp>
                 </Label>
                 <Label name="$(parent)AveragePrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="$(MEDIUM_FONT)|16">
-                   <Dimensions x="92" />
-                   <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
-                   <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                    <Dimensions x="92" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
                 <Label name="$(parent)NumberSales" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" mouseEnabled="false" font="$(MEDIUM_FONT)|16">
-                   <Dimensions x="65" />
-                   <Anchor point="TOPLEFT" relativeTo="$(parent)AveragePrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
-                   <Anchor point="BOTTOMLEFT" relativeTo="$(parent)AveragePrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                    <Dimensions x="65" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)AveragePrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
+                    <Anchor point="BOTTOMLEFT" relativeTo="$(parent)AveragePrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsSalesTooltipExtensionItemListEmptyRow" virtual="true">
             <Dimensions y="16"/>
             <Controls>
                 <Label name="$(parent)Text" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="CENTER" mouseEnabled="false" wrapMode="ELLIPSIS" font="$(MEDIUM_FONT)|16">
-                   <Dimensions x="150" />
-                   <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
-                   <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
-                   <OnInitialized>
+                    <Dimensions x="150" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
+                    <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
+                    <OnInitialized>
                        self:SetText(ArkadiusTradeTools.Modules.Sales.Localization["ATT_STR_NOTHING_FOUND"])
                        self.normalColor = ZO_ColorDef:New(1, 1, 1)
                    </OnInitialized>
                 </Label>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsSalesItemTooltip" inherits="ArkadiusTradeToolsSalesTooltipExtension" virtual="true">
             <OnInitialized>
                 ArkadiusTradeTools.Modules.Sales.TooltipExtension:New(self, ItemTooltip)
             </OnInitialized>
         </Control>
-
         <Control name="ArkadiusTradeToolsSalesPopupTooltip" inherits="ArkadiusTradeToolsSalesTooltipExtension" virtual="true">
             <OnInitialized>
                 ArkadiusTradeTools.Modules.Sales.TooltipExtension:New(self, PopupTooltip)
@@ -165,7 +159,6 @@
                 end)
             </OnInitialized>
         </Control>
-
         <Control name="ArkadiusTradeToolsSalesProvisionerTooltip" inherits="ArkadiusTradeToolsSalesTooltipExtension" virtual="true">
             <OnInitialized>
                 ArkadiusTradeTools.Modules.Sales.TooltipExtension:New(self, ZO_ProvisionerTopLevelTooltip)

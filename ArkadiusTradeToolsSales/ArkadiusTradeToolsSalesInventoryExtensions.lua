@@ -1,7 +1,7 @@
 local ArkadiusTradeToolsSales = ArkadiusTradeTools.Modules.Sales
 local L = ArkadiusTradeToolsSales.Localization
 local Settings
-local SECONDS_IN_DAY = 86400
+local SECONDS_IN_DAY = ZO_ONE_DAY_IN_SECONDS
 
 ArkadiusTradeToolsSales.InventoryExtensions = {
     sortByControls = {
@@ -9,13 +9,13 @@ ArkadiusTradeToolsSales.InventoryExtensions = {
         [ZO_PlayerInventorySortBy] = INVENTORY_BACKPACK,
         [ZO_PlayerBankSortBy] = INVENTORY_BANK,
         [ZO_GuildBankSortBy] = INVENTORY_GUILD_BANK,
-        [ZO_HouseBankSortBy] = INVENTORY_HOUSE_BANK
+        [ZO_HouseBankSortBy] = INVENTORY_HOUSE_BANK,
     },
     craftingInventories = {
         ["ZO_SmithingTopLevelDeconstructionPanelInventory"] = true,
         ["ZO_SmithingTopLevelImprovementPanelInventory"] = true,
         ["ZO_SmithingTopLevelRefinementPanelInventory"] = true,
-        ["ZO_EnchantingTopLevelInventory"] = true
+        ["ZO_EnchantingTopLevelInventory"] = true,
     },
     inventoryLists = {
         [ZO_PlayerInventoryList] = true,
@@ -26,14 +26,13 @@ ArkadiusTradeToolsSales.InventoryExtensions = {
         [ZO_SmithingTopLevelDeconstructionPanelInventoryBackpack] = true,
         [ZO_SmithingTopLevelImprovementPanelInventoryBackpack] = true,
         [ZO_SmithingTopLevelRefinementPanelInventoryBackpack] = true,
-        [ZO_EnchantingTopLevelInventoryBackpack] = true
-    }
+        [ZO_EnchantingTopLevelInventoryBackpack] = true,
+    },
 }
-
 
 function ArkadiusTradeToolsSales.InventoryExtensions:Initialize(settings)
     Settings = settings
-    if (Settings.enabled == nil) then
+    if Settings.enabled == nil then
         Settings.enabled = false
     end
 
@@ -41,13 +40,13 @@ function ArkadiusTradeToolsSales.InventoryExtensions:Initialize(settings)
 end
 
 local function ATT_ZO_ScrollList_Commit_Hook(list)
-    if (ArkadiusTradeToolsSales.InventoryExtensions.inventoryLists[list]) then
+    if ArkadiusTradeToolsSales.InventoryExtensions.inventoryLists[list] then
         local scrollData = ZO_ScrollList_GetDataList(list)
         for i = 1, #scrollData do
             local data = scrollData[i].data
             local bagId = data.bagId
             local slotIndex = data.slotIndex
-            local itemLink = bagId and GetItemLink(bagId, slotIndex) or GetItemLink(slotIndex)
+            local itemLink = bagId and GetItemLink(bagId, slotIndex, LINK_STYLE_DEFAULT)
             if not (data.marketValue and data.marketValueStackCount == data.stackCount and data.marketValueItemLink == itemLink) then
                 if itemLink then
                     local avgPrice = ArkadiusTradeToolsSales.InventoryExtensions:GetPrice(itemLink)
@@ -68,7 +67,7 @@ local function ATT_ZO_ScrollList_Commit_Hook(list)
 end
 
 function ArkadiusTradeToolsSales.InventoryExtensions:Enable(enable)
-    if (enable) then
+    if enable then
         ZO_PreHook("ZO_ScrollList_Commit", ATT_ZO_ScrollList_Commit_Hook)
         self:EnableMarketValue()
     end
@@ -131,9 +130,7 @@ function ArkadiusTradeToolsSales.InventoryExtensions:ShowMarketValue(control, sl
     -- Maybe use SetSortColumnHidden?
     local sellPriceControl = control:GetNamedChild("SellPrice")
     sellPriceControl:SetHidden(true)
-    local marketValueControl =
-        control:GetNamedChild("MarketValue") or
-        CreateControlFromVirtual("$(parent)MarketValue", control, "ZO_CurrencyTemplate")
+    local marketValueControl = control:GetNamedChild("MarketValue") or CreateControlFromVirtual("$(parent)MarketValue", control, "ZO_CurrencyTemplate")
     local _, point, relTo, relPoint, offsetX, offsetY = sellPriceControl:GetAnchor()
 
     marketValueControl:SetAnchor(point, relTo, relPoint, offsetX, offsetY)
@@ -142,32 +139,20 @@ function ArkadiusTradeToolsSales.InventoryExtensions:ShowMarketValue(control, sl
     if control.dataEntry.data.marketValue and control.dataEntry.data.ATT_PRICE then
         local delimitedAmount = ZO_CurrencyControl_FormatCurrency(control.dataEntry.data.marketValue, false, false)
         local formattedAmount = ZO_FastFormatDecimalNumber(delimitedAmount)
-        local currencyMarkup =
-            "|cffdc33|u0:4:currency:" .. formattedAmount .. "|u|r|t80%:80%:/esoui/art/currency/gold_mipmap.dds|t"
+        local currencyMarkup = "|cffdc33|u0:4:currency:" .. formattedAmount .. "|u|r|t80%:80%:/esoui/art/currency/gold_mipmap.dds|t"
         marketValueControl:SetText(currencyMarkup)
         marketValueControl:SetFont("ZoFontGameShadow")
     elseif control.dataEntry.data.marketValue then
-        ZO_CurrencyControl_SetSimpleCurrency(
-            marketValueControl,
-            CURT_MONEY,
-            control.dataEntry.data.marketValue,
-            options
-        )
+        ZO_CurrencyControl_SetSimpleCurrency(marketValueControl, CURT_MONEY, control.dataEntry.data.marketValue, options)
     else
-        ZO_CurrencyControl_SetSimpleCurrency(
-            marketValueControl,
-            CURT_MONEY,
-            control.dataEntry.data.stackCount * control.dataEntry.data.sellPrice,
-            options
-        )
+        ZO_CurrencyControl_SetSimpleCurrency(marketValueControl, CURT_MONEY, control.dataEntry.data.stackCount * control.dataEntry.data.sellPrice, options)
     end
 end
 
-local customSortKeys = {}
+local customSortKeys = ZO_Inventory_GetDefaultHeaderSortKeys()
 
 function ArkadiusTradeToolsSales.InventoryExtensions.SetUpCustomSortKeys()
-    customSortKeys = ZO_Inventory_GetDefaultHeaderSortKeys()
-    customSortKeys.marketValue = {tiebreaker = "stackSellPrice", tieBreakerSortOrder = ZO_SORT_ORDER_UP}
+    customSortKeys.marketValue = { tiebreaker = "stackSellPrice", tieBreakerSortOrder = ZO_SORT_ORDER_UP }
 end
 
 function ArkadiusTradeToolsSales.InventoryExtensions.AddSortByMarketValue(inventoryKey)
@@ -176,13 +161,7 @@ function ArkadiusTradeToolsSales.InventoryExtensions.AddSortByMarketValue(invent
         inventory.sortHeaders:ReplaceKey("stackSellPrice", "marketValue")
         inventory.sortFunction = function(entry1, entry2)
             if entry1.typeId == entry2.typeId then
-                return ZO_TableOrderingFunction(
-                    entry1.data,
-                    entry2.data,
-                    inventory.currentSortKey,
-                    customSortKeys,
-                    inventory.currentSortOrder
-                )
+                return ZO_TableOrderingFunction(entry1.data, entry2.data, inventory.currentSortKey, customSortKeys, inventory.currentSortOrder)
             end
             return entry1.typeId < entry2.typeId
         end
@@ -196,13 +175,7 @@ function ArkadiusTradeToolsSales.InventoryExtensions.AddCraftingSortByMarketValu
         inventory.sortHeaders:HeaderForKey("marketValue").initialDirection = ZO_SORT_ORDER_DOWN
         inventory.sortFunction = function(entry1, entry2)
             if entry1.typeId == entry2.typeId then
-                return ZO_TableOrderingFunction(
-                    entry1.data,
-                    entry2.data,
-                    inventory.sortKey,
-                    customSortKeys,
-                    inventory.sortOrder
-                )
+                return ZO_TableOrderingFunction(entry1.data, entry2.data, inventory.sortKey, customSortKeys, inventory.sortOrder)
             end
             return entry1.typeId < entry2.typeId
         end
