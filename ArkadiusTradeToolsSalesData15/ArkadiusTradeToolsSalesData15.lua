@@ -5,13 +5,13 @@ ArkadiusTradeToolsSalesData.VERSION = ArkadiusTradeToolsSales.VERSION
 ArkadiusTradeToolsSalesData.AUTHOR = ArkadiusTradeToolsSales.AUTHOR
 
 local function onAddOnLoaded(eventCode, addonName)
-    if (addonName ~= ArkadiusTradeToolsSalesData.NAME) then
+    if addonName ~= ArkadiusTradeToolsSalesData.NAME then
         return
     end
 
     local serverName = GetWorldName()
     ArkadiusTradeToolsSalesData15 = ArkadiusTradeToolsSalesData15 or {}
-    ArkadiusTradeToolsSalesData15[serverName] = ArkadiusTradeToolsSalesData15[serverName] or {sales = {}}
+    ArkadiusTradeToolsSalesData15[serverName] = ArkadiusTradeToolsSalesData15[serverName] or { sales = {} }
     ArkadiusTradeToolsSales.SalesTables[15] = ArkadiusTradeToolsSalesData15
 
     EVENT_MANAGER:UnregisterForEvent(ArkadiusTradeToolsSalesData.NAME, EVENT_ADD_ON_LOADED)

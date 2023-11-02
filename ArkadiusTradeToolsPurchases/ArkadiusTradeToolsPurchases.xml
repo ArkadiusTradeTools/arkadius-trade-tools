@@ -1,4 +1,6 @@
-<GuiXml>
+<?xml version="1.0" encoding="utf-8"?>
+<GuiXml
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
         <Control name="ArkadiusTradeToolsPurchasesFrame" inherits="ArkadiusTradeToolsTabFrame">
             <Controls>
@@ -88,12 +90,11 @@
                                         normal="/esoui/art/cadwell/cadwell_indexicon_gold_up.dds"
                                         pressed="/esoui/art/cadwell/cadwell_indexicon_silver_up.dds"
                                     />
-									<TextureCoords left="0.2" top="0.2" bottom="0.8" right="0.8" />
+                                    <TextureCoords left="0.2" top="0.2" bottom="0.8" right="0.8" />
                                 </Button>
                             </Controls>
                         </Control>
-						
-						<Control name="$(parent)UnitPrice" inherits="ArkadiusTradeToolsNonSortHeader">
+                        <Control name="$(parent)UnitPrice" inherits="ArkadiusTradeToolsNonSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)TimeStamp" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeStamp" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                             <OnInitialized>
@@ -101,7 +102,6 @@
                                 self.relativeWidth = 0.1
                             </OnInitialized>
                         </Control>
-						
                         <Control name="$(parent)Price" inherits="ArkadiusTradeToolsSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)UnitPrice" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMLEFT" relativeTo="$(parent)UnitPrice" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
@@ -109,17 +109,11 @@
                                 ArkadiusTradeTools.Templates.SortHeader:Initialize(self, ArkadiusTradeTools.Modules.Purchases.Localization.ATT_STR_PRICE, "price", ZO_SORT_ORDER_DOWN, TEXT_ALIGN_CENTER, "ZoFontGameBold")
                                 self.relativeWidth = 0.1
                             </OnInitialized>
-                            <!--<Controls>
-                                <Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton">
-                                    <Dimensions x="16" y="16"/>
-                                    <Textures
+                            <!--<Controls><Button name="$(parent)Switch" inherits="ArkadiusTradeToolsToggleButton"><Dimensions x="16" y="16"/><Textures
                                         normal="/esoui/art/buttons/switch_up.dds"
                                         pressed="/esoui/art/buttons/switch_down.dds"
-                                    />
-                                </Button>
-                            </Controls>-->
+                                    /></Button></Controls>-->
                         </Control>
-
                         <Control name="$(parent)Settings" inherits="ArkadiusTradeToolsSortHeader">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)Price" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Price" relativePoint="BOTTOMRIGHT" offsetX="20" offsetY="0"/>
@@ -134,27 +128,22 @@
                                 ArkadiusTradeTools.Templates.SortHeader:Initialize(self, "*", "headerSettings", nil, TEXT_ALIGN_CENTER, "ZoFontGameBold")
                             </OnInitialized>
                         </Control>
-
                     </Controls>
                 </Control>
-
                 <Control name="$(parent)List" inherits="ZO_ScrollList">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Headers" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-50"/>
                 </Control>
-
                 <Texture name="$(parent)Divider" inherits="ArkadiusTradeToolsHorizontalDivider">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)List" relativePoint="BOTTOMLEFT" offsetY="5"/>
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)List" relativePoint="BOTTOMRIGHT" offsetY="5"/>
                 </Texture>
-
                 <Control name="$(parent)FilterBar" inherits="ArkadiusTradeToolsFilterBar">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Divider" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="5"/>
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Divider" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="5"/>
                 </Control>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsPurchasesRow" inherits="ArkadiusTradeToolsListRow" virtual="true">
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
@@ -223,7 +212,7 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-				<Label name="$(parent)UnitPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)UnitPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
                     <Dimensions x="85" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TimeStamp" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeStamp" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>

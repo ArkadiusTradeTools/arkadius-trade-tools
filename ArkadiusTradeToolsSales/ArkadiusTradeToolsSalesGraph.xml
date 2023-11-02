@@ -1,65 +1,55 @@
-<GuiXml>
+<?xml version="1.0" encoding="utf-8"?>
+<GuiXml
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
         <Control name="ArkadiusTradeToolsSalesGraph" virtual="true">
             <OnInitialized>
                 ArkadiusTradeToolsSalesGraph:New(self)
             </OnInitialized>
             <Controls>
-                <TextureComposite name="$(parent)DrawArea" textureFile="ArkadiusTradeToolsSales/img/dot.dds">
+                <TextureComposite name="$(parent)DrawArea" textureFile="ArkadiusTradeTools/ArkadiusTradeToolsSales/img/dot.dds">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="20" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="-20" offsetY="-30" />
                 </TextureComposite>
-
                 <Line name="$(parent)HorizontalTopLine" color="606060" thickness="1">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)DrawArea" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)DrawArea" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                 </Line>
-
                 <Line name="$(parent)HorizontalCenterLine" color="606060" thickness="1">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="LEFT" offsetX="0" offsetY="0" />
                     <Anchor point="RIGHT" relativeTo="$(parent)DrawArea" relativePoint="RIGHT" offsetX="0" offsetY="0" />
                 </Line>
-
                 <Line name="$(parent)HorizontalBottomLine" color="606060" thickness="1">
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                 </Line>
-
                 <Line name="$(parent)VerticalLeftLine" color="606060" thickness="1">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)DrawArea" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                 </Line>
-
                 <Line name="$(parent)VerticalCenterLine" color="606060" thickness="1">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="TOP" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOM" relativeTo="$(parent)DrawArea" relativePoint="BOTTOM" offsetX="0" offsetY="0" />
                 </Line>
-
                 <Line name="$(parent)VerticalRightLine" color="606060" thickness="1">
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)DrawArea" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                 </Line>
-
                 <Label name="$(parent)LabelYTop" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="9.9999.999">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="TOPLEFT" offsetX="-20" offsetY="0"/>
                 </Label>
-
                 <Label name="$(parent)LabelYCenter" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="9.9999.999">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="LEFT" offsetX="-20" offsetY="0"/>
                 </Label>
-
                 <Label name="$(parent)LabelYBottom" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="9.9999.999">
                     <Anchor point="LEFT" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMLEFT" offsetX="-20" offsetY="0"/>
                 </Label>
-
                 <Label name="$(parent)LabelXLeft" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="-xx days">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="8"/>
                 </Label>
-
                 <Label name="$(parent)LabelXCenter" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="-x days">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="BOTTOM" offsetX="0" offsetY="8"/>
                 </Label>
-
                 <Label name="$(parent)LabelXRight" horizontalAlignment="CENTER" verticalAlignment="CENTER" font="$(MEDIUM_FONT)|16" text="Today">
                     <Anchor point="TOP" relativeTo="$(parent)DrawArea" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="8"/>
                 </Label>

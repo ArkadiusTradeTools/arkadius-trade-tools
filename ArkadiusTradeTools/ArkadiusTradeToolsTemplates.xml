@@ -1,4 +1,6 @@
-<GuiXml>
+<?xml version="1.0" encoding="utf-8"?>
+<GuiXml
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://sir.insidi.at/or/schema/esoui.xsd">
     <Controls>
         <Control name="ArkadiusTradeToolsTabButton" mouseEnabled="true" resizeToFitDescendents="true" virtual="true">
             <ResizeToFitPadding width="35" />
@@ -16,33 +18,29 @@
                     <DimensionConstraints minX="12" maxX="12" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
-                    <TextureCoords left="0.1" right="0.25" top="0" bottom="0.86" /> 
+                    <TextureCoords left="0.1" right="0.25" top="0" bottom="0.86" />
                 </Texture>
-
                 <Texture name="$(parent)Right" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive.dds">
                     <DimensionConstraints minX="12" maxX="12" />
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
-                    <TextureCoords left="0.75" right="0.9" top="0" bottom="0.86" /> 
+                    <TextureCoords left="0.75" right="0.9" top="0" bottom="0.86" />
                 </Texture>
-
                 <Texture name="$(parent)Center" excludeFromResizeToFitExtents="true" textureFile="ArkadiusTradeTools/ArkadiusTradeTools/img/tab_top_inactive.dds">
                     <DimensionConstraints minX="1" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Left" relativePoint="TOPRIGHT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Right" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
-                    <TextureCoords left="0.25" right="0.75" top="0" bottom="0.86" /> 
+                    <TextureCoords left="0.25" right="0.75" top="0" bottom="0.86" />
                 </Texture>
-
                 <Texture name="$(parent)Icon" textureFile="/esoui/art/icons/item_generic_coinbag.dds">
                     <Dimensions x="20" y="20" />
                     <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="15" offsetY="0"/>
                 </Texture>
-                <Label name="$(parent)Text" text="Sales" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15" color="FFFFFF" resizeToFitDescendents="true">
+                <Label name="$(parent)Text" text="Sales" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15" color="FFFFFF">
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="0" offsetY="0"/>
                 </Label>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsTabFrame" hidden="true" virtual="true">
             <OnUpdate>
                 local w, h = self:GetDimensions()
@@ -56,7 +54,6 @@
                 end
             </OnUpdate>
         </Control>
-
         <Control name="ArkadiusTradeToolsTabWindow" hidden="false" virtual="true">
             <OnInitialized>
                 ArkadiusTradeTools.Templates.TabWindow:Initialize(self)
@@ -67,33 +64,36 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="2" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="2" offsetY="32"/>
                 </Control>
-
                 <Line name="$(parent)LineRight" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" thickness="2">
                     <Anchor point="LEFT" relativeTo="$(parent)ButtonGroup" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="-1" />
                     <Anchor point="RIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="-4" offsetY="31" />
                 </Line>
             </Controls>
-		</Control>
-
+        </Control>
         <EditBox name="ArkadiusTradeToolsEditBox" inherits="ZO_DefaultEdit" virtual="true">
             <Dimensions x="100" y="26"/>
             <OnInitialized>
-                ArkadiusTradeTools.Templates.EditBox:Initialize(self)
+                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
             </OnInitialized>
+            <OnEnter>
+               if ((self.OnChanged) and (type(self.OnChanged) == "function")) then
+                   self.OnChanged(self:GetText())
+                end
+
+                self:LoseFocus()
+            </OnEnter>
             <Controls>
                 <Backdrop inherits="ZO_EditBackdrop">
                     <AnchorFill />
                 </Backdrop>
             </Controls>
         </EditBox>
-
         <Button name="ArkadiusTradeToolsToggleButton" virtual="true">
             <OnInitialized>
                 ArkadiusTradeToolsToggleButton:New(self)
                 ArkadiusTradeTools.Templates.Tooltip:Initialize(self, nil, TOPLEFT, 0, 0, TOPRIGHT)
             </OnInitialized>
         </Button>
-
         <Control name="ArkadiusTradeToolsBackground256X32" virtual="true">
             <AnchorFill />
             <OnInitialized>
@@ -157,7 +157,6 @@
                 </Texture>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsSortHeader" inherits="ZO_SortHeaderBehavior" virtual="true">
             <Controls>
                 <Label name="$(parent)Name" font="ZoFontGame" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" modifyTextType="NONE" horizontalAlignment="CENTER" verticalAlignment="CENTER" wrapMode="ELLIPSIS">
@@ -170,9 +169,7 @@
                 </Texture>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsNonSortHeader" mouseEnabled="false" inherits="ArkadiusTradeToolsSortHeader" virtual="true" />
-
         <Control name="ArkadiusTradeToolsSortHeaderGroup" virtual="true">
             <OnInitialized>
                 self.Update = function(self)
@@ -204,7 +201,6 @@
                 self:Update()
             </OnInitialized>
         </Control>
-
         <Control name="ArkadiusTradeToolsListRow" virtual="true">
             <Dimensions y="32" />
             <OnInitialized>
@@ -226,7 +222,6 @@
                 </Label>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsSlider" virtual="true">
             <Dimensions y="40" />
             <OnInitialized>
@@ -238,11 +233,11 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="16"/>
                 </Slider>
-                <Label name="$(parent)Min" text="1" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|16">
+                <Label name="$(parent)Min" text="1" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|16">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Slider" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)Max" text="30" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|16">
+                <Label name="$(parent)Max" text="30" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" font="$(MEDIUM_FONT)|16">
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Slider" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                 </Label>
@@ -255,13 +250,12 @@
                         </Backdrop>
                     </Controls>
                 </EditBox>
-                <Label name="$(parent)Text" text="Days" resizeToFitDescendents="true" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|16">
+                <Label name="$(parent)Text" text="Days" wrapMode="ELLIPSIS" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" font="$(MEDIUM_FONT)|16">
                     <Anchor point="TOPRIGHT" relativeTo="$(parent)Edit" relativePoint="TOPLEFT" offsetX="-5" offsetY="0"/>
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Edit" relativePoint="BOTTOMLEFT" offsetX="-5" offsetY="0"/>
                 </Label>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsFilterBar" virtual="true">
             <Dimensions y="24" />
             <OnInitialized>
@@ -295,18 +289,15 @@
                 </EditBox>
             </Controls>
         </Control>
-
         <Control name="ArkadiusTradeToolsToolBar" virtual="true">
             <Dimensions y="24" />
             <OnInitialized>
                 ArkadiusTradeTools.Templates.ToolBar:Initialize(self)
             </OnInitialized>
         </Control>
-
         <Texture name="ArkadiusTradeToolsHorizontalDivider" textureFile="/esoui/art/miscellaneous/horizontaldivider.dds" virtual="true">
             <Dimensions y="4" />
             <TextureCoords bottom="1" top="0" right="0.81" left="0.18"/>
         </Texture>
-
     </Controls>
 </GuiXml>
