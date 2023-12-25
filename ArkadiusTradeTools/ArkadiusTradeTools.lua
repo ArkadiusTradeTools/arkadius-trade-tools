@@ -501,6 +501,15 @@ function ArkadiusTradeTools:GetStartOfWeek(relativeWeek, useTradeWeek)
   return result
 end
 
+--- Returns the UTC timestamp for the start of the month ---
+function ArkadiusTradeTools:GetStartOfMonth()
+  -- get current date/time
+  local now = os.date('*t')  
+  -- calculate the timestamp of the 1st day of the month at 0:00
+  local result = os.time{year=now.year, month=now.month, day=1, hour=0, min=0, sec=0}  
+  return result
+end
+
 function ArkadiusTradeTools:GetGuildColor(guildName)
   local color = ZO_ColorDef:New(1, 1, 1, 1)
 

@@ -18,6 +18,7 @@ local localization =
     ATT_STR_THIS_WEEK                                  = "Текущая неделя",
     ATT_STR_LAST_WEEK                                  = "Прошлая неделя",
     ATT_STR_PRIOR_WEEK                                 = "Предыдущая неделя",
+    ATT_STR_THIS_MONTH                                 = "Этот месяц",
     ATT_STR_7_DAYS                                     = "7 дней",
     ATT_STR_10_DAYS                                    = "10 дней",
     ATT_STR_14_DAYS                                    = "14 дней",

@@ -13,6 +13,7 @@ local localization =
     ATT_STR_THIS_WEEK                = "Cette semaine",
     ATT_STR_LAST_WEEK                = "Semaine précedente",
     ATT_STR_PRIOR_WEEK               = "Il y a deux semaines",
+    ATT_STR_THIS_MONTH               = "Ce mois-ci",
     ATT_STR_7_DAYS                   = "7 jours",
     ATT_STR_10_DAYS                  = "10 jours",
     ATT_STR_14_DAYS                  = "14 jours",

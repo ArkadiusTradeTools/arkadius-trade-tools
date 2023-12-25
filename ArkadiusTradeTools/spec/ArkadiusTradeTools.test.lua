@@ -342,4 +342,61 @@ describe('ArkadiusTradeTools', function()
       end)
     end)
   end)
+  
+  describe('GetStartOfMonth', function()
+    after_each(function()           
+      _G.GetTimeStamp = nil
+    end)
+
+    describe('when asking for the start of the current month', function()
+    
+      describe('in the middle of the month', funtion()
+        -- Monday, 25. December 2023 20:43:13
+        before_each(function()
+          _G.GetTimeStamp = function() return 1703536993 end
+        end)
+        
+        it('should return Friday, 01. December 2023 00:00:00', function()
+          local result = ArkadiusTradeTools:GetStartOfMonth()
+          expect.equals(1701388800, result)
+        end)
+      end)
+      
+      describe('1 sec into the month', funtion()
+        -- Friday, 01. December 2023 00:00:01
+        before_each(function()
+          _G.GetTimeStamp = function() return 1701388801 end
+        end)
+        
+        it('should return Friday, 01. December 2023 00:00:00', function()
+          local result = ArkadiusTradeTools:GetStartOfMonth()
+          expect.equals(1701388800, result)
+        end)
+      end)
+      
+      describe('1 sec before end of month', funtion()
+        -- Sunday, 31. December 2023 23:59:59
+        before_each(function()
+          _G.GetTimeStamp = function() return 1704067199 end
+        end)
+        
+        it('should return Friday, 01. December 2023 00:00:00', function()
+          local result = ArkadiusTradeTools:GetStartOfMonth()
+          expect.equals(1701388800, result)
+        end)
+      end)
+      
+      describe('on a 29th of a leap year February', funtion()
+        -- Thursday, 29. February 2024 10:10:10
+        before_each(function()
+          _G.GetTimeStamp = function() return 1709201410 end
+        end)
+        
+        it('should return 01. February 2024 00:00:00', function()
+          local result = ArkadiusTradeTools:GetStartOfMonth()
+          expect.equals(1706745600, result)
+        end)
+      end)
+    end)
+  end)
 end)
