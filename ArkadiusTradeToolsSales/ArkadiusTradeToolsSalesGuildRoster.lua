@@ -248,6 +248,13 @@ function ArkadiusTradeToolsSales.GuildRoster:Enable(enable)
                 end}
         )
         comboBox:AddItem(
+            {name = L["ATT_STR_THIS_MONTH"], callback = callback, NewerThanTimeStamp = function()
+                    return ArkadiusTradeTools:GetStartOfMonth()
+                end, OlderThanTimeStamp = function()
+                    return GetTimeStamp()
+                end}
+        )
+        comboBox:AddItem(
             {name = L["ATT_STR_7_DAYS"], callback = callback, NewerThanTimeStamp = function()
                     return ArkadiusTradeTools:GetStartOfDay(-7)
                 end, OlderThanTimeStamp = function()
