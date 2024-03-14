@@ -23,6 +23,9 @@
                 <Control name="$(parent)Line3" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Line2" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                 </Control>
+                <Control name="$(parent)Line4" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Line3" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+                </Control>
             </Controls>
         </Control>
 
@@ -32,7 +35,8 @@
                 local textureNotDone = "/esoui/art/buttons/checkbox_unchecked.dds"
                 local textureBusy = "/esoui/art/buttons/checkbox_indeterminate.dds"
                 local textureDone = "/esoui/art/buttons/checkbox_checked.dds"
-                local GUILD_STATUS = { NOT_DONE = 1, BUSY = 2, DONE = 3 }
+                local textureNotActive = "/esoui/art/buttons/checkbox_disabled.dds"
+                local GUILD_STATUS = { NOT_DONE = 1, BUSY = 2, DONE = 3, NOT_ACTIVE = 4 }
                 self.status = {}
                 self.icons = {}
                 self.icons[1] = GetControl(self, "Icon1")
@@ -71,6 +75,18 @@
                     self.status[guildIndex] = true
                 end
 
+                self.SetNotActive = function(self, guildIndex)
+                    if (self.status[guildIndex] == GUILD_STATUS.NOT_ACTIVE) then
+                        return
+                    end
+
+                    if (guildIndex ~= 0) then
+                        self.icons[guildIndex]:SetTexture(textureNotActive)
+                    end
+
+                    self.status[guildIndex] = GUILD_STATUS.NOT_ACTIVE
+                end
+
                 self.SetText = function(self, line, text)
                     local l
                     l = GetControl(self.tooltip.content, "Line" .. line)
@@ -99,6 +115,7 @@
                 self:SetIcon(1, textureNotDone)
                 self:SetIcon(2, textureBusy)
                 self:SetIcon(3, textureDone)
+                self:SetIcon(4, textureNotActive)
             </OnInitialized>
             <Controls>
                 <Label name="$(parent)Text" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin">

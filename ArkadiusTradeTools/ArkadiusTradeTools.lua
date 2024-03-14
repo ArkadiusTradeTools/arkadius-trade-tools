@@ -142,6 +142,7 @@ function ArkadiusTradeTools:Initialize()
   self.guildStatus:SetText(1, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE1'])
   self.guildStatus:SetText(2, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE2'])
   self.guildStatus:SetText(3, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE3'])
+  self.guildStatus:SetText(4, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE4'])
   local guildStatusText = self.guildStatus:GetNamedChild('Text')
   guildStatusText:SetText(L['ATT_STR_GUILDSTATUS_TEXT'])
 
@@ -155,7 +156,7 @@ function ArkadiusTradeTools:Initialize()
     buttonDonate:SetHidden(true)
   end
   local guilds = {}
-  for i = 1, GetNumGuilds() do
+  for i = 1, 5 do
     local guildId = GetGuildId(i)
     table.insert(guilds, { id = guildId, linked = false })
   end
@@ -166,7 +167,9 @@ function ArkadiusTradeTools:Initialize()
     Logger:Verbose("ArkadiusTradeToolsGuildStatus callback")
     local setOne = false
     for i, guild in ipairs(guilds) do
-      if self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache and not guild.linked then
+      if guild.id == 0 then
+        self.guildStatus:SetNotActive(i)
+      elseif self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache and not guild.linked then
           if self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache:HasLinked() then
             Logger:Info(GetGuildName(guild.id), "is linked. Marking done.")
             self.guildStatus:SetDone(i)
@@ -176,13 +179,13 @@ function ArkadiusTradeTools:Initialize()
             self.guildStatus:SetNotDone(i)
           end
           setOne = true
-        end
       end
-      if not setOne then
-          Logger:Info("All guilds linked. Removing status update function.")
-          EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
-      end
-    end)
+    end
+    if not setOne then
+        Logger:Info("All guilds linked. Removing status update function.")
+        EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
+    end
+  end)
   -- end)
 end
 
