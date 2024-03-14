@@ -1,6 +1,6 @@
 ## Title: Arkadius' Trade Tools - Sales (Data12)
 ## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
-## APIVersion: 101034
+## APIVersion: 101041
 ## Description: None
 ## Version: 2.0.0-INTERNAL
 ## AddOnVersion: 20000
