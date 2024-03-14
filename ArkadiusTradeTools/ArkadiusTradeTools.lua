@@ -16,7 +16,8 @@ ArkadiusTradeTools.EVENTS = {
   ON_GUILDSTORE_ITEM_BOUGHT = 7,
   ON_GUILDHISTORY_STORE = 8,
   ON_GUILDSTORE_PENDING_ITEM_UPDATE = 9,
-  ON_RESCAN_GUILDS = 10
+  ON_RESCAN_GUILDS = 10,
+  LIBHISTOIRE_REGISTERED = 11
 }
 local internalModules = { ['Sales'] = true, ['Purchases'] = true, ['Statistics'] = true, ['Exports'] = true }
 local Logger = LibDebugLogger('ArkadiusTradeTools')
@@ -158,26 +159,31 @@ function ArkadiusTradeTools:Initialize()
     local guildId = GetGuildId(i)
     table.insert(guilds, { id = guildId, linked = false })
   end
+  Logger:Debug("Initialize")
+  -- self:RegisterCallback(ArkadiusTradeTools.EVENTS.LIBHISTOIRE_REGISTERED, function()
+  Logger:Info("Reigstering status tooltip updates")
   EVENT_MANAGER:RegisterForUpdate('ArkadiusTradeToolsGuildStatus', 1000, function()
+    Logger:Verbose("ArkadiusTradeToolsGuildStatus callback")
     local setOne = false
     for i, guild in ipairs(guilds) do
-      if self.Modules.Sales.guildListeners[guild.id] and not guild.linked then
-        if self.Modules.Sales.guildListeners[guild.id].categoryCache:HasLinked() then
-          Logger:Info(GetGuildName(guild.id), "is linked. Marking done.")
-          self.guildStatus:SetDone(i)
-          guild.linked = true
-        else
-          Logger:Info(GetGuildName(guild.id), "is not linked. Marking not done.")
-          self.guildStatus:SetNotDone(i)
+      if self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache and not guild.linked then
+          if self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache:HasLinked() then
+            Logger:Info(GetGuildName(guild.id), "is linked. Marking done.")
+            self.guildStatus:SetDone(i)
+            guild.linked = true
+          else
+            Logger:Info(GetGuildName(guild.id), "is not linked. Marking not done.")
+            self.guildStatus:SetNotDone(i)
+          end
+          setOne = true
         end
-        setOne = true
       end
-    end
-    if not setOne then
-        Logger:Info("All guilds linked. Removing status update function.")
-        EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
-    end
-  end)
+      if not setOne then
+          Logger:Info("All guilds linked. Removing status update function.")
+          EVENT_MANAGER:UnregisterForUpdate('ArkadiusTradeToolsGuildStatus')
+      end
+    end)
+  -- end)
 end
 
 function ArkadiusTradeTools:Finalize()

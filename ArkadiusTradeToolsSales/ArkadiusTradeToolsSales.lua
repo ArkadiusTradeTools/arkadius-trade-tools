@@ -228,7 +228,7 @@ local function createListenerCallback(self, listener, guildIndex, guildSettings,
     local guildId = GetGuildId(guildIndex)
     local guildName = GetGuildName(guildId)
     return function(eventType, eventId, eventTime, seller, buyer, quantity, itemLink, price, tax)
-        logger:Info("Event received for", guildName)
+        logger:Verbose("Event received for", guildName)
         -- TODO: This should probably be handled via an event
         ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
         if not latestEventId or CompareId64s(eventId, latestEventId) > 0 then
@@ -237,7 +237,7 @@ local function createListenerCallback(self, listener, guildIndex, guildSettings,
         end
         self:AddEvent(guildId, eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax)
         local remaining = listener:GetPendingEventMetrics()
-        logger:Info(remaining, "events remaining for", guildName)
+        logger:Verbose(remaining, "events remaining for", guildName)
         if remaining == 0 then
             ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
         end
@@ -287,9 +287,11 @@ function ArkadiusTradeToolsSales:RegisterLibHistoire()
         if guildSettings.latestEventId then
             latestEventId = StringToId64(guildSettings.latestEventId)
             listener:SetAfterEventId(latestEventId)
+            logger:Info("Latest event id for", guildName, guildSettings.latestEventId)
         else
             local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
             listener:SetAfterEventTime(olderThanTimeStamp)
+            logger:Info("No latest event id for", guildName)
         end
         listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId))
         listener:Start()
@@ -305,6 +307,7 @@ end
 
 ---------------------------------------------------------------------------------------
 function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
+  logger:Debug("Initialize")
     for i = 1, NUM_SALES_TABLES do
         if (SalesTables[i] == nil) then
             CHAT_ROUTER:AddSystemMessage("ArkadiusTradeToolsSales: Error! Number of data tables is not correct. Maybe you forgot to activate them in the addons menu?")
