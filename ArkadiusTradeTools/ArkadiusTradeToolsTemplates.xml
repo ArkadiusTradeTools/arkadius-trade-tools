@@ -37,7 +37,7 @@
                     <Dimensions x="20" y="20" />
                     <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="15" offsetY="0"/>
                 </Texture>
-                <Label name="$(parent)Text" text="Sales" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15" color="FFFFFF">
+                <Label name="$(parent)Text" text="Sales" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(ANTIQUE_FONT)|15" color="FFFFFF">
                     <Anchor point="LEFT" relativeTo="$(parent)Icon" relativePoint="RIGHT" offsetX="0" offsetY="0"/>
                 </Label>
             </Controls>
@@ -221,7 +221,7 @@
                 end
             </OnInitialized>
             <Controls>
-                <Label name="$(parent)Index" inheritAlpha="true" verticalAlignment="TOP" horizontalAlignment="LEFT" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|12">
+                <Label name="$(parent)Index" inheritAlpha="true" verticalAlignment="TOP" horizontalAlignment="LEFT" font="$(ANTIQUE_FONT)|12">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="-4"/>
                 </Label>
             </Controls>

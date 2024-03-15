@@ -97,27 +97,27 @@
         <Control name="ArkadiusTradeToolsStatisticsRow" inherits="ArkadiusTradeToolsListRow" virtual="true">
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
-                <Label name="$(parent)DisplayName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)DisplayName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)DisplayName" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)DisplayName" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)SalesVolume" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)SalesVolume" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)Taxes" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)Taxes" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)SalesVolume" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)SalesVolume" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)InternalSalesVolumePercentage" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)InternalSalesVolumePercentage" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Taxes" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)Taxes" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)ItemCount" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)ItemCount" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)InternalSalesVolumePercentage" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)InternalSalesVolumePercentage" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>

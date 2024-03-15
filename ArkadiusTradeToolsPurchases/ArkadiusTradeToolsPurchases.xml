@@ -158,15 +158,15 @@
         <Control name="ArkadiusTradeToolsPurchasesRow" inherits="ArkadiusTradeToolsListRow" virtual="true">
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
-                <Label name="$(parent)BuyerName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)BuyerName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)SellerName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)SellerName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)BuyerName" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)BuyerName" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)SellerName" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)SellerName" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
@@ -208,27 +208,27 @@
                             <Anchor point="LEFT" relativeTo="$(parent)" relativePoint="LEFT" offsetX="0" offsetY="0"/>
                             <TextureCoords bottom="1" top="0" right="1" left="0"/>
                         </Texture>
-                        <Label name="$(parent)Quantity" horizontalAlignment="RIGHT" verticalAlignment="CENTER" inheritAlpha="true" text="1" color="FFFFFF" height="24" width="30" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15||soft-shadow-thin">
+                        <Label name="$(parent)Quantity" horizontalAlignment="RIGHT" verticalAlignment="CENTER" inheritAlpha="true" text="1" color="FFFFFF" height="24" width="30" font="$(ANTIQUE_FONT)|15||soft-shadow-thin">
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)Icon" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="2"/>
                         </Label>
-                        <Label name="$(parent)Text" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" lineSpacing="0" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                        <Label name="$(parent)Text" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" lineSpacing="0" font="$(ANTIQUE_FONT)|15">
                             <Dimensions x="280" />
                             <Anchor point="TOPLEFT" relativeTo="$(parent)Icon" relativePoint="TOPRIGHT" offsetX="5" offsetY="-4"/>
                             <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0"/>
                         </Label>
                     </Controls>
                 </Control>
-                <Label name="$(parent)TimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)TimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Dimensions x="125" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)ItemLink" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)ItemLink" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-				<Label name="$(parent)UnitPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+				<Label name="$(parent)UnitPrice" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Dimensions x="85" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)TimeStamp" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)TimeStamp" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)Price" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)Price" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Dimensions x="85" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)UnitPrice" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)UnitPrice" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>

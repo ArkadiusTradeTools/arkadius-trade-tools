@@ -137,21 +137,21 @@
         <Control name="ArkadiusTradeToolsExportsRow" inherits="ArkadiusTradeToolsListRow" virtual="true">
             <Controls>
                 <Texture name="$(parent)BG" inherits="ZO_ThinListBgStrip" />
-                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)GuildName" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="LEFT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)StartTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)StartTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Dimensions x="125" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)GuildName" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)GuildName" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)EndTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)EndTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Dimensions x="125" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)StartTimeStamp" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
                 </Label>
-                <Label name="$(parent)CreatedTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|15">
+                <Label name="$(parent)CreatedTimeStamp" inheritAlpha="true" verticalAlignment="CENTER" horizontalAlignment="RIGHT" wrapMode="ELLIPSIS" font="$(ANTIQUE_FONT)|15">
                     <Dimensions x="125" />
                     <Anchor point="TOPLEFT" relativeTo="$(parent)EndTimeStamp" relativePoint="TOPRIGHT" offsetX="10" offsetY="0"/>
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)EndTimeStamp" relativePoint="BOTTOMRIGHT" offsetX="10" offsetY="0"/>
