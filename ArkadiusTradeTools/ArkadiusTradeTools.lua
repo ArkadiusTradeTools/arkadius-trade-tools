@@ -38,45 +38,6 @@ end
 
 local attRound = math.attRound
 
-local function RequestMoreGuildHistoryCategoryEventsLocal(guildIndex, category, numGuilds)
-  if (RequestMoreGuildHistoryCategoryEvents(GetGuildId(guildIndex), category)) then
-    ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
-
-    if (guildIndex < numGuilds) then
-      ArkadiusTradeTools.nextScanGuild = guildIndex + 1
-    else
-      ArkadiusTradeTools.nextScanGuild = 1
-    end
-
-    return true
-  end
-
-  -- We may be able to make this useful again with LibHistoire
-  ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
-
-  return false
-end
-
-local function ScanGuildHistoryEvents()
-  if (((Settings.scanDuringCombat) and (ArkadiusTradeTools.isInCombat)) or (not ArkadiusTradeTools.isInCombat)) then
-    local numGuilds = GetNumGuilds()
-    local guildId
-
-    --- New events are pushed instead of pulled, so scan for older events ---
-    for i = ArkadiusTradeTools.nextScanGuild, numGuilds do
-      RequestMoreGuildHistoryCategoryEventsLocal(i, GUILD_HISTORY_STORE, numGuilds)
-    end
-
-    ArkadiusTradeTools.guildStatus:SetBusy(0)
-    ArkadiusTradeTools.nextScanGuild = 1
-
-    zo_callLater(ScanGuildHistoryEvents, Settings.longScanInterval * 1000)
-  else
-    zo_callLater(ScanGuildHistoryEvents, Settings.shortScanInterval)
-  end
-end
-
-
 --------------------------------------------------------
 ------------------- Global functions -------------------
 --------------------------------------------------------
@@ -136,13 +97,12 @@ function ArkadiusTradeTools:Initialize()
   end
   buttonDrawTier:SetPressed(Settings.drawTier == DT_MEDIUM)
   buttonForceRescan.OnClicked = function() self:FireCallbacks(EVENTS.ON_RESCAN_GUILDS) end
+  if (not self.Modules.Sales) then
+      buttonForceRescan:SetHidden(true)
+  end
 
   local statusBar = self.frame:GetNamedChild('StatusBar')
   self.guildStatus = statusBar:GetNamedChild('GuildStatus')
-  self.guildStatus:SetText(1, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE1'])
-  self.guildStatus:SetText(2, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE2'])
-  self.guildStatus:SetText(3, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE3'])
-  self.guildStatus:SetText(4, L['ATT_STR_GUILDSTATUS_TOOLTIP_LINE4'])
   local guildStatusText = self.guildStatus:GetNamedChild('Text')
   guildStatusText:SetText(L['ATT_STR_GUILDSTATUS_TEXT'])
 
@@ -155,18 +115,17 @@ function ArkadiusTradeTools:Initialize()
     buttonDonate = statusBar:GetNamedChild("Donate")
     buttonDonate:SetHidden(true)
   end
-  local guilds = {}
+  -- I'd like to move this out of here and into somewhere else. It feels bad to reference a module by name
+  self.guilds = {}
   for i = 1, 5 do
     local guildId = GetGuildId(i)
-    table.insert(guilds, { id = guildId, linked = false })
+    table.insert(self.guilds, { id = guildId, linked = false })
   end
-  Logger:Debug("Initialize")
-  -- self:RegisterCallback(ArkadiusTradeTools.EVENTS.LIBHISTOIRE_REGISTERED, function()
-  Logger:Info("Reigstering status tooltip updates")
+  -- This function exists to update the status indicators upon a new load when there aren't events
   EVENT_MANAGER:RegisterForUpdate('ArkadiusTradeToolsGuildStatus', 1000, function()
     Logger:Verbose("ArkadiusTradeToolsGuildStatus callback")
     local setOne = false
-    for i, guild in ipairs(guilds) do
+    for i, guild in ipairs(self.guilds) do
       if guild.id == 0 then
         self.guildStatus:SetNotActive(i)
       elseif self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache and not guild.linked then
@@ -698,6 +657,80 @@ function ArkadiusTradeTools:OnEvent(eventCode, arg1, arg2, ...)
     self.isInCombat = arg1
   end
 end
+
+-- This texture should be used when LibHistoire is not yet linked
+local textureNotDone = "/esoui/art/buttons/checkbox_unchecked.dds"
+local textureBusy = "/esoui/art/buttons/checkbox_indeterminate.dds"
+local textureDone = "/esoui/art/buttons/checkbox_checked.dds"
+local textureNotActive = "/esoui/art/buttons/checkbox_disabled.dds"
+local GUILD_STATUS = { NOT_DONE = 1, BUSY = 2, DONE = 3, NOT_ACTIVE = 4 }
+
+function ArkadiusTradeTools.OnGuildStatusInitialized(self)
+  self.status = {}
+  self.icons = {}
+  -- Indicator should probably expose instance methods to set the icon
+  self.icons[1] = self:GetNamedChild("Indicator1"):GetNamedChild("Icon")
+  self.icons[2] = self:GetNamedChild("Indicator2"):GetNamedChild("Icon")
+  self.icons[3] = self:GetNamedChild("Indicator3"):GetNamedChild("Icon")
+  self.icons[4] = self:GetNamedChild("Indicator4"):GetNamedChild("Icon")
+  self.icons[5] = self:GetNamedChild("Indicator5"):GetNamedChild("Icon")
+
+  self.SetDone = function(self, guildIndex)
+      if (self.status[guildIndex] == GUILD_STATUS.DONE) then
+          return
+      end
+
+      self.icons[guildIndex]:SetTexture(textureDone)
+      self.status[guildIndex] = GUILD_STATUS.DONE
+
+      local statusIndicator = self:GetNamedChild("Indicator" .. guildIndex)
+      -- This needs to use an i18n value
+      statusIndicator.tooltip:SetContent('Up to date')
+  end
+
+  self.SetNotDone = function(self, guildIndex)
+      if (self.status[guildIndex] == GUILD_STATUS.NOT_DONE) then
+          return
+      end
+
+      self.icons[guildIndex]:SetTexture(textureNotDone)
+      self.status[guildIndex] = GUILD_STATUS.NOT_DONE
+
+      local statusIndicator = self:GetNamedChild("Indicator" .. guildIndex)
+      statusIndicator.tooltip:SetContent('Waiting for LibHistoire to link...')
+  end
+
+  self.SetBusy = function(self, guildIndex)
+      if (self.status[guildIndex] == GUILD_STATUS.BUSY) then
+          return
+      end
+
+      if (guildIndex ~= 0) then
+          self.icons[guildIndex]:SetTexture(textureBusy)
+      end
+
+      self.status[guildIndex] = GUILD_STATUS.BUSY
+
+      local statusIndicator = self:GetNamedChild("Indicator" .. guildIndex)
+      statusIndicator.tooltip:SetContent('Processing...')
+  end
+
+  self.SetNotActive = function(self, guildIndex)
+      if (self.status[guildIndex] == GUILD_STATUS.NOT_ACTIVE) then
+          return
+      end
+
+      if (guildIndex ~= 0) then
+          self.icons[guildIndex]:SetTexture(textureNotActive)
+      end
+
+      self.status[guildIndex] = GUILD_STATUS.NOT_ACTIVE
+
+      local statusIndicator = self:GetNamedChild("Indicator" .. guildIndex)
+      statusIndicator.tooltip:SetContent('Guild not joined')
+  end
+end
+
 
 ArkadiusTradeTools.Utilities = {}
 
