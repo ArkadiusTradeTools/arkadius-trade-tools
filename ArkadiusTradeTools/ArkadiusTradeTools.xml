@@ -23,107 +23,55 @@
                 <Control name="$(parent)Line3" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)Line2" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
                 </Control>
+                <Control name="$(parent)Line4" inherits="ArkadiusTradeToolsGuildStatusTooltipLine">
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)Line3" relativePoint="BOTTOMLEFT" offsetX="0" offsetY="0" />
+                </Control>
+            </Controls>
+        </Control>
+
+        <Control name="ArkadiusTradeToolsGuildStatusIndicatorTooltip" resizeToFitDescendents="true" virtual="true" />
+
+        <Control name="ArkadiusTradeToolsGuildStatusIndicator" mouseEnabled="true" resizeToFitDescendents="true" virtual="true">
+            <Dimensions x="16" y="16" />
+            <OnInitialized>
+                local tooltipContent = CreateControlFromVirtual(self:GetName() .. "StatusTooltip", InformationTooltip, "ArkadiusTradeToolsGuildStatusIndicatorTooltip")
+                tooltipContent:SetHidden(true)
+
+                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, tooltipContent, TOPRIGHT, 0, 0, BOTTOMRIGHT)
+            </OnInitialized>
+            <Controls>
+                <Texture name="$(parent)Icon" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
+                    <Dimensions x="16" y="16" />
+                    <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+                    <Anchor point="TOPRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="0" />
+                </Texture>
             </Controls>
         </Control>
 
         <Control name="ArkadiusTradeToolsGuildStatus" mouseEnabled="true" resizeToFitDescendents="true" virtual="true">
             <OnInitialized>
-                local textureNotDone = "/esoui/art/buttons/checkbox_unchecked.dds"
-                local textureBusy = "/esoui/art/buttons/checkbox_indeterminate.dds"
-                local textureDone = "/esoui/art/buttons/checkbox_checked.dds"
-
-                self.done = {}
-                self.busy = 0
-                self.icons = {}
-                self.icons[1] = GetControl(self, "Icon1")
-                self.icons[2] = GetControl(self, "Icon2")
-                self.icons[3] = GetControl(self, "Icon3")
-                self.icons[4] = GetControl(self, "Icon4")
-                self.icons[5] = GetControl(self, "Icon5")
-
-                self.SetDone = function(self, guildIndex)
-                    if (self.done[guildIndex]) then
-                        return
-                    end
-
-                    self.icons[guildIndex]:SetTexture(textureDone)
-                    self.done[guildIndex] = true
-                end
-
-                self.SetBusy = function(self, guildIndex)
-                    if (self.busy == guildIndex) then
-                        return
-                    end
-
-                    if (self.icons[self.busy]) then
-                        if (self.done[self.busy]) then
-                            self.icons[self.busy]:SetTexture(textureDone)
-                        else
-                            self.icons[self.busy]:SetTexture(textureNotDone)
-                        end
-                    end
-
-                    if (guildIndex ~= 0) then
-                        self.icons[guildIndex]:SetTexture(textureBusy)
-                    end
-
-                    self.busy = guildIndex
-                end
-
-                self.SetText = function(self, line, text)
-                    local l
-		            l = GetControl(self.tooltip.content, "Line" .. line)
-
-                    if (l) then
-                        local t = GetControl(l, "Text")
-                        t:SetText(text)
-                    end
-                end
-
-                self.SetIcon = function(self, line, icon)
-                    local l
-		            l = GetControl(self.tooltip.content, "Line" .. line)
-
-                    if (l) then
-                        local i = GetControl(l, "Icon")
-                        i:SetTexture(icon)
-                    end
-                end
-
-                local tooltipContent = CreateControlFromVirtual(self:GetName() .. "Tooltip", InformationTooltip, "ArkadiusTradeToolsGuildStatusTooltip")
-                tooltipContent:SetHidden(true)
-
-                ArkadiusTradeTools.Templates.Tooltip:Initialize(self, tooltipContent, TOPRIGHT, 0, 0, BOTTOMRIGHT)
-
-                self:SetIcon(1, textureNotDone)
-                self:SetIcon(2, textureBusy)
-                self:SetIcon(3, textureDone)
+                ArkadiusTradeTools.OnGuildStatusInitialized(self)
             </OnInitialized>
             <Controls>
                 <Label name="$(parent)Text" color="INTERFACE_COLOR_TYPE_TEXT_COLORS:INTERFACE_TEXT_COLOR_NORMAL" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(BOLD_FONT)|$(KB_14)|soft-shadow-thin">
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="5" offsetY="0" />
                     <Anchor point="BOTTOMLEFT" relativeTo="$(parent)" relativePoint="BOTTOMLEFT" offsetX="5" offsetY="0" />
                 </Label>
-                <Texture name="$(parent)Icon1" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
-                    <Dimensions x="16" y="16" />
+                <Control name="$(parent)Indicator1" inherits="ArkadiusTradeToolsGuildStatusIndicator">
                     <Anchor point="LEFT" relativeTo="$(parent)Text" relativePoint="RIGHT" offsetX="5" offsetY="0" />
-                </Texture>
-                <Texture name="$(parent)Icon2" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
-                    <Dimensions x="16" y="16" />
-                    <Anchor point="LEFT" relativeTo="$(parent)Icon1" relativePoint="RIGHT" offsetX="0" offsetY="0" />
-                </Texture>
-                <Texture name="$(parent)Icon3" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
-                    <Dimensions x="16" y="16" />
-                    <Anchor point="LEFT" relativeTo="$(parent)Icon2" relativePoint="RIGHT" offsetX="0" offsetY="0" />
-                </Texture>
-                <Texture name="$(parent)Icon4" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
-                    <Dimensions x="16" y="16" />
-                    <Anchor point="LEFT" relativeTo="$(parent)Icon3" relativePoint="RIGHT" offsetX="0" offsetY="0" />
-                </Texture>
-                <Texture name="$(parent)Icon5" textureFile="/esoui/art/buttons/checkbox_unchecked.dds">
-                    <Dimensions x="16" y="16" />
-                    <Anchor point="LEFT" relativeTo="$(parent)Icon4" relativePoint="RIGHT" offsetX="0" offsetY="0" />
-                </Texture>
+                </Control>
+                <Control name="$(parent)Indicator2" inherits="ArkadiusTradeToolsGuildStatusIndicator">
+                    <Anchor point="LEFT" relativeTo="$(parent)Indicator1" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Control>
+                <Control name="$(parent)Indicator3" inherits="ArkadiusTradeToolsGuildStatusIndicator">
+                    <Anchor point="LEFT" relativeTo="$(parent)Indicator2" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Control>
+                <Control name="$(parent)Indicator4" inherits="ArkadiusTradeToolsGuildStatusIndicator">
+                    <Anchor point="LEFT" relativeTo="$(parent)Indicator3" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Control>
+                <Control name="$(parent)Indicator5" inherits="ArkadiusTradeToolsGuildStatusIndicator">
+                    <Anchor point="LEFT" relativeTo="$(parent)Indicator4" relativePoint="RIGHT" offsetX="0" offsetY="0" />
+                </Control>
             </Controls>
         </Control>
 
@@ -162,6 +110,15 @@
                             <Textures
                                 normal="/esoui/art/worldmap/mapnav_uparrow_up.dds"
                                 pressed="/esoui/art/worldmap/mapnav_downarrow_up.dds"
+                            />
+                        </Button>
+                        <Button name="$(parent)ForceRescan" inherits="ArkadiusTradeToolsToggleButton">
+                            <Dimensions x="32" y="32"/>
+                            <Anchor point="RIGHT" relativeTo="$(parent)DrawTier" relativePoint="LEFT" offsetX="0" offsetY="0" />
+                            <Textures
+                                normal="/esoui/art/help/help_tabicon_feedback_up.dds"
+                                pressed="/esoui/art/help/help_tabicon_feedback_down.dds"
+                                mouseOver="/esoui/art/help/help_tabicon_feedback_over.dds"
                             />
                         </Button>
                         <Control name="$(parent)Background" inherits="ArkadiusTradeToolsBackground256X32">

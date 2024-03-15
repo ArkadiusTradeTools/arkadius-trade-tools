@@ -3,4 +3,5 @@
     "editor.maxTokenizationLineLength": 2000000,
     "files.autoSave": "onFocusChange",
     "search.showLineNumbers": true,
+    "emmylua.codeLens": true,
 }

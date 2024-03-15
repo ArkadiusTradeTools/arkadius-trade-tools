@@ -3,6 +3,8 @@ local ArkadiusTradeToolsSales = ArkadiusTradeTools.Modules.Sales
 ArkadiusTradeToolsSales.Localization = {}
 ArkadiusTradeToolsSales.SalesTables = {}
 
+local logger = LibDebugLogger("ArkadiusTradeToolsSales")
+
 local L = ArkadiusTradeToolsSales.Localization
 local Utilities = ArkadiusTradeTools.Utilities
 local SalesTables = ArkadiusTradeToolsSales.SalesTables
@@ -222,12 +224,139 @@ function ArkadiusTradeToolsSalesList:SetupSaleRow(rowControl, rowData)
     ArkadiusTradeToolsSortFilterList.SetupRow(self, rowControl, rowData)
 end
 
+-- This update and the content change needs to be internalized somehow.
+-- Either a new control (Updatable Tooltip?) or an optional parameter for our current tooltip
+local function updateStatusTooltip(listener, statusIndicator)
+    local eventsRemaining, speed, timeRemaining = listener:GetPendingEventMetrics()
+    timeRemaining = math.floor(timeRemaining / 60)
+    -- Instead of setting this directly, it might be better for the SetBusy function
+    -- to take optional parameters for showing the extended statistics
+    statusIndicator.tooltip:SetContent(
+        zo_strformat(
+            "Processing <<1>> events...\nEstimated time remaining: <<2[less than a minute/one minute/$d minutes]>> <<3[/(%d events per second)]>>",
+            eventsRemaining,
+            timeRemaining,
+            speed
+        )
+    )
+end
+
+local function createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId, isRescan)
+    local guildId = GetGuildId(guildIndex)
+    local guildName = GetGuildName(guildId)
+    local updateFunction
+    local rescanCount = 0
+    local eventsToScan
+    local isRescanComplete = false
+    return function(eventType, eventId, eventTime, seller, buyer, quantity, itemLink, price, tax)
+        logger:Verbose("Event received for", guildName)
+        local statusIndicator = ArkadiusTradeTools.guildStatus:GetNamedChild('Indicator' .. guildIndex)
+        -- TODO: This should probably be handled via an event
+        ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
+        if not latestEventId or CompareId64s(eventId, latestEventId) > 0 then
+            guildSettings.latestEventId = Id64ToString(eventId)
+            latestEventId = eventId
+        end
+        local isNewEvent = self:AddEvent(guildId, eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax)
+        local eventsRemaining = listener:GetPendingEventMetrics()
+        if not eventsToScan then
+            eventsToScan = eventsRemaining
+        end
+        logger:Verbose(eventsRemaining, "events remaining for", guildName)
+        if isRescan and isNewEvent then
+            rescanCount = rescanCount + 1
+        end
+        if eventsRemaining == 0 then
+            if updateFunction then
+                logger:Debug('Unregistering for update')
+                EVENT_MANAGER:UnregisterForUpdate(updateFunction)
+                updateFunction = nil
+            end
+            ArkadiusTradeTools.guildStatus:SetDone(guildIndex)
+            if isRescan and not isRescanComplete then
+                local message = zo_strformat("Rescan complete for <<1>> (<<2>> transactions). Found <<3>> missing sales events.", guildName, eventsToScan, rescanCount)
+                CHAT_ROUTER:AddSystemMessage(message)
+                logger:Debug(message)
+                isRescanComplete = true
+            end
+        elseif not updateFunction then
+            logger:Debug('Registering for update')
+            updateFunction = 'ArkadiusTradeToolsSalesGuildStatusUpdate' .. guildIndex
+            EVENT_MANAGER:RegisterForUpdate(updateFunction, 100, function()
+                updateStatusTooltip(listener, statusIndicator)
+            end)
+        end
+        if (self.list:IsHidden()) then
+            self.list:BuildMasterList()
+        else
+            self.list:RefreshData()
+        end
+    end 
+end
+
+function ArkadiusTradeToolsSales:RescanHistory()
+    logger:Info('Rescanning LibHistoire events')
+    local function UpdateListener(guildIndex, guildId)
+        local guildName = GetGuildName(guildId)
+        logger:Info("Rescanning guild", guildName)
+        local listener = self.guildListeners[guildId]
+        listener:Stop()
+        listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
+        -- self.guildListeners[guildId] = listener
+        local guildSettings = Settings.guilds[guildName]
+        local latestEventId
+        local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
+        logger:Info("Setting starting event time of", olderThanTimeStamp, "for", guildName)
+        listener:SetAfterEventTime(olderThanTimeStamp)
+        listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId, true))
+        listener:Start()
+    end
+    for i = 1, GetNumGuilds() do
+        local guildId = GetGuildId(i)
+        local guildName = GetGuildName(guildId)
+        Settings.guilds[guildName] = Settings.guilds[guildName] or {}
+        Settings.guilds[guildName].keepSalesForDays = Settings.guilds[guildName].keepSalesForDays or DefaultSettings.keepSalesForDays
+        UpdateListener(i, guildId)
+    end
+end
+
+function ArkadiusTradeToolsSales:RegisterLibHistoire()
+    logger:Info('Registering LibHistoire')
+    self.guildListeners = {}
+    local function SetUpListener(guildIndex, guildId)
+        local guildName = GetGuildName(guildId)
+        logger:Info("Setting up for guild", guildName)
+        local listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
+        self.guildListeners[guildId] = listener
+        local guildSettings = Settings.guilds[guildName]
+        local latestEventId
+        if guildSettings.latestEventId then
+            latestEventId = StringToId64(guildSettings.latestEventId)
+            listener:SetAfterEventId(latestEventId)
+            logger:Info("Latest event id for", guildName, guildSettings.latestEventId)
+        else
+            local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
+            listener:SetAfterEventTime(olderThanTimeStamp)
+            logger:Info("No latest event id for", guildName)
+        end
+        listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId))
+        listener:Start()
+    end
+    for i = 1, GetNumGuilds() do
+        local guildId = GetGuildId(i)
+        local guildName = GetGuildName(guildId)
+        Settings.guilds[guildName] = Settings.guilds[guildName] or {}
+        Settings.guilds[guildName].keepSalesForDays = Settings.guilds[guildName].keepSalesForDays or DefaultSettings.keepSalesForDays
+        SetUpListener(i, guildId)
+    end
+end
+
 ---------------------------------------------------------------------------------------
 function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
+  logger:Debug("Initialize")
     for i = 1, NUM_SALES_TABLES do
         if (SalesTables[i] == nil) then
             CHAT_ROUTER:AddSystemMessage("ArkadiusTradeToolsSales: Error! Number of data tables is not correct. Maybe you forgot to activate them in the addons menu?")
-
             return
         end
     end
@@ -300,7 +429,8 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     ---------------------------------------------
 
     self.list:RefreshData()
-    ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_GUILDHISTORY_STORE, function(...) self:OnGuildHistoryEventStore(...) end)
+    self:RegisterLibHistoire()
+    ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_RESCAN_GUILDS, function(...) self:RescanHistory(...) end)
 end
 
 function ArkadiusTradeToolsSales:Finalize()
@@ -425,14 +555,6 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
         local isArmorOrWeapon = (itemType == ITEMTYPE_ARMOR) or (itemType == ITEMTYPE_WEAPON)
         if (isArmorOrWeapon or (itemType == ITEMTYPE_ARMOR_TRAIT) or (itemType == ITEMTYPE_WEAPON_TRAIT) or (itemType == ITEMTYPE_JEWELRY_TRAIT)) then
             itemTrait = GetItemLinkTraitType(itemLink)
-            
-            -- Hack for EN issue with Nightmother's Embrace and Night Mother's Gaze set items having the same names
-            if isArmorOrWeapon then
-                local hasSet, _setName, _numBonuses, _numEquipped, _maxEquipped, setId = GetItemLinkSetInfo(itemLink)
-                if hasSet and setId == 34 or setId == 51 then
-                    itemName = itemName .. setId
-                end
-            end
         else
             itemTrait = ITEM_TRAIT_TYPE_NONE
         end
@@ -481,27 +603,16 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
     guildSales[sale.guildName].displayNames[sale.sellerName].sales[#guildSales[sale.guildName].displayNames[sale.sellerName].sales + 1] = #guildSales[sale.guildName].sales
 end
 
-function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
-    local eventType, secsSinceEvent, seller, buyer, quantity, itemLink, price, tax = GetGuildEventInfo(guildId, category, eventIndex)
+-- Maybe call this from OnGuildHistoryEventStore?
+--eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax
+function ArkadiusTradeToolsSales:AddEvent(guildId, eventId, eventType, eventTimeStamp, seller, buyer, quantity, itemLink, price, tax)
     local unitPrice = nil
 
     if (eventType ~= GUILD_EVENT_ITEM_SOLD) then
         return false
     end
 
-    local timeStamp = GetTimeStamp()
     local guildName = GetGuildName(guildId)
-    local eventTimeStamp = timeStamp - secsSinceEvent
-
-    if ((Settings.guilds[guildName]) and (Settings.guilds[guildName].keepSalesForDays) and (Settings.guilds[guildName].keepSalesForDays < 10)) then
-        local olderThanTimeStamp = timeStamp - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
-
-        if (eventTimeStamp < olderThanTimeStamp) then
-            return false
-        end
-    end
-
-    local eventId = GetGuildEventId(guildId, category, eventIndex)
     local eventIdString = Id64ToString(eventId)
     -- We'll use the traditional number if there's no overflow so we don't duplicate sales
     -- in a different sales table. Otherwise, use the new way to distribute and use the stringified ID.
@@ -510,6 +621,7 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
     local eventIdNumber = tonumber(eventIdString)
     local hashNumber = eventIdNumber > 0 and eventIdNumber or tonumber(eventIdString:sub(-9))
     local dataIndex = floor((hashNumber % (NUM_SALES_TABLES * 2)) / 2) + 1
+    logger:Debug('ArkadiusTradeToolsSales:EventId', eventIdString, eventIdNumber, hashNumber, dataIndex)
     local dataTable = SalesTables[dataIndex][self.serverName]
     if (eventIdString ~= '0') then
         -- We don't want to use a number key stringified and duplicate the data
@@ -534,11 +646,6 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
 
             --- Update temporary lists ---
             self:UpdateTemporaryVariables(dataTable.sales[eventIdString])
-
-            --- Update guild roster ---
-            self.GuildRoster:Update(dataTable.sales[eventIdString].guildName, dataTable.sales[eventIdString].sellerName)
-            self.GuildRoster:Update(dataTable.sales[eventIdString].guildName, dataTable.sales[eventIdString].buyerName)
-
             
             --- Add event to lists master list ---
             -- local entry = Utilities.EnsureUnitPrice(dataTable.sales[eventIdNum])
@@ -568,13 +675,14 @@ function ArkadiusTradeToolsSales:AddEvent(guildId, category, eventIndex)
     return false
 end
 
-function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp, allQualities)
+function ArkadiusTradeToolsSales:GetItemSalesInformation(itemLink, fromTimeStamp, allQualities, olderThanTimeStamp)
     -- This is already called by all callers, so no need to double up
     -- if (not self:IsItemLink(itemLink)) then
     --     return {}
     -- end
 
     fromTimeStamp = fromTimeStamp or 0
+    olderThanTimeStamp = olderThanTimeStamp or math.huge
     local result = {[itemLink] = {}}
     local itemSales = TemporaryVariables.itemSales
     local itemLinkInfos = TemporaryVariables.itemLinkInfos
@@ -686,13 +794,13 @@ function ArkadiusTradeToolsSales:GetVoucherCount(itemLink)
     return floor((tonumber(vouchers) / 10000) + .5)
 end
 
-function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeStamp)
+function ArkadiusTradeToolsSales:GetAveragePricePerItem(itemLink, newerThanTimeStamp, olderThanTimeStamp)
     if (not self:IsItemLink(itemLink)) then
         return 0
     end
 
     newerThanTimeStamp = newerThanTimeStamp or 0
-    local itemSales = self:GetItemSalesInformation(itemLink, newerThanTimeStamp)
+    local itemSales = self:GetItemSalesInformation(itemLink, newerThanTimeStamp, false, olderThanTimeStamp)
     local itemQuality = GetItemLinkQuality(itemLink)
     local itemType = GetItemLinkItemType(itemLink)
     local averagePrice = 0
@@ -828,6 +936,18 @@ function ArkadiusTradeToolsSales:StatsToChat(itemLink, language)
     end
 
     CHAT_SYSTEM.textEntry:InsertLink(chatString)
+end
+
+function ArkadiusTradeToolsSales:SearchForItem(itemLink)
+    itemLink = self:NormalizeItemLink(itemLink)
+    if itemLink == nil then return end
+    ArkadiusTradeTools.frame:SetHidden(false)
+    local itemLinkInfo = TemporaryVariables.itemLinkInfos[itemLink] or {
+        name = GetItemLinkName(itemLink),
+        quality = GetItemLinkQuality(itemLink),
+    }
+    self.frame.filterBar.Text:SetText(string.format('%s %s', itemLinkInfo.name, TemporaryVariables.qualityNamesLowered[itemLinkInfo.quality]))
+    ArkadiusTradeTools.Templates.EditBox.OnEnter(self.frame.filterBar.Text)
 end
 
 function ArkadiusTradeToolsSales:GetFullStatisticsForGuild(resultRef, newerThanTimeStamp, olderThanTimeStamp, guildName, guildNameData, includeGuildRecord)
@@ -1079,7 +1199,8 @@ function ArkadiusTradeToolsSales:ShowContextMenu(inventorySlot)
     if (self:IsItemLink(itemLink)) then 
         self.addMenuItems[L["ATT_STR_STATS_TO_CHAT"]] = function() self:StatsToChat(itemLink) end
         self.addMenuItems[L["ATT_STR_OPEN_POPUP_TOOLTIP"]] = function() ZO_LinkHandler_OnLinkClicked(itemLink, MOUSE_BUTTON_INDEX_LEFT) end
-
+        self.addMenuItems["Search for item"] = function() self:SearchForItem(itemLink) end
+        
         if (GetCVar("language.2") ~= "en") then
             self.addMenuItems[L["en"]["ATT_STR_STATS_TO_CHAT"]] = function() self:StatsToChat(itemLink, "en") end
         end

@@ -1,10 +1,10 @@
 ## Title: Arkadius' Trade Tools
 ## Author: Aldanga (@Aldanga NA), Arkadius (@Arkadius1 EU)
-## APIVersion: 101034
+## APIVersion: 101041
 ## Description: None
-## Version: 1.13.6
-## AddOnVersion: 11306
-## DependsOn: LibAddonMenu-2.0 
+## Version: 2.0.0-INTERNAL
+## AddOnVersion: 20000
+## DependsOn: LibAddonMenu-2.0 LibDebugLogger>=180
 ## SavedVariables: ArkadiusTradeToolsData
 
 ArkadiusTradeTools.lua

@@ -24,6 +24,7 @@ local localization =
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE3               = "la guilde est à jour",
     ATT_STR_BUTTON_CLOSE_TOOLTIP                    = "Fermer la fenêtre",
     ATT_STR_BUTTON_DRAWTIER_TOOLTIP                 = "Afficher la fenêtre au-dessus ou dessous les autres élements de l'ui",
+    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Refresh data from LibHistoire",
     ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW              = "Afficher ou cacher la fenêtre princial",
 }
 
