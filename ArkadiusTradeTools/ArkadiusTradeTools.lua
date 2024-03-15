@@ -1,7 +1,7 @@
 ArkadiusTradeTools = ZO_CallbackObject:New()
 ArkadiusTradeTools.NAME = 'ArkadiusTradeTools'
 ArkadiusTradeTools.TITLE = 'Arkadius Trade Tools'
-ArkadiusTradeTools.VERSION = '2.0.0-INTERNAL'
+ArkadiusTradeTools.VERSION = '2.0.0'
 ArkadiusTradeTools.AUTHOR = '@Aldanga, @Arkadius1'
 ArkadiusTradeTools.Localization = {}
 ArkadiusTradeTools.SavedVariables = {}
