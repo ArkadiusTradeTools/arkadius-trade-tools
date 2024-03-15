@@ -16,17 +16,17 @@ local localization =
     ATT_STR_TWO_DAYS_AGO             = "Два дня назад",
     ATT_STR_THIS_WEEK                = "Текущая неделя",
     ATT_STR_LAST_WEEK                = "Прошлая неделя",
-    ATT_STR_PRIOR_WEEK               = "Предыдущая неделя",
+    ATT_STR_PRIOR_WEEK               = "Позапрошлая неделя",
     ATT_STR_7_DAYS                   = "7 дней",
     ATT_STR_10_DAYS                  = "10 дней",
     ATT_STR_14_DAYS                  = "14 дней",
     ATT_STR_30_DAYS                  = "30 дней",
-    ATT_STR_KEEP_EXPORTS_FOR_DAYS    = "Хранить историю экспорт x дней",
-    ATT_STR_FILTER_TEXT_TOOLTIP      = "Поиск по игроку-, гильдии- или предмету",
+    ATT_STR_KEEP_EXPORTS_FOR_DAYS    = "Хранить историю экспорта x дней",
+    ATT_STR_FILTER_TEXT_TOOLTIP      = "Поиск по игроку, гильдии или предмету",
     ATT_STR_FILTER_SUBSTRING_TOOLTIP = "Переключение между поиском по слову целиком или по части слова. Заглавные буквы игнорируются в обоих случаях.",
     ATT_STR_FILTER_COLUMN_TOOLTIP    = "Включить/Исключить эту колонку в/из поиск(а)",
-    ATT_STR_EXPORT_RELOAD_WARNING    = "Export saved. Please /reloadui to write to disk.",
-    ATT_STR_INCLUDE_ONLY_MEMBERS     = "Only include members"
+    ATT_STR_EXPORT_RELOAD_WARNING    = "Экспорт завершён. Введите /reloadui, чтобы сохранить его на диске.",
+    ATT_STR_INCLUDE_ONLY_MEMBERS     = "Включить только игроков"
 }
 
 ZO_ShallowTableCopy(localization, ArkadiusTradeTools.Modules.Exports.Localization)
