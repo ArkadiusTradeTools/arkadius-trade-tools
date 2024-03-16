@@ -86,7 +86,7 @@
                     <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="TOPRIGHT" offsetX="0" offsetY="80" />
                     <Controls>
-                        <Label name="$(parent)Caption" text="Arkadius' Trade Tools" color="FFFFFF" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="EsoUI/Common/Fonts/ProseAntiquePSMT.otf|18">
+                        <Label name="$(parent)Caption" text="Arkadius' Trade Tools" color="FFFFFF" horizontalAlignment="LEFT" verticalAlignment="CENTER" font="$(ANTIQUE_FONT)|18">
                             <Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="10" offsetY="10" />
                         </Label>
                         <Button name="$(parent)Close">
