@@ -9,8 +9,8 @@ local localization =
     ATT_STR_SHOW_NOTIFICATIONS_DURING_COMBAT        = "Показывать уведомления во время боя",
     ATT_STR_HIGHLIGHT_OWN_NAME_BY_COLOR             = "Выделять своё имя цветом",
     ATT_STR_HIGHLIGHT_OWN_GUILDNAMES_BY_CHAT_COLOR  = "Выделять свои гильдии цветом как в чате",
-    ATT_STR_FORCE_TRADITIONAL_TRADER_WEEK           = "Force traditional trader week (Sun-Sun)",
-    ATT_STR_FORCE_TRADITIONAL_TRADER_WEEK_WARNING   = "Window data won't update until you change the time filter or reload",
+    ATT_STR_FORCE_TRADITIONAL_TRADER_WEEK           = "Перейти на старый график торговых недель (Вс-Вс)",
+    ATT_STR_FORCE_TRADITIONAL_TRADER_WEEK_WARNING   = "Данные в окне обновятся только после смены фильтра по времени или перезагрузки",
     ATT_STR_COLOR                                   = "Цвет",
     ATT_STR_EXTENDED                                = "Расширенные",
     ATT_STR_SCAN_DURING_COMBAT                      = "Сканировать продажи во время боя",
@@ -22,9 +22,10 @@ local localization =
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE1               = "Данные по гильдии устарели",
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE2               = "Данные по гильдии обновляются",
     ATT_STR_GUILDSTATUS_TOOLTIP_LINE3               = "Данные по гильдии актуальны",
+    ATT_STR_GUILDSTATUS_TOOLTIP_LINE4               = "Вы не состоите в этой гильдии",
     ATT_STR_BUTTON_CLOSE_TOOLTIP                    = "Закрыть окно",
     ATT_STR_BUTTON_DRAWTIER_TOOLTIP                 = "Показывать окно поверх других элементов управления или нет",
-    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Refresh data from LibHistoire",
+    ATT_STR_BUTTON_FORCE_REFRESH_TOOLTIP            = "Обновить данные из LibHistoire",
     ATT_STR_KEYBIND_TOGGLE_MAIN_WINDOW              = "Показать или скрыть основное окно",
 }
 
