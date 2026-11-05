@@ -16,6 +16,20 @@ local floor = math.floor
 
 local NUM_SALES_TABLES = 16
 local SECONDS_IN_DAY = 60*60*24
+-- Sales and latestEventId are keyed by the artificial id64 LibHistoire's legacy listener
+-- used to hand out (eventId + 3000000000), so existing saved data stays valid.
+local LEGACY_EVENT_ID_OFFSET = 3000000000
+
+local function EventIdToKey(eventId)
+    return string.format("%.f", eventId + LEGACY_EVENT_ID_OFFSET)
+end
+
+local function KeyToEventId(key)
+    local number = tonumber(key)
+    if number and number >= LEGACY_EVENT_ID_OFFSET then
+        return number - LEGACY_EVENT_ID_OFFSET
+    end
+end
 
 --------------------------------------------------------
 ------------------- Helper functions -------------------
@@ -226,8 +240,8 @@ end
 
 -- This update and the content change needs to be internalized somehow.
 -- Either a new control (Updatable Tooltip?) or an optional parameter for our current tooltip
-local function updateStatusTooltip(listener, statusIndicator)
-    local eventsRemaining, speed, timeRemaining = listener:GetPendingEventMetrics()
+local function updateStatusTooltip(processor, statusIndicator)
+    local eventsRemaining, speed, timeRemaining = processor:GetPendingEventMetrics()
     timeRemaining = math.floor(timeRemaining / 60)
     -- Instead of setting this directly, it might be better for the SetBusy function
     -- to take optional parameters for showing the extended statistics
@@ -241,24 +255,33 @@ local function updateStatusTooltip(listener, statusIndicator)
     )
 end
 
-local function createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId, isRescan)
+-- latestEventId is a LibHistoire eventId (integer), not a sales key
+local function createProcessorCallback(self, processor, guildIndex, guildSettings, latestEventId, isRescan)
     local guildId = GetGuildId(guildIndex)
     local guildName = GetGuildName(guildId)
     local updateFunction
     local rescanCount = 0
     local eventsToScan
     local isRescanComplete = false
-    return function(eventType, eventId, eventTime, seller, buyer, quantity, itemLink, price, tax)
+    -- event objects are reused by LibHistoire, so everything needed is read before returning
+    return function(event)
         logger:Verbose("Event received for", guildName)
         local statusIndicator = ArkadiusTradeTools.guildStatus:GetNamedChild('Indicator' .. guildIndex)
         -- TODO: This should probably be handled via an event
         ArkadiusTradeTools.guildStatus:SetBusy(guildIndex)
-        if not latestEventId or CompareId64s(eventId, latestEventId) > 0 then
-            guildSettings.latestEventId = Id64ToString(eventId)
+        local eventId = event:GetEventId()
+        if not latestEventId or eventId > latestEventId then
+            guildSettings.latestEventId = EventIdToKey(eventId)
             latestEventId = eventId
         end
-        local isNewEvent = self:AddEvent(guildId, eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax)
-        local eventsRemaining = listener:GetPendingEventMetrics()
+        local isNewEvent = false
+        if event:GetEventType() == GUILD_HISTORY_TRADER_EVENT_ITEM_SOLD then
+            local info = event:GetEventInfo()
+            isNewEvent = self:AddEvent(guildId, EventIdToKey(eventId), event:GetEventTimestampS(),
+                DecorateDisplayName(info.sellerDisplayName), DecorateDisplayName(info.buyerDisplayName),
+                info.quantity, info.itemLink, info.price, info.tax)
+        end
+        local eventsRemaining = processor:GetPendingEventMetrics()
         if not eventsToScan then
             eventsToScan = eventsRemaining
         end
@@ -283,7 +306,7 @@ local function createListenerCallback(self, listener, guildIndex, guildSettings,
             logger:Debug('Registering for update')
             updateFunction = 'ArkadiusTradeToolsSalesGuildStatusUpdate' .. guildIndex
             EVENT_MANAGER:RegisterForUpdate(updateFunction, 100, function()
-                updateStatusTooltip(listener, statusIndicator)
+                updateStatusTooltip(processor, statusIndicator)
             end)
         end
         if (self.list:IsHidden()) then
@@ -296,58 +319,67 @@ end
 
 function ArkadiusTradeToolsSales:RescanHistory()
     logger:Info('Rescanning LibHistoire events')
-    local function UpdateListener(guildIndex, guildId)
+    local function UpdateProcessor(guildIndex, guildId)
         local guildName = GetGuildName(guildId)
         logger:Info("Rescanning guild", guildName)
-        local listener = self.guildListeners[guildId]
-        listener:Stop()
-        listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
-        -- self.guildListeners[guildId] = listener
+        local processor = self.guildProcessors[guildId]
+        if processor then
+            processor:Stop()
+        end
+        processor = LibHistoire:CreateGuildHistoryProcessor(guildId, GUILD_HISTORY_EVENT_CATEGORY_TRADER, ArkadiusTradeTools.NAME)
+        self.guildProcessors[guildId] = processor
+        if not processor then
+            logger:Warn("No trader history processor for", guildName)
+            return
+        end
         local guildSettings = Settings.guilds[guildName]
-        local latestEventId
+        local latestEventId = KeyToEventId(guildSettings.latestEventId)
         local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
         logger:Info("Setting starting event time of", olderThanTimeStamp, "for", guildName)
-        listener:SetAfterEventTime(olderThanTimeStamp)
-        listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId, true))
-        listener:Start()
+        processor:SetAfterEventTime(olderThanTimeStamp)
+        processor:SetEventCallback(createProcessorCallback(self, processor, guildIndex, guildSettings, latestEventId, true))
+        processor:Start()
     end
     for i = 1, GetNumGuilds() do
         local guildId = GetGuildId(i)
         local guildName = GetGuildName(guildId)
         Settings.guilds[guildName] = Settings.guilds[guildName] or {}
         Settings.guilds[guildName].keepSalesForDays = Settings.guilds[guildName].keepSalesForDays or DefaultSettings.keepSalesForDays
-        UpdateListener(i, guildId)
+        UpdateProcessor(i, guildId)
     end
 end
 
 function ArkadiusTradeToolsSales:RegisterLibHistoire()
     logger:Info('Registering LibHistoire')
-    self.guildListeners = {}
-    local function SetUpListener(guildIndex, guildId)
+    self.guildProcessors = {}
+    local function SetUpProcessor(guildIndex, guildId)
         local guildName = GetGuildName(guildId)
         logger:Info("Setting up for guild", guildName)
-        local listener = LibHistoire:CreateGuildHistoryListener(guildId, GUILD_HISTORY_STORE)
-        self.guildListeners[guildId] = listener
+        local processor = LibHistoire:CreateGuildHistoryProcessor(guildId, GUILD_HISTORY_EVENT_CATEGORY_TRADER, ArkadiusTradeTools.NAME)
+        self.guildProcessors[guildId] = processor
+        if not processor then
+            logger:Warn("No trader history processor for", guildName)
+            return
+        end
         local guildSettings = Settings.guilds[guildName]
-        local latestEventId
-        if guildSettings.latestEventId then
-            latestEventId = StringToId64(guildSettings.latestEventId)
-            listener:SetAfterEventId(latestEventId)
+        local latestEventId = KeyToEventId(guildSettings.latestEventId)
+        if latestEventId then
+            processor:SetAfterEventId(latestEventId)
             logger:Info("Latest event id for", guildName, guildSettings.latestEventId)
         else
             local olderThanTimeStamp = GetTimeStamp() - Settings.guilds[guildName].keepSalesForDays * SECONDS_IN_DAY
-            listener:SetAfterEventTime(olderThanTimeStamp)
+            processor:SetAfterEventTime(olderThanTimeStamp)
             logger:Info("No latest event id for", guildName)
         end
-        listener:SetEventCallback(createListenerCallback(self, listener, guildIndex, guildSettings, latestEventId))
-        listener:Start()
+        processor:SetEventCallback(createProcessorCallback(self, processor, guildIndex, guildSettings, latestEventId))
+        processor:Start()
     end
     for i = 1, GetNumGuilds() do
         local guildId = GetGuildId(i)
         local guildName = GetGuildName(guildId)
         Settings.guilds[guildName] = Settings.guilds[guildName] or {}
         Settings.guilds[guildName].keepSalesForDays = Settings.guilds[guildName].keepSalesForDays or DefaultSettings.keepSalesForDays
-        SetUpListener(i, guildId)
+        SetUpProcessor(i, guildId)
     end
 end
 
@@ -429,7 +461,7 @@ function ArkadiusTradeToolsSales:Initialize(serverName, displayName)
     ---------------------------------------------
 
     self.list:RefreshData()
-    self:RegisterLibHistoire()
+    LibHistoire:OnReady(function() self:RegisterLibHistoire() end)
     ArkadiusTradeTools:RegisterCallback(ArkadiusTradeTools.EVENTS.ON_RESCAN_GUILDS, function(...) self:RescanHistory(...) end)
 end
 
@@ -604,16 +636,11 @@ function ArkadiusTradeToolsSales:UpdateTemporaryVariables(sale)
 end
 
 -- Maybe call this from OnGuildHistoryEventStore?
---eventId, eventType, eventTime, seller, buyer, quantity, itemLink, price, tax
-function ArkadiusTradeToolsSales:AddEvent(guildId, eventId, eventType, eventTimeStamp, seller, buyer, quantity, itemLink, price, tax)
+--eventIdString (see EventIdToKey), eventTime, seller, buyer, quantity, itemLink, price, tax
+function ArkadiusTradeToolsSales:AddEvent(guildId, eventIdString, eventTimeStamp, seller, buyer, quantity, itemLink, price, tax)
     local unitPrice = nil
 
-    if (eventType ~= GUILD_EVENT_ITEM_SOLD) then
-        return false
-    end
-
     local guildName = GetGuildName(guildId)
-    local eventIdString = Id64ToString(eventId)
     -- We'll use the traditional number if there's no overflow so we don't duplicate sales
     -- in a different sales table. Otherwise, use the new way to distribute and use the stringified ID.
     -- The only other way to solve this would be to iterate sales in each table, replace

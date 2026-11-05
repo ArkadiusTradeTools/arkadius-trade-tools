@@ -125,11 +125,14 @@ function ArkadiusTradeTools:Initialize()
   EVENT_MANAGER:RegisterForUpdate('ArkadiusTradeToolsGuildStatus', 1000, function()
     Logger:Verbose("ArkadiusTradeToolsGuildStatus callback")
     local setOne = false
+    local processors = self.Modules.Sales.guildProcessors
+    if not processors then return end -- Sales has not registered with LibHistoire yet
     for i, guild in ipairs(self.guilds) do
+      local categoryCache = processors[guild.id] and processors[guild.id].categoryCache
       if guild.id == 0 then
         self.guildStatus:SetNotActive(i)
-      elseif self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache and not guild.linked then
-          if self.Modules.Sales.guildListeners[guild.id].listeners[1].categoryCache:HasLinked() then
+      elseif categoryCache and not guild.linked then
+          if categoryCache:HasLinked() then
             Logger:Info(GetGuildName(guild.id), "is linked. Marking done.")
             self.guildStatus:SetDone(i)
             guild.linked = true
